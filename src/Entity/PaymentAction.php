@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\PaymentActionRepository;
 use App\Service\Transaction\TransactionStateChangeTargetInterface;
 use Doctrine\ORM\Mapping as ORM;
-use http\Exception;
+use Exception;
 
 #[ORM\Entity(repositoryClass: PaymentActionRepository::class)]
 class PaymentAction implements TransactionStateChangeTargetInterface
@@ -83,12 +83,12 @@ class PaymentAction implements TransactionStateChangeTargetInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function setVariant(string $variant): self
     {
-        if (!in_array($variant, self::ALLOWED_VARIANTS)){
-            throw new \Exception('Invalid variant');
+        if (!in_array($variant, self::ALLOWED_VARIANTS)) {
+            throw new Exception('Invalid variant');
         }
 
         $this->variant = $variant;

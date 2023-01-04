@@ -12,7 +12,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -50,14 +49,13 @@ class LoanRepository extends ServiceEntityRepository
      */
     public function findTransactionsForUser(User $owner)
     {
-        return $this->createQueryBuilder('l' )
+        return $this->createQueryBuilder('l')
             ->select('t')
-            ->leftJoin(Transaction::class, 't','WITH', 'l.transaction = t.id')
+            ->leftJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
             ->where('l.owner = :owner')
             ->setParameter('owner', $owner)
             ->orderBy('l.amount', 'ASC')
-            ->getQuery()->getResult()
-            ;
+            ->getQuery()->getResult();
     }
 
     /**
@@ -82,9 +80,9 @@ class LoanRepository extends ServiceEntityRepository
     /**
      * getAllDebtTransactionsForUserAndSate
      *
-     * @param User   $owner
+     * @param User $owner
      * @param string $state
-     * @param float  $amount
+     * @param float $amount
      *
      * @return int|mixed|string
      */
@@ -106,19 +104,21 @@ class LoanRepository extends ServiceEntityRepository
     /**
      * getAllExchangeLoansForDebt
      *
-     * @param User   $debtor
+     * @param User $debtor
      * @param string $state
-     * @param float  $amount
-     * @param array  $loaner
+     * @param float $amount
+     * @param array $loaner
      *
      * @return int|mixed|string
      */
     public function getAllExchangeLoansForDebt(
-        User $debtor,
+        User   $debtor,
         string $state,
-        float $amount,
-        array $loaner
-    ) {dump($loaner);
+        float  $amount,
+        array  $loaner
+    )
+    {
+        dump($loaner);
         return $this->createQueryBuilder('l')
             ->select('l')
             ->innerJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')

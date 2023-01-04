@@ -415,14 +415,15 @@ class Transaction
         return $this;
     }
 
-    public function getTransactionPartByUser(User $transactionPartOwner){
-        foreach ($this->getDebts() as $debt){
-            if ($debt->getOwner() === $transactionPartOwner){
+    public function getTransactionPartByUser(User $transactionPartOwner)
+    {
+        foreach ($this->getDebts() as $debt) {
+            if ($debt->getOwner() === $transactionPartOwner) {
                 return $debt;
             }
         }
-        foreach ($this->getLoans() as $loan){
-            if ($loan->getOwner() === $transactionPartOwner){
+        foreach ($this->getLoans() as $loan) {
+            if ($loan->getOwner() === $transactionPartOwner) {
                 return $loan;
             }
         }

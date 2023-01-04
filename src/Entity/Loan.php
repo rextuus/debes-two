@@ -177,7 +177,7 @@ class Loan implements TransactionPartInterface
 
     public function __toString()
     {
-        return $this->getTransaction()->getReason()." - ".$this->getAmount()." €";
+        return $this->getTransaction()->getReason() . " - " . $this->getAmount() . " €";
     }
 
     /**

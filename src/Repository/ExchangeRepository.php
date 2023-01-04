@@ -50,7 +50,7 @@ class ExchangeRepository extends ServiceEntityRepository
             ->setParameter('loan', $loan)
             ->setParameter('transaction', $transaction);
 
-            return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getSingleResult();
     }
 
     // /**

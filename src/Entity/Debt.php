@@ -67,12 +67,12 @@ class Debt implements TransactionPartInterface
         return $this;
     }
 
-    public function getCreated(): ?\DateTimeInterface
+    public function getCreated(): ?DateTimeInterface
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTimeInterface $created): TransactionPartInterface
+    public function setCreated(DateTimeInterface $created): TransactionPartInterface
     {
         $this->created = $created;
 
@@ -194,7 +194,7 @@ class Debt implements TransactionPartInterface
      */
     public function __toString(): string
     {
-        return $this->getTransaction()->getReason().' - '.$this->getAmount();
+        return $this->getTransaction()->getReason() . ' - ' . $this->getAmount();
     }
 
     public function getInitialAmount(): ?float

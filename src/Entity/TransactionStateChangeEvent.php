@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TransactionStateChangeEventRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TransactionStateChangeEventRepository::class)]
@@ -81,12 +82,12 @@ class TransactionStateChangeEvent
         return $this;
     }
 
-    public function getCreated(): ?\DateTimeInterface
+    public function getCreated(): ?DateTimeInterface
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTimeInterface $created): self
+    public function setCreated(DateTimeInterface $created): self
     {
         $this->created = $created;
 

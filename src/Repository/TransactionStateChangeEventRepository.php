@@ -2,10 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\BankAccount;
 use App\Entity\Debt;
 use App\Entity\Loan;
-use App\Entity\PaypalAccount;
 use App\Entity\Transaction;
 use App\Entity\TransactionStateChangeEvent;
 use App\Entity\User;

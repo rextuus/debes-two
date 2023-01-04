@@ -79,7 +79,7 @@ class DebtRepository extends ServiceEntityRepository
 
     /**
      * findTransactionsForUserAndState
-     * @param User   $owner
+     * @param User $owner
      * @param string $state
      *
      * @return int|mixed|string

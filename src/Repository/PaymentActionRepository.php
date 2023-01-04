@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\BankAccount;
 use App\Entity\PaymentAction;
-use App\Entity\PaymentOption;
 use App\Entity\PaypalAccount;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
