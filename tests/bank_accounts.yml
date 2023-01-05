@@ -1,0 +1,36 @@
+App\Entity\BankAccount:
+    bank_account_user_1:
+      iban: '<iban()>'
+      bic: 'COKS'
+      accountName: 'user1'
+      bankName: 'bank1'
+      owner: '@bankAccountUser1'
+      description: 'bank account of user 1'
+      isPrioritised: true
+      enabled: true
+    bank_account_user_2:
+      iban: '<iban()>'
+      bic: 'COKS'
+      accountName: 'user2'
+      bankName: 'bank1'
+      owner: '@bankAccountUser2'
+      description: 'bank account of user 2'
+      isPrioritised: true
+      enabled: true
+
+App\Entity\PaypalAccount:
+  paypal_account_user_1:
+    email: 'email()'
+    owner: '@bankAccountUser1'
+    description: 'paypal account of user 1'
+    isPrioritised: true
+    enabled: true
+  paypal_account_user_2:
+    email: 'email()'
+    owner: '@bankAccountUser2'
+    description: 'paypal account of user 2'
+    isPrioritised: true
+    enabled: true
+
+
+

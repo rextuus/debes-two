@@ -16,15 +16,16 @@ abstract class PaymentOption
     #[ORM\Column(type: 'boolean')]
     protected $enabled;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'PaymentOptions', cascade: ['persist'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private $owner;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $description;
 
     #[ORM\Column(type: 'boolean')]
     private $isPrioritised;
+
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'paymentOptions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $owner = null;
 
     public function getId(): ?int
     {

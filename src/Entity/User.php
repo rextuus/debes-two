@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -46,6 +47,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'owner', cascade: ['persist'])]
     private $loans;
+
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: PaymentOption::class, cascade: ['persist'])]
+    private Collection $paymentOptions;
+
+    public function __construct()
+    {
+        $this->paymentOptions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -158,13 +167,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getPaymentOptions(): Collection
     {
-        return $this->PaymentOptions;
+        return $this->paymentOptions;
     }
 
     public function addPaymentOption(PaymentOption $paymentOption): self
     {
-        if (!$this->PaymentOptions->contains($paymentOption)) {
-            $this->PaymentOptions[] = $paymentOption;
+        if (!$this->paymentOptions->contains($paymentOption)) {
+            $this->paymentOptions[] = $paymentOption;
             $paymentOption->setOwner($this);
         }
 
@@ -173,7 +182,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removePaymentOption(PaymentOption $paymentOption): self
     {
-        if ($this->PaymentOptions->removeElement($paymentOption)) {
+        if ($this->paymentOptions->removeElement($paymentOption)) {
             // set the owning side to null (unless already changed)
             if ($paymentOption->getOwner() === $this) {
                 $paymentOption->setOwner(null);

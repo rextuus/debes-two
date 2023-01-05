@@ -1,0 +1,14 @@
+App\Entity\TransactionStateChangeEvent:
+  acceptChangeEventForTransaction1:
+    transaction: '@transactionSingleLoanerMultipleDebtors'
+    oldState: 'ready'
+    newState: 'accepted'
+    created: '<dateTimeBetween("-200 days", "now")>'
+    type: 'blank'
+  bankTransferChangeEventForTransaction1:
+    transaction: '@transactionSingleLoanerMultipleDebtors'
+    oldState: 'accepted'
+    newState: 'cleared'
+    created: '<dateTimeBetween("-200 days", "now")>'
+    type: 'bank'
+
