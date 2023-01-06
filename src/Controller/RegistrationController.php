@@ -8,13 +8,12 @@ use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
 
-    /**
-     * @Route("/registration", name="registration")
-     */
+    #[Route('/registration', name: 'c')]
     public function registerNewUser(Request $request, UserService $userService): Response
     {
         $form = $this->createForm(UserType::class, new UserData());
