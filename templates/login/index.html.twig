@@ -4,6 +4,55 @@
 {# ... #}
 
 {% block body %}
+    <div class="top-navi">
+        <div></div>
+        <button id="burger" class="open-main-nav">
+            <span class="burger"></span>
+            <span class="burger-text">Menu</span>
+        </button>
+        <nav class="main-nav" id="main-nav">
+            <ul>
+                <li>
+                    <a href="#">About me</a>
+                </li>
+                <li>
+                    <a href="#">Speaker &amp; Writer</a>
+                </li>
+                <li>
+                    <a href="#">Work</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+                <li>
+                    <a href="#">Blog</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="tab-nav">
+        <button class="tab-button active" data-tab="tab-1" data-name="Login"
+                data-image="{{ asset('assets/img/login.svg') }}"></button>
+        <button class="tab-button link" data-tab="tab-2" data-name="Registieren" data-link="{{ path('registration') }}"
+                data-image="{{ asset('assets/img/registration.svg') }}"></button>
+    </div>
+
+    <div class="page-header">
+        <div class="page-header-text">
+            Konten
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/login.svg') }}" alt="Tile image">
+        </div>
+
+    </div>
+
+
+    <div class="content-body">
+
+    <div id="tab-1" class="tab active">
+    <div class="empty-list-info font-size-1-2">Willkommen zurück</div>
+
     {% if error %}
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -20,4 +69,6 @@
 
         <button type="submit">login</button>
     </form>
+    </div>
+    </div>
 {% endblock %}

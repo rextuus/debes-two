@@ -1,0 +1,151 @@
+/*--------------------------------------------------------------------------------------------------------------------*/
+/*form*/
+
+.form-area{
+    background: #424243;
+    border: 1px solid #424243;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.form-style {
+    padding: 10px;
+    height: 48px;
+    width: 100%;
+    font-weight: 500;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: 0.5px;
+    outline: none;
+    color: #000000;
+    background-color: #688059;
+    border: none;
+    -webkit-transition: all 200ms linear;
+    transition: all 200ms linear;
+    /*box-shadow: 0 4px 8px 0 rgba(21,21,21,.2);*/
+}
+.form-style:focus,
+.form-style:active {
+    border: none;
+    outline: none;
+    /*box-shadow: 0 4px 8px 0 rgba(21,21,21,.2);*/
+}
+
+.btn{
+    border-radius: 4px;
+    height: 44px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    -webkit-transition : all 200ms linear;
+    transition: all 200ms linear;
+    padding: 0 30px;
+    letter-spacing: 1px;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+
+    align-items: center;
+    -webkit-justify-content: center;
+
+    justify-content: center;
+    -ms-flex-pack: center;
+    text-align: center;
+    border: none;
+    background-color: #688059;
+    /*color: #102770;*/
+}
+
+.form-input-field{
+    margin-bottom: 4px;
+    background-color: #688059;
+
+}
+.form-input-field input::placeholder {
+    color: #5d5d5d;
+}
+.form-submit-field{
+    margin-top: 10px;
+}
+
+.form-header{
+    margin-bottom: 10px;
+}
+
+.image-form-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.image-form-row-image{
+    margin-left: auto;
+    display: inline-block;
+    fill: #ffffff;
+    margin-right: 5px;
+    padding: 5px;
+}
+
+.image-form-row-image img{
+    width: 30px;
+    height: 30px;
+}
+
+.hidden{
+    display: none;
+}
+label{
+    padding: 4px;
+    color: #5d5d5d;
+}
+
+
+/*buttons*/
+.next-state-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.next-state-button button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    font-size: 1.1em; /* Increase font size */
+    border: 2px solid black;
+    border-radius: 9px;
+    color: black;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.accept{
+    background-color: #6c915b; /* Green background */
+
+}
+.decline{
+    background-color: #c04545; /* Green background */
+}
+
+.next-state-button img {
+    padding: 5px;
+    width: 30px;
+    margin-right: 10px; /* Add some margin between the image and text */
+}
+
+.next-state-button-text{
+    margin-right: 10px;
+}
+
+/*currency*/
+.currency-euro{
+
+}
+.currency-text{
+}
+.currency-cent{
+
+}

@@ -12,25 +12,24 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-
-    #[Route('/registration', name: 'c')]
+    #[Route('/registration', name: 'registration')]
     public function registerNewUser(Request $request, UserService $userService): Response
     {
-        $form = $this->createForm(UserType::class, new UserData());
+        $registrationForm = $this->createForm(UserType::class, new UserData());
 
-        $form->handleRequest($request);
+        $registrationForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
             /** @var UserData $data */
-            $data = $form->getData();
+            $data = $registrationForm->getData();
 
             $userService->storeUser($data);
 
-            return $this->redirect($this->generateUrl('app_login'));
+            return $this->redirect($this->generateUrl('login'));
         }
 
         return $this->render('registration/registration.html.twig', [
-            'form' => $form->createView(),
+            'registrationForm' => $registrationForm->createView(),
         ]);
     }
 }
