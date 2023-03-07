@@ -1,0 +1,54 @@
+<div class="transaction-summary">
+    <div class="summary-header">
+        {% if debtVariant %}
+            Schuld vom {{ dto.created }}
+        {% else %}
+            Darlehen vom {{ dto.created }}
+        {% endif %}
+    </div>
+
+    <div class="summary-info-filed">
+        <div class="summary-info-filed-row">
+            <div class="summary-info-filed-entry bold">
+                {% if debtVariant %}
+                    Darlehensgeber:
+                {% else %}
+                    Gläubiger:
+                {% endif %}
+            </div>
+            <div class="summary-info-filed-entry">
+                {% if dto.hasMultipleDebtors %}
+                    <table class="table table-hover table-dark">
+                        <tr>
+                            {% for detail in dto.debtDtos %}
+                                <th>{{ detail.owner.fullName }}</th>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                {% else %}
+                    {{ dto.transactionPartner }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="summary-info-filed-row">
+            <div class="summary-info-filed-entry bold">
+                Betrag:
+            </div>
+            <div class="summary-info-filed-entry">
+                {{ dto.totalAmount }} €
+            </div>
+        </div>
+        <div class="summary-info-filed-row">
+            <div class="summary-info-filed-entry bold">
+                Grund:
+            </div>
+            <div class="summary-info-filed-entry">
+                {{ dto.reason }}
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-transaction-details">
+        {{ transaction_part_details(dto, true) | raw }}
+    </div>
+</div>

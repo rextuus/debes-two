@@ -62,6 +62,7 @@ class TransactionDto
      * @var string
      */
     private $slug;
+    private string $reason;
 
     public static function create(Transaction $transaction, bool $useDebt): TransactionDto
     {
@@ -70,6 +71,7 @@ class TransactionDto
         $dto->setEdited($transaction->getEdited());
         $dto->setTransactionId($transaction->getId());
         $dto->setSlug($transaction->getSlug());
+        $dto->setReason($transaction->getReason());
 
         $debt = $transaction->getDebts()[0];
         $loan = $transaction->getLoans()[0];
@@ -158,6 +160,11 @@ class TransactionDto
         }
     }
 
+    public function getStateAsString(): string
+    {
+        return $this->state;
+    }
+
     /**
      * @param string $state
      */
@@ -244,5 +251,16 @@ class TransactionDto
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
+    }
+
+    public function getReason(): string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(string $reason): TransactionDto
+    {
+        $this->reason = $reason;
+        return $this;
     }
 }

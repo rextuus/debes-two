@@ -1,7 +1,9 @@
+@import "variables";
+
 /* Style the tab navigation */
 .tab-nav {
     display: flex;
-    border-bottom: 1px solid #80596f;
+    border-bottom: 1px solid $header-purple;
 }
 
 .tab-button {
@@ -20,7 +22,7 @@
 }
 
 .tab-button.active {
-    background-color: #80596f;
+    background-color: $header-purple;
     font-weight: bold;
     color: #ddd;
 

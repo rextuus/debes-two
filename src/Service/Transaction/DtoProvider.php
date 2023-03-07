@@ -9,6 +9,7 @@ use App\Service\Debt\DebtDto;
 use App\Service\Exchange\ExchangeDto;
 use App\Service\Exchange\ExchangeService;
 use App\Service\Loan\LoanDto;
+use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
 use App\Service\Transaction\TransactionDtos\TransactionPartBaseDto;
 
 /**
@@ -19,19 +20,11 @@ use App\Service\Transaction\TransactionDtos\TransactionPartBaseDto;
  */
 class DtoProvider
 {
-    /**
-     * @var ExchangeService
-     */
-    private $exchangeService;
-
-    /**
-     * DtoProvider constructor.
-     */
     public function __construct(
-        ExchangeService $exchangeService
+        private ExchangeService $exchangeService,
+        private TransactionChangeEventService $changeEventService
     )
     {
-        $this->exchangeService = $exchangeService;
     }
 
 
@@ -98,19 +91,8 @@ class DtoProvider
         }
         $transactionDto->setExchangeDtos($exchangeDtos);
 
-        return $transactionDto;
-//        dd($exchanges);
-
-        foreach ($transaction->getDebts() as $debt) {
-            $exchanges = $this->exchangeService->getAllExchangesBelongingToTransactionAndPartType($transaction, $debt);
-            $debtPartDto = TransactionPartBaseDto::createFromTransactionPart($debt, false);
-
-            $exchangeDtos = [];
-            foreach ($exchanges as $exchange) {
-                $exchangeDtos[] = ExchangeDto::create($exchange);
-            }
-            $debtPartDto->setExchangeDtos($exchangeDtos);
-        }
+        $changeEvents = $this->changeEventService->getAllByTransaction($transaction);
+        $transactionDto->setChangeEvents($changeEvents);
 
         return $transactionDto;
     }

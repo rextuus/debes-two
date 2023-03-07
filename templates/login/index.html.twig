@@ -33,13 +33,13 @@
     <div class="tab-nav">
         <button class="tab-button active" data-tab="tab-1" data-name="Login"
                 data-image="{{ asset('assets/img/login.svg') }}"></button>
-        <button class="tab-button link" data-tab="tab-2" data-name="Registieren" data-link="{{ path('registration') }}"
+        <button class="tab-button link" data-tab="tab-2" data-name="Registrieren" data-link="{{ path('registration') }}"
                 data-image="{{ asset('assets/img/registration.svg') }}"></button>
     </div>
 
     <div class="page-header">
         <div class="page-header-text">
-            Konten
+            Login
         </div>
         <div class="page-header-image">
             <img src="{{ asset('assets/img/login.svg') }}" alt="Tile image">
@@ -50,25 +50,51 @@
 
     <div class="content-body">
 
-    <div id="tab-1" class="tab active">
-    <div class="empty-list-info font-size-1-2">Willkommen zurück</div>
+        <div id="tab-1" class="tab active">
+            {% if last_username %}
 
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+                <div class="empty-list-info font-size-1-2">Willkommen zurück {{ last_username }}</div>
 
-    <form action="{{ path('app_login') }}" method="post">
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}">
+            {% else %}
+                {% if error %}
+                    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+                <div class="empty-list-info font-size-1-2">Willkommen zurück</div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password">
+                <div class="form-area">
+                    <form action="{{ path('app_login') }}" method="post">
+                        <div class="form-input-field">
+                            <label class="hidden" for="username">Email:</label>
+                            <div class="image-form-row">
+                                <div class="image-form-row-image">
+                                    <img src="{{ asset('assets/img/person.svg') }}" alt="Tile image">
+                                </div>
+                                <input class="form-style" type="text" id="username" name="_username"
+                                       value="{{ last_username }}" placeholder="Username">
+                            </div>
+                        </div>
 
-        {# If you want to control the URL the user is redirected to on success
+                        <div class="form-input-field">
+                            <div class="image-form-row">
+
+                                <label class="hidden" for="password">Password:</label>
+                                <div class="image-form-row-image">
+                                    <img src="{{ asset('assets/img/password.svg') }}" alt="Tile image">
+                                </div>
+                                <input class="form-style" type="password" id="password" name="_password"
+                                       placeholder="Passwort">
+                            </div>
+                        </div>
+                        <button class="btn" type="submit">login</button>
+                    </form>
+                </div>
+            {% endif %}
+
+
+            {# If you want to control the URL the user is redirected to on success
 {#        <input type="hidden" name="_target_path" value="/account"> #}
 
-        <button type="submit">login</button>
-    </form>
-    </div>
+
+        </div>
     </div>
 {% endblock %}

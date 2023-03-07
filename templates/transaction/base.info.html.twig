@@ -1,0 +1,69 @@
+{% if debtVariant %}
+    <h2><span>Schuld vom</span></h2><h2> {{ dto.created }}</h2>
+{% else %}
+    <h2><span>Darlehen vom</span></h2><h2> {{ dto.created }}</h2>
+{% endif %}
+
+<table class="table table-hover table-dark">
+    <tr>
+        {% if debtVariant %}
+            <th scope="col">Darlehensgeber</th>
+        {% else %}
+            <th scope="col">Gläubiger</th>
+        {% endif %}
+        <td>
+            {% if dto.hasMultipleDebtors %}
+                <table class="table table-hover table-dark">
+                    <tr>
+                        {% for detail in dto.debtDtos %}
+                            <th>{{ detail.owner.fullName }}</th>
+                        {% endfor %}
+                    </tr>
+                </table>
+            {% else %}
+                {{ dto.transactionPartner }}
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <th scope="col">Betrag</th>
+        <td>{{ dto.totalAmount }} €</td>
+    </tr>
+
+    <tr>
+        <th scope="col">Grund</th>
+        <td>{{ dto.reason }}</td>
+    </tr>
+
+
+</table>
+{#<h5>Verrechnete Transaktionen:</h5>#}
+{#<table class="table table-hover table-dark">#}
+{#    {% for exchangeDto in dto.singleTransactionPartner.exchangeDtos %}#}
+{#        <tr>#}
+{#            <th>#}
+{#                {{ loop.index }}.#}
+{#            </th>#}
+{#            <td>#}
+{#                vom {{ exchangeDto.creationDate }}#}
+{#            </td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            {% if debtVariant %}#}
+{#                <th scope="col">Darlehensgeber</th>#}
+{#            {% else %}#}
+{#                <th scope="col">Gläubiger</th>#}
+{#            {% endif %}#}
+{#            <td>{{ exchangeDto.exchangePartners }}</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <th scope="col">Betrag</th>#}
+{#            <td>{{ exchangeDto.amount }} €</td>#}
+{#        </tr>#}
+
+{#        <tr>#}
+{#            <th scope="col">Grund</th>#}
+{#            <td>{{ exchangeDto.exchangeReason }}</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}

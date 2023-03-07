@@ -1,41 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PaymentController!{% endblock %}
+{% block title %}Schuld begleichen{% endblock %}
 
 {% block body %}
-    <section class="hero-section">
+<html lang="de">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debes - Schuld begleichen</title>
+</head>
+<body>
 
-        <div class="hero-slider owl-carousel">
-            <div class="hs-item-own">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="hs-text">
-                                {% include 'base.info.html.twig' %}
+<div class="tile-container">
+    <a href="#" class="tile" data-url="{{ path('landing') }}" data-caption="Tile 1">
+        <img src="{{ asset('assets/img/claim.svg') }}" alt="Tile image">
+    </a>
+    <a href="#" class="tile" data-url="{{ path('landing') }}">
+        <img src="{{ asset('assets/img/claim.png') }}" alt="Tile image">
+    </a>
+    <a href="#" class="tile" data-url="{{ path('landing') }}">
+        <img src="{{ asset('assets/img/history.png') }}" alt="Tile image">
+    </a>
+</div>
 
-                                {% if debtVariant %}
-                                    <p> Möchtest du das Geld jetzt überweisen?</p>
-                                {% else %}
-                                    <p>Die Überweisung lässt seit Tagen auf sich warten</p>
-                                {% endif %}
+<div class="content-body">
+    {{ transaction_part_summary(dto) | raw }}
+
+    {% if debtVariant %}
+        <p> Möchtest du das Geld jetzt überweisen?</p>
+    {% else %}
+        <p>Die Überweisung lässt seit Tagen auf sich warten</p>
+    {% endif %}
 
 
-                                {% if debtVariant %}
-                                    {{ form_start(form, {'method': 'POST'}) }}
-                                    {{ form_row(form._token) }}
-                                    {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }}
-                                    {{ form_widget(form.decline, {'attr': {'class': 'site-btn loan'}}) }}
-                                {% else %}
-                                    {{ form_start(form, {'method': 'POST'}) }}
-                                    {{ form_row(form._token) }}
-                                    {{ form_widget(form.submit, {'attr': {'class': 'site-btn debt'}}) }}
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </section>
+    {% if debtVariant %}
+        {{ form_start(form, {'method': 'POST'}) }}
+        {{ form_row(form._token) }}
+        {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }}
+        {{ form_widget(form.decline, {'attr': {'class': 'site-btn loan'}}) }}
+    {% else %}
+        {{ form_start(form, {'method': 'POST'}) }}
+        {{ form_row(form._token) }}
+        {{ form_widget(form.submit, {'attr': {'class': 'site-btn debt'}}) }}
+    {% endif %}
+</div>
 {% endblock %}

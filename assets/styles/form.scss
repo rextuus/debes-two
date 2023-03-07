@@ -1,11 +1,13 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*form*/
+@import "variables";
 
 .form-area{
     background: #424243;
     border: 1px solid #424243;
     border-radius: 8px;
     padding: 10px;
+    margin-bottom: 5px;
 }
 
 .form-style {
@@ -123,7 +125,7 @@ label{
     margin-left: 5px;
 }
 .accept{
-    background-color: #6c915b; /* Green background */
+    background-color: $balance-positive; /* Green background */
 
 }
 .decline{
@@ -148,4 +150,34 @@ label{
 }
 .currency-cent{
 
+}
+
+.double-form-style{
+
+
+    #user_password_first{
+
+        outline: none;
+        color: #000000;
+        background-color: #688059;
+        border: none;
+        -webkit-transition: all 200ms linear;
+        transition: all 200ms linear;
+
+        margin-bottom: 5px;
+    }
+
+    #user_password_second{
+        outline: none;
+        color: #000000;
+        background-color: #688059;
+        border: none;
+        -webkit-transition: all 200ms linear;
+        transition: all 200ms linear;
+
+        margin-bottom: 5px;
+    }
+    .help-text{
+        display: none;
+    }
 }

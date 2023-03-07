@@ -25,7 +25,7 @@ class RegistrationController extends AbstractController
 
             $userService->storeUser($data);
 
-            return $this->redirect($this->generateUrl('login'));
+            return $this->redirect($this->generateUrl('app_login'));
         }
 
         return $this->render('registration/registration.html.twig', [

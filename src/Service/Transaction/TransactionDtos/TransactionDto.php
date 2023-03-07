@@ -3,8 +3,10 @@
 namespace App\Service\Transaction\TransactionDtos;
 
 use App\Entity\Transaction;
+use App\Entity\TransactionStateChangeEvent;
 use App\Service\Exchange\ExchangeDto;
 use DateTimeInterface;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * TransactionDto
@@ -14,80 +16,46 @@ use DateTimeInterface;
  */
 class TransactionDto
 {
-    /**
-     * @var boolean
-     */
-    private $hasMultipleLoaners;
-
-    /**
-     * @var boolean
-     */
-    private $hasMultipleDebtors;
+    private bool $hasMultipleLoaners;
+    private bool $hasMultipleDebtors;
 
     /**
      * @var TransactionPartBaseDto[]
      */
-    private $loanDtos;
+    private array $loanDtos;
 
     /**
      * @var TransactionPartBaseDto[]
      */
-    private $debtDtos;
+    private array $debtDtos;
+    private float $totalAmount;
 
-    /**
-     * @var float
-     */
-    private $totalAmount;
+    private DateTimeInterface $created;
 
-    /**
-     * @var DateTimeInterface
-     */
-    private $created;
+    private ?DateTimeInterface $edited;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $edited;
+    private string $state;
 
-    /**
-     * @var string
-     */
-    private $state;
+    private string $reason;
+    private int $transactionId;
 
-    /**
-     * @var string
-     */
-    private $reason;
+    private string $transactionSlug;
 
-    /**
-     * @var int
-     */
-    private $transactionId;
+    private string $transactionPartner;
 
-    /**
-     * @var string
-     */
-    private $transactionSlug;
-
-    /**
-     * @var string
-     */
-    private $transactionPartner;
-
-    /**
-     * @var bool
-     */
-    private $isDebtVariant;
+    private bool $isDebtVariant;
 
     /**
      * @var ExchangeDto[]
      */
     private $exchangeDtos;
 
+    private float $initialAmount;
+
     /**
-     * @var float
+     * @var TransactionStateChangeEvent[]
      */
-    private $initialAmount;
+    private array $changeEvents;
 
     /**
      * @return bool
@@ -142,7 +110,7 @@ class TransactionDto
      */
     public function getCreated(): string
     {
-        return $this->created->format('d.n.Y');
+        return $this->created->format('d.m.Y');
     }
 
     /**
@@ -384,6 +352,17 @@ class TransactionDto
             return $this->getLoanDtos()[0];
         }
         return null;
+    }
+
+    public function getChangeEvents(): array
+    {
+        return $this->changeEvents;
+    }
+
+    public function setChangeEvents(array $changeEvents): TransactionDto
+    {
+        $this->changeEvents = $changeEvents;
+        return $this;
     }
 
     /**

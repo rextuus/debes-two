@@ -1,0 +1,28 @@
+@import "variables";
+
+
+.account-overview-area-header{
+    display: flex;
+    flex-direction: row;
+}
+
+.account-overview-area-header-text {
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    border-bottom: 4px solid $header-purple;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.account-overview-area-header-image {
+    height: 100%;
+}
+
+.account-overview-area-empty {
+    padding: 8px;
+    background: #424243;
+    border: 3px solid $header-purple;
+    border-radius: 8px;
+}

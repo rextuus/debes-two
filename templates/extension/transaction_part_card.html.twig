@@ -1,0 +1,70 @@
+<div class="content-card {% if part.direction > 0 %}is-debt{% endif %}">
+    <div class="card-header">
+        <div class="row row-date">
+            <div class="date">
+                <div class="date-since">
+                    {{ ago }}
+                </div>
+                <div class="date-plain">
+                    ({{ part.edited|date("d.m.Y") }})
+                </div>
+            </div>
+            <svg class="collapse-icon" viewBox="0 0 24 24">
+                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
+            </svg>
+        </div>
+        <div class="row row-label ">
+            <div class="label transparent-text">{{ part.reason }}</div>
+        </div>
+        <div class="row row-info">
+            <div class="left-side-icon">@{{ part.transactionPartner }}</div>
+            <div class="left-side-icon">{{ part.amount }} &euro;</div>
+            <div class="right-side-icon">{{ part.getStateAsString() }}</div>
+        </div>
+    </div>
+    <div class="card-body hidden">
+        <div class="description body-element">
+            {% if part.direction > 0 %}
+                Du schuldest UserName noch Amount für Reason
+            {% else %}
+                Du bekommst von UserName noch Amount für Reason
+            {% endif %}
+        </div>
+        <div class="transaction-details body-element">
+            <div class="transaction-state">
+                <div class="state-icon {% if part.state > 0 %}active {% endif %}">
+                    <img src="{{ asset('assets/img/create.svg') }}" alt="Tile image">
+                </div>
+                <div class="state-date {% if part.state > 0 %}active {% endif %}">08.09.1999</div>
+            </div>
+            <div class="transaction-state {% if part.state > 1 %}active {% endif %}">
+                <div class="state-icon">
+                    <img src="{{ asset('assets/img/accept.svg') }}" alt="Tile image">
+                </div>
+                <div class="state-date {% if part.state > 1 %}active {% endif %}">Akzeptiert</div>
+            </div>
+            <div class="transaction-state {% if part.state > 2 %}active {% endif %}">
+                <div class="state-icon">
+                    <img src="{{ asset('assets/img/paid.svg') }}" alt="Tile image">
+                </div>
+                <div class="state-date {% if part.state > 2 %}active {% endif %}">Bezahlt</div>
+            </div>
+            <div class="transaction-state {% if part.state > 3 %}active {% endif %}">
+                <div class="state-icon">
+                    <img src="{{ asset('assets/img/party.svg') }}" alt="Tile image">
+                </div>
+                <div class="state-date {% if part.state > 3 %}active {% endif %}">Abgewickelt</div>
+            </div>
+        </div>
+        <div class="next-state-button body-element">
+            <button class="accept">
+                <img src="{{ asset('assets/img/accept.svg') }}" alt="Button Image">
+                <div class="next-state-button-text">Akzeptieren</div>
+            </button>
+            <button class="decline">
+                <img class="rotate" src="{{ asset('assets/img/accept.svg') }}" alt="Button Image">
+                <div class="next-state-button-text">Akzeptieren</div>
+            </button>
+        </div>
+    </div>
+</div>

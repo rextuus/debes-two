@@ -1,0 +1,44 @@
+@import "variables";
+
+.transaction-summary{
+  background: #424243;
+  border: 2px solid $header-purple;
+  border-radius: 8px;
+  margin-right: 3px;
+  max-width: 100%;
+}
+.summary-header{
+  color: black;
+  font-weight: bold;
+  font-size: 1.8rem;
+  background-color: $header-purple;
+  border: 1px solid $header-purple;
+  //border-radius: 8px;
+}
+
+.summary-info-filed{
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  background-color: $body-diff;
+  border: 1px solid $header-purple;
+  //border-radius: 8px;
+  margin: 5px 0px;
+}
+.summary-info-filed-row{
+  display: flex;
+  margin: 5px;
+}
+.summary-info-filed-entry{
+  color: black;
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 1.3em;
+
+}
+
+.summary-transaction-details{
+  padding: 5px;
+  background-color: $body-diff;
+  border: 1px solid $header-purple;
+}

@@ -1,12 +1,13 @@
+@import "variables";
 body{
-    background: #292f24;
+    background: $body-main;
     color: #d7e6cf;
     font-family: arial, verdana, sans-serif;
     margin: 0;
 }
 
 .page-header{
-    background: #80596f;
+    background: $header-purple;
     font-weight: bold;
     font-size: 1.9em;
 
@@ -50,8 +51,8 @@ body{
     padding: 15px;
     font-size: 1.5em;
     margin: 20px auto;
-    border: 1px solid #5d5d5d;
-    background-color: #5d5d5d;
+    border: 1px solid $body-diff;
+    background-color: $body-diff;
     border-radius: 8px;
 }
 
@@ -61,4 +62,8 @@ body{
 
 .color-b{
     color: #000000 !important;
+}
+
+.bold{
+    font-weight: bold;
 }

@@ -24,6 +24,10 @@ Encore
     .addEntry('form', './assets/form.js')
     .addEntry('navi', './assets/navi.js')
     .addEntry('tab', './assets/tab.js')
+    .addEntry('account_landing', './assets/account_landing.js')
+    .addEntry('transaction-part-content-card', './assets/transaction-part-content-card.js')
+    .addEntry('content-card', './assets/content-card.js')
+    .addEntry('transaction-handling', './assets/transaction-handling.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

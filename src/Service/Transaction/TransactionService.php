@@ -225,6 +225,8 @@ class TransactionService
         $debtTransactions = $this->debtService->getAllDebtTransactionsForUser($owner);
         foreach ($debtTransactions as $transaction) {
             $dtos[] = TransactionDto::create($transaction, true);
+            $events = $this->transactionChangeEventService->getAllByTransaction($transaction);
+            dump($events);
         }
         $loanTransactions = $this->loanService->getAllLoanTransactionsForUser($owner);
         foreach ($loanTransactions as $transaction) {

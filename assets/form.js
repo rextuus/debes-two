@@ -134,3 +134,12 @@ function formatCurrency(input, blur) {
     caret_pos = updated_len - original_len + caret_pos;
     input.setSelectionRange(caret_pos, caret_pos);
 }
+
+var passwordFirst = document.getElementById("user_password_first");
+if (passwordFirst){
+    passwordFirst.placeholder = 'Passwort';
+}
+var passwordSecond = document.getElementById("user_password_second");
+if (passwordSecond){
+    passwordSecond.placeholder = 'Passwort wiederholen';
+}

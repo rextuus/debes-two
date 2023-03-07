@@ -1,0 +1,188 @@
+@import "variables";
+
+.content-card {
+    max-width: 100%;
+    margin: 5px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #424243;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #424243;
+    padding: 10px;
+    border-bottom: 1px solid #424243;
+    position: relative;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    /*justify-content: space-between;*/
+    width: 100%;
+}
+
+.row-date {
+    position: relative;
+    justify-content: flex-start;
+}
+
+.date {
+    text-align: left;
+    font-size: 18px;
+    margin-right: auto;
+
+    display: flex;
+    align-items: center;
+}
+
+.date-since {
+    font-size: 1.2em;
+    border-bottom: 4px solid $balance-positive;
+    margin-right: 5px;
+}
+
+.date-plain {
+    font-size: 0.8em;
+}
+
+.collapse-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.row-info {
+    font-size: 0.9em;
+    font-weight: bold;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.left-side-icon {
+    /*for chields*/
+    margin-right: 5px;
+    display: inline-block;
+
+
+    /*for itsels*/
+    background: $balance-positive;
+    border: 2px solid black;
+    color: black;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.right-side-icon {
+    margin-left: auto;
+    display: inline-block;
+
+    background: $balance-positive;
+    border: 2px solid black;
+    color: black;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.row-label {
+    width: 100%;
+    text-align: center;
+
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+.transparent-text {
+    /* Use a linear gradient as the background */
+    background: linear-gradient(to right, #000000, #000000 90%, transparent);
+    /* Clip the text to the gradient */
+    -webkit-background-clip: text;
+    background-clip: text;
+    /* Use a mixin to apply color and gradient to the text */
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent;
+
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.body-element{
+    margin-bottom: 15px;
+}
+
+.description{
+    color: #000000;
+    font-size: 1.2em;
+}
+
+
+/*transaction state infos*/
+.account-details {
+
+}
+
+.transaction-state {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.state-icon {
+    margin-right: 10px;
+    margin-bottom: 2px;
+    border: 1px solid black;
+    color: black;
+    padding: 2px;
+    /*border-radius: 8px;*/
+}
+.state-icon.active {
+    background: $balance-positive;
+}
+
+.state-icon img {
+    width: 25px;
+    height: 25px;
+}
+
+.state-date {
+    color: black;
+
+}
+.state-date.active {
+    color: #d7e6cf;
+    font-weight: bold;
+}
+
+.content-card {
+    &.is-debt {
+        .left-side-icon {
+            background-color: $balance-negative;
+        }
+        .right-side-icon {
+            background-color: $balance-negative;
+        }
+        .date-since {
+            border-bottom: 4px solid $balance-negative;
+        }
+        .state-icon.active{
+            background: $balance-negative;
+        }
+    }
+}

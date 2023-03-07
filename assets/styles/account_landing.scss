@@ -1,0 +1,236 @@
+@import "variables";
+
+.statistics {
+    background: #424243;
+    border: 2px solid $header-purple;
+    border-radius: 8px;
+    margin-right: 3px;
+    max-width: 100%;
+}
+
+.info-container {
+    display: flex;
+    max-width: 100%;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/*tile navigation*/
+.tile-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    padding: 5px;
+    background: #424243;
+    margin-bottom: 20px;
+
+    /*border: 2px solid $header-purple;*/
+    /*border-radius: 8px;*/
+}
+
+.tile {
+    width: calc(25% - 20px); /* calculate the width to be half of the screen width and subtract some padding */
+    height: calc(25% - 20px); /* set the height to be equal to the width */
+    background-color: $balance-positive; /* add a background color for styling purposes */
+    margin: 5px; /* add some padding between the tiles */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    border: 2px solid $header-purple;
+    border-radius: 8px;
+
+    position: relative; /* add a positioning context for the hover effect */
+}
+
+.tile img {
+    width: 100%; /* make the image fill the tile */
+    height: 100%;
+    object-fit: cover; /* preserve the aspect ratio of the image and crop the excess */
+}
+
+/* add a hover effect that displays a caption */
+.tile:hover::before {
+    content: attr(data-caption); /* use the data-caption attribute as the content */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* make the caption background semi-transparent */
+    color: #fff; /* set the text color to white */
+    padding: 10px; /* add some padding to the caption */
+    font-size: 14px; /* set the font size */
+    line-height: 1.4;
+    text-align: center;
+    visibility: hidden; /* hide the caption by default */
+    opacity: 0; /* make the caption fully transparent */
+    transition: visibility 0s, opacity 0.5s linear; /* fade in the caption when it becomes visible */
+}
+
+.tile:hover::before {
+    visibility: visible; /* show the caption when the tile is hovered */
+    opacity: 1; /* make the caption fully opaque */
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/*total balance*/
+.balance-header-element {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.balance-header-element-end {
+    display: inline-block;
+    float: right;
+    margin: 10px;
+}
+
+.open-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.open-count {
+    font-size: 2.1rem;
+    font-weight: bold;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    padding-left: 15px;
+    padding-right: 10px;
+}
+
+.balance-hidden {
+    display: none;
+}
+
+.balance {
+    border: 1px solid $header-purple;
+    border-radius: 3px;
+}
+
+.balance-header {
+    display: flex;
+    justify-content: flex-start; /* align flex items to the left */
+}
+
+.balance-text-number {
+    display: flex;
+    flex-direction: column; /* create a vertical flex layout */
+
+    flex: 1; /* take up equal amount of space */
+
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.balance-image {
+    flex: 0 0 auto;
+    padding: 10px;
+}
+
+.balance-number {
+    font-size: 2.5rem;
+    padding-left: 10px;
+    color: #468527;
+
+}
+
+.balance-text {
+    background: $header-purple;
+    border: 1px solid $header-purple;
+    border-radius: 3px;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/*loan/debt container*/
+.balance-part {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 5px;
+    background: #424243;
+}
+
+.balance-part-header {
+    flex: 1;
+
+    display: flex;
+}
+
+.balance-part-total {
+    flex: 1;
+
+    font-size: 2.1rem;
+    font-weight: bold;
+    color: $balance-positive;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    align-items: center;
+    text-align: center;
+}
+
+.balance-part-summary {
+    display: flex;
+    flex-wrap: nowrap; /* create a vertical flex layout */
+
+    flex: 1;
+}
+
+.balance-part-detail-header {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    background: #688059;
+    border: 2px solid #000000;
+    border-radius: 8px;
+
+    padding: 5px;
+    margin: 3px;
+}
+
+.balance-part-detail-header-variant{
+    flex: 1;
+    color: black;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.balance-part-detail-header-amount{
+    flex: 1;
+    font-weight: bold;
+    font-size: 1.8rem;
+    color: black;
+    align-items: center;
+    text-align: center;
+}
+
+.balance-part-header-element {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.part-balance-part-header-element-image {
+    flex: 1;
+    height: 100%;
+}
+
+.balance-negative {
+    color: $balance-negative;
+}
