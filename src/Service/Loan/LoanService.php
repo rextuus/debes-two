@@ -16,41 +16,13 @@ use Doctrine\ORM\ORMException;
 
 class LoanService
 {
-
-    /**
-     * @var LoanFactory
-     */
-    private $loanFactory;
-
-    /**
-     * @var LoanRepository
-     */
-    private $loanRepository;
-
-    /**
-     * LoanService constructor.
-     *
-     * @param LoanFactory $loanFactory
-     * @param LoanRepository $loanRepository
-     */
     public function __construct(
-        LoanFactory    $loanFactory,
-        LoanRepository $loanRepository
+        private LoanFactory    $loanFactory,
+        private LoanRepository $loanRepository
     )
     {
-        $this->loanFactory = $loanFactory;
-        $this->loanRepository = $loanRepository;
     }
 
-    /**
-     * storeLoan
-     *
-     * @param LoanCreateData $loanData
-     *
-     * @return Loan
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function storeLoan(LoanCreateData $loanData): Loan
     {
         $loan = $this->loanFactory->createByData($loanData);
@@ -60,15 +32,6 @@ class LoanService
         return $loan;
     }
 
-    /**
-     * update
-     *
-     * @param TransactionPartInterface $loan
-     * @param TransactionPartDataInterface $data
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function update(TransactionPartInterface $loan, TransactionPartDataInterface $data): void
     {
         $this->loanFactory->mapData($loan, $data);
@@ -76,12 +39,13 @@ class LoanService
         $this->loanRepository->persist($loan);
     }
 
+    public function getLoanById(int $id): ?Loan
+    {
+        return $this->loanRepository->find($id);
+    }
+
     /**
-     * getAllLoanTransactionsForUser
-     *
-     * @param User $user
-     *
-     * @return array
+     * @return Transaction[]
      */
     public function getAllLoanTransactionsForUser(User $user): array
     {
@@ -89,13 +53,7 @@ class LoanService
     }
 
     /**
-     * getAllDebtTransactionsForUserAndSate
-     *
-     * @param User $owner
-     * @param string $state
-     * @param float $amount
-     *
-     * @return array
+     * @return Transaction[]
      */
     public function getAllLoanTransactionsForUserAndSate(User $owner, string $state, float $amount): array
     {
@@ -103,11 +61,7 @@ class LoanService
     }
 
     /**
-     * getAllDebtTransactionsForUserAndSate
-     *
-     * @param Debt $debt
-     *
-     * @return array
+     * @return Loan[]
      */
     public function getAllExchangeLoansForDebt(Debt $debt): array
     {
@@ -119,15 +73,6 @@ class LoanService
         );
     }
 
-    /**
-     * getTotalLoansForUser
-     *
-     * @param User $user
-     *
-     * @return float
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
     public function getTotalLoansForUser(User $user): float
     {
         return $this->loanRepository->getTotalLoansForUser($user);

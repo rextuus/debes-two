@@ -47,5 +47,17 @@ contentCards.forEach(contentCard => {
     }
 });
 
+const transactionSummaries = document.querySelectorAll('.transaction-summary');
 
+transactionSummaries.forEach(transactionSummary => {
+    // const contentCard = document.querySelector('.content-card');
+    const body = transactionSummary.querySelector('.exchange-list');
+    const button = transactionSummary.querySelector('.exchange-collapsable');
+
+    if (!button.classList.contains('deactivated')){
+        button.addEventListener('click', () => {
+            body.classList.toggle('hidden');
+        });
+    }
+});
 

@@ -3,6 +3,7 @@
 namespace App\Service\Debt;
 
 use App\Entity\Debt;
+use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
 use App\Entity\User;
 use App\Repository\DebtRepository;
@@ -14,40 +15,13 @@ use Doctrine\ORM\ORMException;
 
 class DebtService
 {
-    /**
-     * @var DebtFactory
-     */
-    private $debtFactory;
-
-    /**
-     * @var DebtRepository
-     */
-    private $debtRepository;
-
-    /**
-     * DebtService constructor.
-     *
-     * @param DebtFactory $debtFactory
-     * @param DebtRepository $debtRepository
-     */
     public function __construct(
-        DebtFactory    $debtFactory,
-        DebtRepository $debtRepository
+        private DebtFactory    $debtFactory,
+        private DebtRepository $debtRepository
     )
     {
-        $this->debtFactory = $debtFactory;
-        $this->debtRepository = $debtRepository;
     }
 
-    /**
-     * storeDebt
-     *
-     * @param DebtCreateData $debtData
-     *
-     * @return Debt
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function storeDebt(DebtCreateData $debtData): Debt
     {
         $debt = $this->debtFactory->createByData($debtData);
@@ -57,15 +31,6 @@ class DebtService
         return $debt;
     }
 
-    /**
-     * update
-     *
-     * @param TransactionPartInterface $debt
-     * @param TransactionPartDataInterface $data
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function update(TransactionPartInterface $debt, TransactionPartDataInterface $data): void
     {
         $this->debtFactory->mapData($debt, $data);
@@ -73,40 +38,24 @@ class DebtService
         $this->debtRepository->persist($debt);
     }
 
+    public function getDebtById(int $id): ?Debt
+    {
+        return $this->debtRepository->find($id);
+    }
+
     /**
-     * getAllDebtTransactionsForUser
-     *
-     * @param User $user
-     *
-     * @return array
+     * @return Transaction[]
      */
     public function getAllDebtTransactionsForUser(User $user): array
     {
         return $this->debtRepository->findTransactionsForUser($user);
     }
 
-    /**
-     * getAllDebtTransactionsForUserAndSate
-     *
-     * @param User $user
-     * @param string $state
-     *
-     * @return array
-     */
     public function getAllDebtTransactionsForUserAndState(User $user, string $state): array
     {
         return $this->debtRepository->findAllDebtsForUserAndState($user, $state);
     }
 
-    /**
-     * getTotalDebtsForUser
-     *
-     * @param User $user
-     *
-     * @return float
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
     public function getTotalDebtsForUser(User $user): float
     {
         return $this->debtRepository->getTotalDebtsForUser($user);

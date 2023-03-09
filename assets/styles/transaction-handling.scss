@@ -4,7 +4,7 @@
   background: #424243;
   border: 2px solid $header-purple;
   border-radius: 8px;
-  margin-right: 3px;
+  margin-right: $default-margin-lr;
   max-width: 100%;
 }
 .summary-header{
@@ -41,4 +41,268 @@
   padding: 5px;
   background-color: $body-diff;
   border: 1px solid $header-purple;
+}
+
+.exchange-choice{
+  max-width: 100%;
+  background-color: $body-diff;
+}
+
+.exchange-preview{
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+.exchange-preview-image{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    $exchange-img-size: 140px;
+    width: $exchange-img-size;
+    height: $exchange-img-size;
+  }
+}
+
+.exchange-result-image{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    $exchange-img-size: 50px;
+    width: $exchange-img-size;
+    height: $exchange-img-size;
+  }
+}
+
+.exchange-preview-part{
+  background-color: $body-diff;
+  //border-radius: 8px;
+  margin-right: $default-margin-lr;
+  margin-left: $default-margin-lr;
+  max-width: 100%;
+
+
+}
+.exchange-preview-part.positive{
+  //background-color: $balance-positive;
+  //border-top: 2px solid $balance-positive;
+  border-right: 10px solid $balance-positive;
+  //border-left: 1px solid $body-diff;
+  //border-bottom: 1px solid $body-diff;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+
+
+}
+
+.exchange-preview-part.negative{
+  border-left: 10px solid $balance-negative;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  //background-color: $balance-positive;
+  //border-top: 2px solid $balance-positive;
+
+}
+
+.exchange-preview-part-arrow.positive{
+  border-right: 10px solid $balance-positive;
+  padding-bottom: 30px;
+  border-bottom-right-radius: 8px;
+  margin-right: $default-margin-lr;
+}
+
+.exchange-preview-part-arrow.negative{
+  border-left: 10px solid $balance-negative;
+  padding-bottom: 30px;
+  border-top-left-radius: 8px;
+  margin-left: $default-margin-lr;
+}
+
+.exchange-preview-part-header{
+  padding: 5px;
+  font-size: 1.3em;
+  text-align: center;
+}
+
+.exchange-preview-part-header.positive{
+  background-color: $balance-positive;
+  border-left: 10px solid $balance-positive;
+  border-top-left-radius: 8px;
+  //border-bottom-left-radius: 8px;
+}
+.exchange-preview-part-header.negative{
+  background-color: $balance-negative;
+  border-left: 10px solid $balance-negative;
+  //border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.exchange-info-container{
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  background-color: $body-diff;
+  //border-top-left-radius: 8px;
+  //border-bottom-left-radius: 8px;
+  border-radius: 8px;
+}
+.exchange-info-field-row{
+  display: flex;
+  margin: 5px;
+}
+.exchange-info-field-entry{
+  color: black;
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 1.3em;
+
+}
+
+.exchange-result{
+  //background-color: $body-diff;
+  //border-top-left-radius: 8px;
+  //border-bottom-left-radius: 8px;
+  border-radius: 8px;
+  margin: 20px $default-margin-lr;
+  color: #0a0800;
+  padding: 5px;
+  font-size: 1.2em;
+
+}
+
+.exchange-result-number{
+  font-weight: bold;
+  font-size: 1.8em;
+}
+
+.exchange-result.negative{
+  background-color: $balance-negative;
+}
+.exchange-result.positive{
+  background-color: $balance-positive;
+}
+
+// exchange listing
+.exchange-list{
+  background: #424243;
+  margin: 20px $default-margin-lr 10px;
+  max-width: 100%;
+  font-size: 0.7em;
+
+}
+.exchange-event{
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+ @extend .summary-info-filed;
+}
+
+.exchange-list-row{
+  @extend .summary-info-filed-row;
+}
+.exchange-list-entry{
+  @extend .summary-info-filed-entry;
+}
+
+.reason{
+  background-color: $balance-positive;
+  padding: 3px;
+  border-radius: 4px;
+}
+
+.exchange-event-visual-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8em;
+  color: #0a0800;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.exchange-list-row-image{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    $exchange-list-row-image-size: 10px;
+    width: $exchange-list-row-image-size;
+    height: $exchange-list-row-image-size;
+  }
+}
+
+.exchange-event-visual-amounts {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.exchange-event-visual-amounts span {
+  margin: 0 10px;
+}
+
+.exchange-event-visual-users {
+  display: flex;
+}
+
+.exchange-event-visual-users span {
+  margin: 0 10px;
+}
+
+.user1-name {
+}
+
+.user2-name {
+}
+
+.exchange-collapsable-row{
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.exchange-collapsable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $header-purple;
+  color: black;
+  border-radius: 4px;
+  border: 1px black solid;
+  max-width: fit-content;
+  padding-left: 15px;
+  padding-right: 15px;
+  img {
+    $img-size: 50px;
+    max-width: $img-size;
+    max-height: $img-size;
+    object-fit: contain;
+  }
+  &.deactivated{
+    background-color: $body-diff;
+  }
+
+  .exchange-collapsable-text{
+
+  }
 }

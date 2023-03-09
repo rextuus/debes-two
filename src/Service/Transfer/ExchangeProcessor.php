@@ -151,31 +151,14 @@ class ExchangeProcessor
         return $exchangeCandidateSet;
     }
 
-    /**
-     * calculateExchange
-     *
-     * @param string $slug1
-     * @param string $slug2
-     *
-     * @return ExchangeDto
-     */
-    public function calculateExchange(Transaction $transaction, Transaction $transactionToExchange): ExchangeDto
+    public function calculateExchange(Transaction $debtTransaction, Transaction $loanTransaction): ExchangeDto
     {
-        $exchangeDto = (new ExchangeDto())->initFromTransactions($transaction, $transactionToExchange);
-        $difference = $transaction->getAmount() - $transactionToExchange->getAmount();
+        $exchangeDto = (new ExchangeDto())->initFromTransactions($debtTransaction, $loanTransaction);
+        $difference = $loanTransaction->getAmount() - $debtTransaction->getAmount();
         $exchangeDto->setDifference($difference);
-
         return $exchangeDto;
     }
 
-    /**
-     * exchangeDebtAndLoan
-     *
-     * @param Debt $debt
-     * @param Loan $loan
-     *
-     * @return void
-     */
     public function exchangeDebtAndLoan(Debt $debt, Loan $loan): void
     {
         // update debt and transaction

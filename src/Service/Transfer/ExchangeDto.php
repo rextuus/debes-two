@@ -13,217 +13,133 @@ use DateTimeInterface;
  */
 class ExchangeDto
 {
-    /**
-     * @var string
-     */
-    private $reason;
+    private string $reason;
 
-    /**
-     * @var string
-     */
-    private $reasonExchange;
+    private string $reasonExchange;
 
-    /**
-     * @var DateTimeInterface
-     */
-    private $created;
+    private DateTimeInterface $created;
 
-    /**
-     * @var DateTimeInterface
-     */
-    private $createdExchange;
+    private DateTimeInterface $createdExchange;
 
-    /**
-     * @var string
-     */
-    private $debtor;
+    private string $debtor;
 
-    /**
-     * @var string
-     */
-    private $loaner;
+    private string $loaner;
 
-    /**
-     * @var float
-     */
-    private $difference;
+    private float $difference;
 
-    /**
-     * @var float
-     */
-    private $amount;
+    private float $amount;
 
-    /**
-     * @var float
-     */
-    private $amountExchange;
+    private float $amountExchange;
 
-    /**
-     * @return string
-     */
     public function getReason(): string
     {
         return $this->reason;
     }
 
-    /**
-     * @param string $reason
-     */
-    public function setReason(string $reason): void
+    public function setReason(string $reason): ExchangeDto
     {
         $this->reason = $reason;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getReasonExchange(): string
     {
         return $this->reasonExchange;
     }
 
-    /**
-     * @param string $reasonExchange
-     */
-    public function setReasonExchange(string $reasonExchange): void
+    public function setReasonExchange(string $reasonExchange): ExchangeDto
     {
         $this->reasonExchange = $reasonExchange;
+        return $this;
     }
 
-    /**
-     * @return String
-     */
-    public function getCreated(): string
+    public function getCreated(): DateTimeInterface
     {
-        return $this->created->format('d.m.Y');
+        return $this->created;
     }
 
-    /**
-     * @param DateTimeInterface $created
-     */
-    public function setCreated(DateTimeInterface $created): void
+    public function setCreated(DateTimeInterface $created): ExchangeDto
     {
         $this->created = $created;
+        return $this;
     }
 
-    /**
-     * @return String
-     */
-    public function getCreatedExchange(): string
+    public function getCreatedExchange(): DateTimeInterface
     {
-        return $this->createdExchange->format('d.m.Y');
+        return $this->createdExchange;
     }
 
-    /**
-     * @param DateTimeInterface $createdExchange
-     */
-    public function setCreatedExchange(DateTimeInterface $createdExchange): void
+    public function setCreatedExchange(DateTimeInterface $createdExchange): ExchangeDto
     {
         $this->createdExchange = $createdExchange;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDebtor(): string
     {
         return $this->debtor;
     }
 
-    /**
-     * @param string $debtor
-     */
-    public function setDebtor(string $debtor): void
+    public function setDebtor(string $debtor): ExchangeDto
     {
         $this->debtor = $debtor;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLoaner(): string
     {
         return $this->loaner;
     }
 
-    /**
-     * @param string $loaner
-     */
-    public function setLoaner(string $loaner): void
+    public function setLoaner(string $loaner): ExchangeDto
     {
         $this->loaner = $loaner;
+        return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getDifference(): float
     {
         return $this->difference;
     }
 
-    /**
-     * @param float $difference
-     */
-    public function setDifference(float $difference): void
+    public function setDifference(float $difference): ExchangeDto
     {
         $this->difference = $difference;
+        return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     */
-    public function setAmount(float $amount): void
+    public function setAmount(float $amount): ExchangeDto
     {
         $this->amount = $amount;
+        return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getAmountExchange(): float
     {
         return $this->amountExchange;
     }
 
-    /**
-     * @param float $amountExchange
-     */
-    public function setAmountExchange(float $amountExchange): void
+    public function setAmountExchange(float $amountExchange): ExchangeDto
     {
         $this->amountExchange = $amountExchange;
+        return $this;
     }
 
-
-    /**
-     * initFromTransactions
-     *
-     * @param Transaction $transaction
-     * @param Transaction $transactionToExchange
-     *
-     * @return $this
-     */
-    public function initFromTransactions(
-        Transaction $transaction,
-        Transaction $transactionToExchange
-    ): ExchangeDto
+    public function initFromTransactions(Transaction $debtTransaction, Transaction $loanTransaction): ExchangeDto
     {
-        $this->setReason($transaction->getReason());
-        $this->setReasonExchange($transactionToExchange->getReason());
-        $this->setCreated($transaction->getCreated());
-        $this->setCreatedExchange($transactionToExchange->getCreated());
-        $this->setDebtor($transaction->getLoaner()->getFullName());
-        $this->setLoaner($transactionToExchange->getLoaner()->getFullName());
-        $this->setAmount($transaction->getAmount());
-        $this->setAmountExchange($transactionToExchange->getAmount());
+        $this->setReason($debtTransaction->getReason());
+        $this->setReasonExchange($loanTransaction->getReason());
+        $this->setCreated($debtTransaction->getCreated());
+        $this->setCreatedExchange($loanTransaction->getCreated());
+        $this->setDebtor($debtTransaction->getLoaner()->getFullName());
+        $this->setLoaner($loanTransaction->getLoaner()->getFullName());
+        $this->setAmount($debtTransaction->getAmount());
+        $this->setAmountExchange($loanTransaction->getAmount());
         return $this;
     }
 }

@@ -77,141 +77,96 @@ class ExchangeDto
         return $dto;
     }
 
-    /**
-     * @return DateTimeInterface
-     */
     public function getCreated(): DateTimeInterface
     {
         return $this->created;
     }
 
-    /**
-     * @param DateTimeInterface $created
-     */
-    public function setCreated(DateTimeInterface $created): void
+    public function setCreated(DateTimeInterface $created): ExchangeDto
     {
         $this->created = $created;
+        return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     */
-    public function setAmount(float $amount): void
+    public function setAmount(float $amount): ExchangeDto
     {
         $this->amount = $amount;
+        return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getRemainingAmount(): float
     {
         return $this->remainingAmount;
     }
 
-    /**
-     * @param float $remainingAmount
-     */
-    public function setRemainingAmount(float $remainingAmount): void
+    public function setRemainingAmount(float $remainingAmount): ExchangeDto
     {
         $this->remainingAmount = $remainingAmount;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getExchangeSlug(): string
     {
         return $this->exchangeSlug;
     }
 
-    /**
-     * @param string $exchangeSlug
-     */
-    public function setExchangeSlug(string $exchangeSlug): void
+    public function setExchangeSlug(string $exchangeSlug): ExchangeDto
     {
         $this->exchangeSlug = $exchangeSlug;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getExchangePartner(): string
     {
         return $this->exchangePartner;
     }
 
-    /**
-     * @param string $exchangePartner
-     */
-    public function setExchangePartner(string $exchangePartner): void
+    public function setExchangePartner(string $exchangePartner): ExchangeDto
     {
         $this->exchangePartner = $exchangePartner;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getExchangeReason(): string
     {
         return $this->exchangeReason;
     }
 
-    /**
-     * @param string $exchangeReason
-     */
-    public function setExchangeReason(string $exchangeReason): void
+    public function setExchangeReason(string $exchangeReason): ExchangeDto
     {
         $this->exchangeReason = $exchangeReason;
+        return $this;
     }
 
-    /**
-     * getCreationDate
-     *
-     * @return string
-     */
-    public function getCreationDate(): string
-    {
-        return $this->created->format("d.m.Y");
-    }
-
-    /**
-     * @return string
-     */
     public function getFrom(): string
     {
         return $this->from;
     }
 
-    /**
-     * @param string $from
-     */
-    public function setFrom(string $from): void
+    public function setFrom(string $from): ExchangeDto
     {
         $this->from = $from;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTo(): string
     {
         return $this->to;
     }
 
-    /**
-     * @param string $to
-     */
-    public function setTo(string $to): void
+    public function setTo(string $to): ExchangeDto
     {
         $this->to = $to;
+        return $this;
+    }
+
+    public function getAmountBefore(): float
+    {
+        return $this->amount + $this->remainingAmount;
     }
 }

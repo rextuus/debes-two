@@ -32,7 +32,15 @@
         </div>
         <div class="summary-info-filed-row">
             <div class="summary-info-filed-entry bold">
-                Betrag:
+                Initialer Betrag:
+            </div>
+            <div class="summary-info-filed-entry">
+                {{ dto.initialAmount }} €
+            </div>
+        </div>
+        <div class="summary-info-filed-row">
+            <div class="summary-info-filed-entry bold">
+                Aktueller Betrag:
             </div>
             <div class="summary-info-filed-entry">
                 {{ dto.totalAmount }} €
@@ -50,5 +58,62 @@
 
     <div class="summary-transaction-details">
         {{ transaction_part_details(dto, true) | raw }}
+        <div class="exchange-collapsable-row">
+
+        <div class="exchange-collapsable deactivated">
+            <img src="{{ asset('assets/img/exchange.svg') }}" alt="Tile image"><span class="exchange-collapsable-text"># 4</span>
+        </div>
+        </div>
+    </div>
+
+
+    <div class="exchange-list hidden">
+    {% for exchangeDto in dto.exchangeDtos %}
+        <div class="exchange-event">
+            <div class="exchange-list-row">
+                <div class="exchange-list-entry bold">Datum:</div>
+                <div class="exchange-list-entry">{{ exchangeDto.created|date('d.m.Y')  }}</div>
+            </div>
+            <div class="exchange-list-row reason">
+                <div class="exchange-list-entry bold">Schuld:</div>
+                <div class="exchange-list-entry">{{ exchangeDto.exchangeReason  }}</div>
+            </div>
+
+            <div class="exchange-event-visual-container">
+                <div class="exchange-event-visual-amounts">
+                    <span class="amount-before">{{ exchangeDto.amountBefore }}</span>
+                    <div class="exchange-list-row-image">
+                        <img src="{{ asset('assets/img/arrow-right.svg') }}" alt="Tile image">
+                    </div>
+                    <span class="paid-back-amount reason">{{ exchangeDto.amount  }} €</span>
+                    <div class="exchange-list-row-image">
+                        <img src="{{ asset('assets/img/arrow-right.svg') }}" alt="Tile image">
+                    </div>
+                    <span class="amount-after">{{ exchangeDto.remainingAmount }} €</span>
+                </div>
+                <div class="exchange-event-visual-users">
+                    <span class="user1-name">{{ exchangeDto.from }}</span>
+                    <span class="user2-name">{{ exchangeDto.to }}</span>
+                </div>
+            </div>
+
+{#            <div class="exchange-list-row">#}
+{#                <div class="exchange-list-entry bold">Partei:</div>#}
+{#                <div class="exchange-list-entry">{{ exchangeDto.exchangePartner }}</div>#}
+{#            </div>#}
+{#            <div class="exchange-list-row">#}
+{#                <div class="exchange-list-entry bold">Grund:</div>#}
+{#                <div class="exchange-list-entry">{{ exchangeDto.exchangeReason }}</div>#}
+{#            </div>#}
+{#            <div class="exchange-list-row">#}
+{#                <div class="exchange-list-entry bold">Von:</div>#}
+{#                <div class="exchange-list-entry">{{ exchangeDto.from }}</div>#}
+{#            </div>#}
+{#            <div class="exchange-list-row">#}
+{#                <div class="exchange-list-entry bold">Nach:</div>#}
+{#                <div class="exchange-list-entry">{{ exchangeDto.to }}</div>#}
+{#            </div>#}
+        </div>
+    {% endfor %}
     </div>
 </div>

@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Schuld verrechnen{% endblock %}
+
+{% block body %}
+<html lang="de">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debes - Schuld verrechnen</title>
+</head>
+<div class="content-body">
+    <div class="exchange-preview">
+        <div class="exchange-preview-part positive">
+            <div class="exchange-preview-part-header positive">
+                Du erhältst noch:
+            </div>
+
+            <div class="exchange-info-container">
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                        Erstellt:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.createdExchange|date("d.m.Y") }}
+                    </div>
+                </div>
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                            Darlehensgeber:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.loaner }}
+                    </div>
+                </div>
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                        Betrag:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.amountExchange }} €
+                    </div>
+                </div>
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                        Grund:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.reasonExchange }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="exchange-preview-part-arrow positive"></div>
+        <div class="exchange-preview-image">
+            <img src="{{ asset('assets/img/exchange.svg') }}" alt="Tile image">
+        </div>
+        <div class="exchange-preview-part-arrow negative"></div>
+        <div class="exchange-preview-part negative">
+            <div class="exchange-info-container">
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                        Erstellt:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.created |date("d.m.Y")}}
+                    </div>
+                </div>
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                        Darlehensgeber:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.debtor }}
+                    </div>
+                </div>
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                        Betrag:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.amount }} €
+                    </div>
+                </div>
+                <div class="summary-info-filed-row">
+                    <div class="summary-info-filed-entry bold">
+                        Grund:
+                    </div>
+                    <div class="summary-info-filed-entry">
+                        {{ dto.reason }}
+                    </div>
+                </div>
+            </div>
+            <div class="exchange-preview-part-header negative">
+                Du schuldest noch
+            </div>
+        </div>
+
+        <div class="exchange-result-image">
+            <img src="{{ asset('assets/img/result-arrow.svg') }}" alt="Tile image">
+        </div>
+
+    {% if dto.difference > 0%}
+        <div class="exchange-result positive">
+            <span class="exchange-result-number">{{ dto.difference }} €</span> an Guthaben bleiben nach der Verrechnung über!
+        </div>
+    {% else %}
+        <div class="exchange-result negative">
+            <span class="exchange-result-number">{{ dto.difference * -1 }} €</span> an Schulden bleiben nach der Verrechnung über!
+        </div>
+    {% endif %}
+
+        <div class="form-area">
+            Sollen beide Transaktionen miteinander verrechnet werden?
+            {{ form_start(form, {'method': 'POST'}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+
+            {{ form_row(form._token) }}
+            <div class="form-submit-field">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+            </div>
+            <div class="form-submit-field">
+                {{ form_widget(form.decline, {'attr': {'class': 'btn'}}) }}
+            </div>
+        </div>
+</div>
+
+
+
+
+    <script>
+        function updateClipboard(newClip) {
+            navigator.clipboard.writeText(newClip).then(function () {
+                /* clipboard successfully set */
+
+            }, function () {
+                /* clipboard write failed */
+            });
+        }
+
+    </script>
+
+{% endblock %}
+

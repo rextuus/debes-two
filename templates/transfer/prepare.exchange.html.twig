@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Schuld verrechnen{% endblock %}
+
+{% block body %}
+<html lang="de">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debes - Schuld verrechnen</title>
+</head>
+
+    <div class="content-body">
+        {{ transaction_part_summary(dto) | raw }}
+        Mit welcher Schuldlast möchtest du deine eigene Schuld verrechnen?
+        <div class="exchange-choice">
+            <div class="form-area">
+
+            {{ form_start(form, {'method': 'POST'}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+
+                <div class="form-input-field">
+
+                {{ form_widget(form.loan, {'attr': {'class': 'form-style'}}) }}
+                </div>
+            {{ form_row(form._token) }}
+                <div class="form-submit-field">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+                </div>
+                <div class="form-submit-field">
+                    {{ form_widget(form.decline, {'attr': {'class': 'btn'}}) }}
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+{% endblock %}
+

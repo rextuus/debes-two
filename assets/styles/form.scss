@@ -121,8 +121,8 @@ label{
     border: 2px solid black;
     border-radius: 9px;
     color: black;
-    margin-right: 5px;
-    margin-left: 5px;
+    margin-right: $default-margin-lr;
+    margin-left: $default-margin-lr;
 }
 .accept{
     background-color: $balance-positive; /* Green background */
@@ -140,6 +140,13 @@ label{
 
 .next-state-button-text{
     margin-right: 10px;
+}
+
+select{
+    max-width: 100%;
+    white-space: normal;
+
+    word-wrap: break-word;
 }
 
 /*currency*/

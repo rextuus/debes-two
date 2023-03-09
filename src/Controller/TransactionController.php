@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Exchange;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Form\ChoiceType;
@@ -9,6 +10,7 @@ use App\Form\TransactionCreateMultipleType;
 use App\Form\TransactionCreateSimpleType;
 use App\Service\Debt\DebtCreateData;
 use App\Service\Debt\DebtDto;
+use App\Service\Exchange\ExchangeDto;
 use App\Service\Loan\LoanDto;
 use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionCreateData;
