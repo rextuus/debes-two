@@ -32,13 +32,33 @@ class TransactionExtension extends AbstractExtension
         ];
     }
 
-    public function renderTransactionPartContentCard(\App\Service\Transaction\TransactionDto $part): string
+    public function renderTransactionPartContentCard(TransactionDto $part): string
     {
+        $acceptButton = 'Bezahlen';
+        $declineButton = 'Abgeben';
+        $acceptLink = 'transaction_process';
+        $declineLink = 'transaction_process';
+
+        switch ($part->getState()){
+            case 2:
+                $declineLink = '';
+                break;
+            case 3:
+                $acceptLink = '';
+                $declineButton = 'Hinweis senden';
+                break;
+        }
+
         return $this->environment->render(
             'extension/transaction_part_card.html.twig',
             [
                 'part' => $part,
                 'ago'  => $this->timeConverter->getUserFriendlyDateTime($part->getEdited()),
+                'acceptButton' => $acceptButton,
+                'acceptLink' => $acceptLink,
+                'slug' => $part->getTransactionSlug(),
+                'declineButton' => $declineButton,
+                'declineLink' => $declineLink,
             ]
         );
     }

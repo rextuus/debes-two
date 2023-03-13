@@ -51,6 +51,9 @@ class DebtService
         return $this->debtRepository->findTransactionsForUser($user);
     }
 
+    /**
+     * @return Debt[]
+     */
     public function getAllDebtTransactionsForUserAndState(User $user, string $state): array
     {
         return $this->debtRepository->findAllDebtsForUserAndState($user, $state);

@@ -6,6 +6,7 @@
   border-radius: 8px;
   margin-right: $default-margin-lr;
   max-width: 100%;
+  margin-bottom: 15px;
 }
 .summary-header{
   color: black;
@@ -299,6 +300,9 @@
     object-fit: contain;
   }
   &.deactivated{
+    background-color: $body-diff;
+  }
+  &.active{
     background-color: $body-diff;
   }
 

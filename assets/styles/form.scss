@@ -110,6 +110,24 @@ label{
     display: flex;
     flex-direction: row;
     justify-content: center;
+
+    .accept-link {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        //display: inline-block;
+        //padding: 10px 20px;
+        //background-color: $balance-positive;
+        color: black;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+
+        border: 2px solid black;
+        border-radius: 9px;
+        margin-right: $default-margin-lr;
+        margin-left: $default-margin-lr;
+    }
 }
 
 .next-state-button button {

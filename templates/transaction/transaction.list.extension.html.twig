@@ -1,139 +1,193 @@
-<section class="hero-section">
-    <div class="hero-slider owl-carousel">
-        <div class="hs-item-own">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="hs-text">
-                            {% if debtVariant %}
-                                <h2><span>Schulden</span> sind nicht schön</h2>
-                                <p>Also versuch sie loszuwerden! Indem du hier den Überblick behältst</p>
-                            {% else %}
-                                <h2><span>Geld zu verleihen</span> ist wie Sparen</h2>
-                                <p>Zeit sich was schönes zu kaufen. Organisiere hier das Geldeintreiben</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        {% if debtVariant %}
-                            <h2>Neue Schulden</h2>
-                        {% else %}
-                            <h2>Noch nicht akzeptiert</h2>
-                        {% endif %}
-                        <table class="table table-hover table-dark">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Betrag</th>
-                                {% if debtVariant %}
-                                    <th scope="col">Schuldner</th>
-                                {% else %}
-                                    <th scope="col">Gläubiger</th>
-                                {% endif %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for entry in ready %}
-                                <tr>
-                                    <td>
-                                        {% if debtVariant %}
-                                            <a href="{{ path('transaction_accept', {slug: entry.slug, variant: 'debtor'}) }}">{{ loop.index }}</a>
-                                        {% else %}
-                                            <a href="{{ path('transaction_accept', {slug: entry.slug, variant: 'loaner'}) }}">{{ loop.index }}</a>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ entry.amount }}
-                                    </td>
-                                    <td>
-                                        {{ entry.transactionPartners }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <p></p>
-                        {% if debtVariant %}
-                            <h2>Noch zu Begleichen</h2>
-                        {% else %}
-                            <h2>Akzeptiert</h2>
-                        {% endif %}
-                        <table class="table table-hover table-dark">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Betrag</th>
-                                {% if debtVariant %}
-                                    <th scope="col">Schuldner</th>
-                                {% else %}
-                                    <th scope="col">Gläubiger</th>
-                                {% endif %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for entry in accepted %}
-                                <tr>
-                                    <td>
-                                        {% if debtVariant %}
-                                            <a href="{{ path('transaction_process', {slug: entry.slug, variant: 'debtor'}) }}">{{ loop.index }}</a>
-                                        {% else %}
-                                            <a href="{{ path('transaction_process', {slug: entry.slug, variant: 'loaner'}) }}">{{ loop.index }}</a>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ entry.amount }}
-                                    </td>
-                                    <td>
-                                        {{ entry.transactionPartners }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <p></p>
-                        {% if debtVariant %}
-                            <h2>Beglichen, aber von der Gegenpartei nicht bestätigt</h2>
-                        {% else %}
-                            <h2>Von dir noch nicht bestätigt</h2>
-                        {% endif %}
+<div class="tab-nav">
+    <button class="tab-button active " data-tab="tab-1" data-name="Neu" data-image="{{ asset('assets/img/create.svg') }}">
+    </button>
+    <button class="tab-button " data-tab="tab-2" data-name="Akzeptiert" data-image="{{ asset('assets/img/accept.svg') }}">
+    </button>
+    <button class="tab-button " data-tab="tab-3" data-name="Bezahlt" data-image="{{ asset('assets/img/paid.svg') }}"></button>
+    <button class="tab-button " data-tab="tab-4" data-name="Erledigt" data-image="{{ asset('assets/img/party.svg') }}"></button>
+</div>
+<div class="page-header">
+    <div class="page-header-text">
+        Neu
+    </div>
+    <div class="page-header-image">
+        <img src="{{ asset('assets/img/create.svg') }}" alt="Tile image">
+    </div>
+</div>
+<div class="content-body">
+       <div id="tab-1" class="tab active">
+           {% for part in ready%}
+               {{ transaction_part_content_card(part) |raw }}
+           {% endfor %}
+    </div>
 
-                        <table class="table table-hover table-dark">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Betrag</th>
-                                {% if debtVariant %}
-                                    <th scope="col">Schuldner</th>
-                                {% else %}
-                                    <th scope="col">Gläubiger</th>
-                                {% endif %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for entry in cleared %}
-                                <tr>
-                                    <td>
-                                        {% if debtVariant %}
-                                            <a href="{{ path('transaction_confirm', {slug: entry.slug, variant: 'debtor'}) }}">{{ loop.index }}</a>
-                                        {% else %}
-                                            <a href="{{ path('transaction_confirm', {slug: entry.slug, variant: 'loaner'}) }}">{{ loop.index }}</a>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ entry.amount }}
-                                    </td>
-                                    <td>
-                                        {{ entry.transactionPartners }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
+    <div id="tab-2" class="tab">
+        {% for part in accepted%}
+            {{ transaction_part_content_card(part) |raw }}
+        {% endfor %}
+    </div>
+
+    <div id="tab-3" class="tab">
+        {% if  cleared|length == 0%}
+        <div class="empty-list-info">
+            Hier werden bereits bezahlte, aber von dir noch nicht kontrollierte Transaktionen angezeigt. Momentan hast du keine Transaktionen dieser Art!
+        </div>
+        {% endif %}
+        {% for part in cleared%}
+            {{ transaction_part_content_card(part) |raw }}
+        {% endfor %}
+    </div>
+
+    <div id="tab-4" class="tab">
+        {% for part in confirmed%}
+            {{ transaction_part_content_card(part) |raw }}
+        {% endfor %}
+        <div class="empty-list-info">
+            Hier werden bereits bezahlte, aber von dir noch nicht kontrollierte Transaktionen angezeigt. Momentan hast du keine Transaktionen dieser Art!
         </div>
     </div>
 
-</section>
+
+</div>
+
+
+
+{#<section class="hero-section">#}
+{#    <div class="hero-slider owl-carousel">#}
+{#        <div class="hs-item-own">#}
+{#            <div class="container">#}
+{#                <div class="row">#}
+{#                    <div class="col-lg-6">#}
+{#                        <div class="hs-text">#}
+{#                            {% if debtVariant %}#}
+{#                                <h2><span>Schulden</span> sind nicht schön</h2>#}
+{#                                <p>Also versuch sie loszuwerden! Indem du hier den Überblick behältst</p>#}
+{#                            {% else %}#}
+{#                                <h2><span>Geld zu verleihen</span> ist wie Sparen</h2>#}
+{#                                <p>Zeit sich was schönes zu kaufen. Organisiere hier das Geldeintreiben</p>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-6">#}
+{#                        {% if debtVariant %}#}
+{#                            <h2>Neue Schulden</h2>#}
+{#                        {% else %}#}
+{#                            <h2>Noch nicht akzeptiert</h2>#}
+{#                        {% endif %}#}
+{#                        <table class="table table-hover table-dark">#}
+{#                            <thead>#}
+{#                            <tr>#}
+{#                                <th scope="col">#</th>#}
+{#                                <th scope="col">Betrag</th>#}
+{#                                {% if debtVariant %}#}
+{#                                    <th scope="col">Schuldner</th>#}
+{#                                {% else %}#}
+{#                                    <th scope="col">Gläubiger</th>#}
+{#                                {% endif %}#}
+{#                            </tr>#}
+{#                            </thead>#}
+{#                            <tbody>#}
+{#                            {% for entry in ready %}#}
+{#                                <tr>#}
+{#                                    <td>#}
+{#                                        {% if debtVariant %}#}
+{#                                            <a href="{{ path('transaction_accept', {slug: entry.slug, variant: 'debtor'}) }}">{{ loop.index }}</a>#}
+{#                                        {% else %}#}
+{#                                            <a href="{{ path('transaction_accept', {slug: entry.slug, variant: 'loaner'}) }}">{{ loop.index }}</a>#}
+{#                                        {% endif %}#}
+{#                                    </td>#}
+{#                                    <td>#}
+{#                                        {{ entry.amount }}#}
+{#                                    </td>#}
+{#                                    <td>#}
+{#                                        {{ entry.transactionPartners }}#}
+{#                                    </td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+{#                            </tbody>#}
+{#                        </table>#}
+{#                        <p></p>#}
+{#                        {% if debtVariant %}#}
+{#                            <h2>Noch zu Begleichen</h2>#}
+{#                        {% else %}#}
+{#                            <h2>Akzeptiert</h2>#}
+{#                        {% endif %}#}
+{#                        <table class="table table-hover table-dark">#}
+{#                            <thead>#}
+{#                            <tr>#}
+{#                                <th scope="col">#</th>#}
+{#                                <th scope="col">Betrag</th>#}
+{#                                {% if debtVariant %}#}
+{#                                    <th scope="col">Schuldner</th>#}
+{#                                {% else %}#}
+{#                                    <th scope="col">Gläubiger</th>#}
+{#                                {% endif %}#}
+{#                            </tr>#}
+{#                            </thead>#}
+{#                            <tbody>#}
+{#                            {% for entry in accepted %}#}
+{#                                <tr>#}
+{#                                    <td>#}
+{#                                        {% if debtVariant %}#}
+{#                                            <a href="{{ path('transaction_process', {slug: entry.slug, variant: 'debtor'}) }}">{{ loop.index }}</a>#}
+{#                                        {% else %}#}
+{#                                            <a href="{{ path('transaction_process', {slug: entry.slug, variant: 'loaner'}) }}">{{ loop.index }}</a>#}
+{#                                        {% endif %}#}
+{#                                    </td>#}
+{#                                    <td>#}
+{#                                        {{ entry.amount }}#}
+{#                                    </td>#}
+{#                                    <td>#}
+{#                                        {{ entry.transactionPartners }}#}
+{#                                    </td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+{#                            </tbody>#}
+{#                        </table>#}
+{#                        <p></p>#}
+{#                        {% if debtVariant %}#}
+{#                            <h2>Beglichen, aber von der Gegenpartei nicht bestätigt</h2>#}
+{#                        {% else %}#}
+{#                            <h2>Von dir noch nicht bestätigt</h2>#}
+{#                        {% endif %}#}
+
+{#                        <table class="table table-hover table-dark">#}
+{#                            <thead>#}
+{#                            <tr>#}
+{#                                <th scope="col">#</th>#}
+{#                                <th scope="col">Betrag</th>#}
+{#                                {% if debtVariant %}#}
+{#                                    <th scope="col">Schuldner</th>#}
+{#                                {% else %}#}
+{#                                    <th scope="col">Gläubiger</th>#}
+{#                                {% endif %}#}
+{#                            </tr>#}
+{#                            </thead>#}
+{#                            <tbody>#}
+{#                            {% for entry in cleared %}#}
+{#                                <tr>#}
+{#                                    <td>#}
+{#                                        {% if debtVariant %}#}
+{#                                            <a href="{{ path('transaction_confirm', {slug: entry.slug, variant: 'debtor'}) }}">{{ loop.index }}</a>#}
+{#                                        {% else %}#}
+{#                                            <a href="{{ path('transaction_confirm', {slug: entry.slug, variant: 'loaner'}) }}">{{ loop.index }}</a>#}
+{#                                        {% endif %}#}
+{#                                    </td>#}
+{#                                    <td>#}
+{#                                        {{ entry.amount }}#}
+{#                                    </td>#}
+{#                                    <td>#}
+{#                                        {{ entry.transactionPartners }}#}
+{#                                    </td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+{#                            </tbody>#}
+{#                        </table>#}
+{#                        <p></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+{#</section>#}

@@ -11,36 +11,37 @@
 <body>
 
 <div class="tile-container">
-    <a href="#" class="tile" data-url="{{ path('landing') }}" data-caption="Tile 1">
-        <img src="{{ asset('assets/img/claim.svg') }}" alt="Tile image">
-    </a>
-    <a href="#" class="tile" data-url="{{ path('landing') }}">
-        <img src="{{ asset('assets/img/claim.png') }}" alt="Tile image">
-    </a>
-    <a href="#" class="tile" data-url="{{ path('landing') }}">
-        <img src="{{ asset('assets/img/history.png') }}" alt="Tile image">
-    </a>
+
 </div>
 
 <div class="content-body">
     {{ transaction_part_summary(dto) | raw }}
 
-    {% if debtVariant %}
-        <p> Möchtest du das Geld jetzt überweisen?</p>
-    {% else %}
-        <p>Die Überweisung lässt seit Tagen auf sich warten</p>
-    {% endif %}
 
 
+
+    <div class="form-area">
+        {% if debtVariant %}
+            Möchtest du das Geld jetzt überweisen?
+        {% else %}
+            Die Überweisung lässt seit Tagen auf sich warten
+        {% endif %}
+
+        {{ form_start(form, {'method': 'POST'}) }}
+        {{ form_row(form._token) }}
     {% if debtVariant %}
-        {{ form_start(form, {'method': 'POST'}) }}
-        {{ form_row(form._token) }}
-        {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }}
-        {{ form_widget(form.decline, {'attr': {'class': 'site-btn loan'}}) }}
+            <div class="form-submit-field">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+            </div>
+            <div class="form-submit-field">
+                {{ form_widget(form.decline, {'attr': {'class': 'btn'}}) }}
+            </div>
     {% else %}
-        {{ form_start(form, {'method': 'POST'}) }}
-        {{ form_row(form._token) }}
-        {{ form_widget(form.submit, {'attr': {'class': 'site-btn debt'}}) }}
+
+        <div class="form-submit-field">
+            {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+        </div>
     {% endif %}
+</div>
 </div>
 {% endblock %}

@@ -19,70 +19,23 @@ use App\Service\Transaction\ChangeEvent\TransactionChangeEventData;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
 use DateTime;
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 class TransactionService
 {
     const DEBTOR_VIEW = 'debtor';
     const LOANER_VIEW = 'loaner';
 
-    private TransactionFactory $transactionFactory;
-
-    private TransactionRepository $transactionRepository;
-
-    private DebtService $debtService;
-
-    private LoanService $loanService;
-
-    private EntityManagerInterface $entityManager;
-
-    private DtoProvider $dtoProvider;
-
-    private TransactionChangeEventService $transactionChangeEventService;
-
-    /**
-     * TransactionService constructor.
-     *
-     * @param TransactionFactory $transactionFactory
-     * @param TransactionRepository $transactionRepository
-     * @param DebtService $debtService
-     * @param LoanService $loanService
-     * @param EntityManagerInterface $entityManager
-     * @param DtoProvider $dtoProvider
-     */
     public function __construct(
-        TransactionFactory            $transactionFactory,
-        TransactionRepository         $transactionRepository,
-        DebtService                   $debtService,
-        LoanService                   $loanService,
-        EntityManagerInterface        $entityManager,
-        DtoProvider                   $dtoProvider,
-        TransactionChangeEventService $transactionChangeEventService
+        private TransactionFactory            $transactionFactory,
+        private TransactionRepository         $transactionRepository,
+        private DebtService                   $debtService,
+        private LoanService                   $loanService,
+        private DtoProvider                   $dtoProvider,
+        private TransactionChangeEventService $transactionChangeEventService
     )
     {
-        $this->transactionFactory = $transactionFactory;
-        $this->transactionRepository = $transactionRepository;
-        $this->debtService = $debtService;
-        $this->loanService = $loanService;
-        $this->entityManager = $entityManager;
-        $this->dtoProvider = $dtoProvider;
-        $this->transactionChangeEventService = $transactionChangeEventService;
     }
 
-    /**
-     * storeTransaction
-     *
-     * @param TransactionData $transactionData
-     * @param bool $persist
-     *
-     * @return Transaction
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function storeTransaction(TransactionData $transactionData, bool $persist = true): Transaction
     {
         $transaction = $this->transactionFactory->createByData($transactionData);
@@ -94,16 +47,6 @@ class TransactionService
         return $transaction;
     }
 
-    /**
-     * update
-     *
-     * @param Transaction $transaction
-     * @param TransactionUpdateData $data
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function update(Transaction $transaction, TransactionUpdateData $data = null): Transaction
     {
         // TODO Add variant to change event paypal/bankaccount/exchange
@@ -139,16 +82,6 @@ class TransactionService
         return $transaction;
     }
 
-    /**
-     * storeSimpleTransaction
-     *
-     * @param TransactionData $data
-     * @param User $requester
-     *
-     * @return Transaction
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function storeSingleTransaction(TransactionData $data, User $requester): Transaction
     {
         $data->setState(Transaction::STATE_READY);
@@ -168,15 +101,6 @@ class TransactionService
         return $transaction;
     }
 
-    /**
-     * storeSimpleTransaction
-     *
-     * @param TransactionCreateMultipleData $data
-     *
-     * @return Transaction
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function storeMultipleTransaction(TransactionCreateMultipleData $data): Transaction
     {
         $transactionData = new TransactionCreateData();
@@ -213,82 +137,46 @@ class TransactionService
     }
 
     /**
-     * getAllTransactionBelongingUser
-     *
-     * @param User $owner
-     *
-     * @return array
+     * @return TransactionDtos\TransactionDto[]
      */
     public function getAllTransactionBelongingUser(User $owner): array
     {
         $dtos = array();
         $debtTransactions = $this->debtService->getAllDebtTransactionsForUser($owner);
         foreach ($debtTransactions as $transaction) {
-            $dtos[] = TransactionDto::create($transaction, true);
+            $dtos[] = \App\Service\Transaction\TransactionDtos\TransactionDto::createFromTransaction($transaction, true);
             $events = $this->transactionChangeEventService->getAllByTransaction($transaction);
-            dump($events);
         }
         $loanTransactions = $this->loanService->getAllLoanTransactionsForUser($owner);
         foreach ($loanTransactions as $transaction) {
-            $dtos[] = TransactionDto::create($transaction, false);
+            $dtos[] = \App\Service\Transaction\TransactionDtos\TransactionDto::createFromTransaction($transaction, false);
         }
         return $dtos;
     }
 
-    /**
-     * getTotalDebtsForUser
-     *
-     * @param User $owner
-     *
-     * @return float
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
     public function getTotalDebtsForUser(User $owner): float
     {
         return $this->debtService->getTotalDebtsForUser($owner);
     }
 
-    /**
-     * getTotalLoansForUser
-     *
-     * @param User $owner
-     *
-     * @return float
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
     public function getTotalLoansForUser(User $owner): float
     {
         return $this->loanService->getTotalLoansForUser($owner);
     }
 
     /**
-     * getAllDebtTransactionsForUserAndState
-     *
-     * @param User $owner
-     * @param string $state
-     *
-     * @return array
+     * @return TransactionDtos\TransactionDto[]
      */
     public function getAllDebtTransactionsForUserAndState(User $owner, string $state): array
     {
         $dtos = [];
         $debts = $this->debtService->getAllDebtTransactionsForUserAndState($owner, $state);
         foreach ($debts as $debt) {
-            $dtos[] = $this->dtoProvider->createDebtDto($debt);
+            $dtos[] = $this->dtoProvider->createTransactionDto($debt->getTransaction(), true);
         }
         return $dtos;
     }
 
-    /**
-     * createDtoFromTransaction
-     *
-     * @param Transaction $transaction
-     * @param bool $isDebtVariant
-     *
-     * @return TransactionDtos\TransactionDto
-     */
     public function createDtoFromTransaction(
         Transaction $transaction,
         bool        $isDebtVariant
@@ -298,11 +186,6 @@ class TransactionService
     }
 
     /**
-     * getAllLoanTransactionsForUserAndState
-     *
-     * @param User $owner
-     * @param string $state
-     *
      * @return LoanDto[]
      */
     public function getAllLoanTransactionPartsForUserAndStateDtoVariant(User $owner, string $state): array
@@ -316,11 +199,6 @@ class TransactionService
     }
 
     /**
-     * getAllLoanTransactionsForUserAndState
-     *
-     * @param User $owner
-     * @param string $state
-     *
      * @return Loan[]
      */
     public function getAllLoanTransactionsForUserAndState(User $owner, string $state): array
@@ -328,16 +206,6 @@ class TransactionService
         return $this->loanService->getAllLoanTransactionsForUserAndSate($owner, $state, 0.0);
     }
 
-
-    /**
-     * acceptDebt
-     *
-     * @param Transaction $transaction
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function confirmTransaction(Transaction $transaction): void
     {
         $transactionData = (new TransactionUpdateData())->initFrom($transaction);
@@ -345,15 +213,6 @@ class TransactionService
         $this->update($transaction, $transactionData);
     }
 
-    /**
-     * declineTransaction
-     *
-     * @param Debt $debt
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function declineDebt(Debt $debt): void
     {
         $debtData = (new DebtUpdateData())->initFrom($debt);
@@ -361,17 +220,6 @@ class TransactionService
         $this->debtService->update($debt, $debtData);
     }
 
-    /**
-     * checkRequestForVariant
-     *
-     * @param User $requester
-     * @param Transaction $transaction
-     * @param string $variant
-     * @param string $state
-     *
-     * @return bool
-     * @throws Exception
-     */
     public function checkRequestForVariant(
         User        $requester,
         Transaction $transaction,
@@ -404,13 +252,6 @@ class TransactionService
         }
     }
 
-    /**
-     * getTransactionBySlug
-     *
-     * @param string $slug
-     *
-     * @return Transaction|null
-     */
     public function getTransactionBySlug(string $slug): ?Transaction
     {
         return $this->transactionRepository->findOneBy(['slug' => $slug]);
@@ -454,14 +295,6 @@ class TransactionService
         }
     }
 
-    /**
-     * getDebtPartOfUserForTransaction
-     *
-     * @param Transaction $transaction
-     * @param User $user
-     *
-     * @return Debt|null
-     */
     public function getDebtPartOfUserForTransaction(Transaction $transaction, User $user): ?Debt
     {
         foreach ($transaction->getDebts() as $debt) {
@@ -472,14 +305,6 @@ class TransactionService
         return null;
     }
 
-    /**
-     * getLoanPartOfUserForTransaction
-     *
-     * @param Transaction $transaction
-     * @param User $user
-     *
-     * @return Loan|null
-     */
     public function getLoanPartOfUserForTransaction(Transaction $transaction, User $user): ?Loan
     {
         foreach ($transaction->getLoans() as $loan) {

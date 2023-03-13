@@ -137,12 +137,29 @@
 .account-details {
 
 }
+.transaction-details{
+    .transaction-state {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
-.transaction-state {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+        &.active.is-debt{
+            .state-icon{
+                background: $balance-negative;
+            }
+        }
+        &.active{
+            .state-icon{
+                background: $balance-positive;
+            }
+            .state-date{
+                color: #d7e6cf;
+                font-weight: bold;
+            }
+        }
+    }
 }
+
 
 .state-icon {
     margin-right: 10px;
@@ -152,9 +169,6 @@
     padding: 2px;
     /*border-radius: 8px;*/
 }
-.state-icon.active {
-    background: $balance-positive;
-}
 
 .state-icon img {
     width: 25px;
@@ -163,11 +177,6 @@
 
 .state-date {
     color: black;
-
-}
-.state-date.active {
-    color: #d7e6cf;
-    font-weight: bold;
 }
 
 .content-card {
@@ -180,9 +189,6 @@
         }
         .date-since {
             border-bottom: 4px solid $balance-negative;
-        }
-        .state-icon.active{
-            background: $balance-negative;
         }
     }
 }

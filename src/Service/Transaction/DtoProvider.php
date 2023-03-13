@@ -27,14 +27,6 @@ class DtoProvider
     {
     }
 
-
-    /**
-     * createDebtDto
-     *
-     * @param Debt $debt
-     *
-     * @return DebtDto
-     */
     public function createDebtDto(Debt $debt): DebtDto
     {
         $debtDto = DebtDto::create($debt);
@@ -47,13 +39,6 @@ class DtoProvider
         return $debtDto;
     }
 
-    /**
-     * createLoanDto
-     *
-     * @param Loan $loan
-     *
-     * @return LoanDto
-     */
     public function createLoanDto(Loan $loan): LoanDto
     {
         $loanDto = LoanDto::create($loan);
@@ -66,13 +51,6 @@ class DtoProvider
         return $loanDto;
     }
 
-    /**
-     * createDebtDto
-     *
-     * @param Transaction $transaction
-     *
-     * @return TransactionDtos\TransactionDto
-     */
     public function createTransactionDto(Transaction $transaction, bool $isDebtVariant): TransactionDtos\TransactionDto
     {
         $transactionDto = \App\Service\Transaction\TransactionDtos\TransactionDto::createFromTransaction(

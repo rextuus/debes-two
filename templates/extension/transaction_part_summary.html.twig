@@ -58,10 +58,11 @@
 
     <div class="summary-transaction-details">
         {{ transaction_part_details(dto, true) | raw }}
+
         <div class="exchange-collapsable-row">
 
-        <div class="exchange-collapsable deactivated">
-            <img src="{{ asset('assets/img/exchange.svg') }}" alt="Tile image"><span class="exchange-collapsable-text"># 4</span>
+        <div class="exchange-collapsable {% if dto.exchangeDtos|length == 0 %}deactivated{% endif %}">
+            <img src="{{ asset('assets/img/exchange.svg') }}" alt="Tile image"><span class="bold exchange-collapsable-text"># {{ dto.exchangeDtos|length }}</span>
         </div>
         </div>
     </div>
@@ -96,23 +97,6 @@
                     <span class="user2-name">{{ exchangeDto.to }}</span>
                 </div>
             </div>
-
-{#            <div class="exchange-list-row">#}
-{#                <div class="exchange-list-entry bold">Partei:</div>#}
-{#                <div class="exchange-list-entry">{{ exchangeDto.exchangePartner }}</div>#}
-{#            </div>#}
-{#            <div class="exchange-list-row">#}
-{#                <div class="exchange-list-entry bold">Grund:</div>#}
-{#                <div class="exchange-list-entry">{{ exchangeDto.exchangeReason }}</div>#}
-{#            </div>#}
-{#            <div class="exchange-list-row">#}
-{#                <div class="exchange-list-entry bold">Von:</div>#}
-{#                <div class="exchange-list-entry">{{ exchangeDto.from }}</div>#}
-{#            </div>#}
-{#            <div class="exchange-list-row">#}
-{#                <div class="exchange-list-entry bold">Nach:</div>#}
-{#                <div class="exchange-list-entry">{{ exchangeDto.to }}</div>#}
-{#            </div>#}
         </div>
     {% endfor %}
     </div>

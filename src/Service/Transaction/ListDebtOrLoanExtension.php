@@ -70,6 +70,7 @@ class ListDebtOrLoanExtension extends AbstractExtension
 
         if ($debtVariant) {
             $ready = $this->transactionService->getAllDebtTransactionsForUserAndState($owner, Transaction::STATE_READY);
+            $confirmed = $this->transactionService->getAllDebtTransactionsForUserAndState($owner, Transaction::STATE_CONFIRMED);
             $accepted = $this->transactionService->getAllDebtTransactionsForUserAndState($owner, Transaction::STATE_ACCEPTED);
             $cleared = $this->transactionService->getAllDebtTransactionsForUserAndState($owner, Transaction::STATE_CLEARED);
         } else {
@@ -83,6 +84,7 @@ class ListDebtOrLoanExtension extends AbstractExtension
             [
                 'debtVariant' => $debtVariant,
                 'ready' => $ready,
+                'confirmed' => $confirmed,
                 'accepted' => $accepted,
                 'cleared' => $cleared,
             ]

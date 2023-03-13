@@ -1,8 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PaymentController!{% endblock %}
+{% block title %}Meine Schulden{% endblock %}
 
 {% block body %}
+<html lang="de">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debes - Meine Schulden</title>
+</head>
+<body>
+
+<div class="tab-nav">
+    <button class="tab-button active" data-tab="tab-1" data-name="Neu" data-image="public/assets/img/create.svg">
+    </button>
+    <button class="tab-button " data-tab="tab-2" data-name="Akzeptiert" data-image="public/assets/img/accept.svg">
+    </button>
+    <button class="tab-button " data-tab="tab-3" data-name="Bezahlt" data-image="public/assets/img/paid.svg"></button>
+    <button class="tab-button " data-tab="tab-4" data-name="Erledigt" data-image="public/assets/img/party.svg"></button>
+</div>
+<div class="page-header">
+    <div class="page-header-text">
+        Neu
+    </div>
+    <div class="page-header-image">
+        <img src="public/assets/img/create.svg" alt="Tile image">
+    </div>
+</div>
+<div class="content-body">
+
+</div>
+
+
     <section class="hero-section">
         <div class="hero-slider owl-carousel">
             {% for transaction in transactions %}

@@ -57,6 +57,7 @@ transactionSummaries.forEach(transactionSummary => {
     if (!button.classList.contains('deactivated')){
         button.addEventListener('click', () => {
             body.classList.toggle('hidden');
+            button.classList.toggle('active');
         });
     }
 });
