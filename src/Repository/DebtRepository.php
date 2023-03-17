@@ -95,4 +95,15 @@ class DebtRepository extends ServiceEntityRepository
             ->orderBy('d.created', 'ASC')
             ->getQuery()->getResult();
     }
+
+    public function getCountForAllDebtsForUserAndState(User $owner, string $state){
+        return $this->createQueryBuilder('d')
+            ->select('count(d)')
+            ->where('d.owner = :owner')
+            ->andWhere('d.state = :state')
+            ->setParameter('owner', $owner)
+            ->setParameter('state', $state)
+            ->orderBy('d.created', 'ASC')
+            ->getQuery()->getSingleScalarResult();
+    }
 }

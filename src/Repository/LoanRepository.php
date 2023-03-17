@@ -101,6 +101,21 @@ class LoanRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getCountForAllLoanTransactionsForUserAndSate(User $owner, string $state, float $amount): int
+    {
+        $qb = $this->createQueryBuilder('l')
+            ->select('count(l)')
+            ->leftJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
+            ->where('l.owner = :owner')
+            ->andWhere('l.state = :state')
+            ->andWhere('l.amount >= :amount')
+            ->setParameter('owner', $owner)
+            ->setParameter('state', $state)
+            ->setParameter('amount', $amount)
+            ->orderBy('t.created', 'ASC');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
     /**
      * getAllExchangeLoansForDebt
      *

@@ -6,6 +6,7 @@ use App\Entity\PaymentOption;
 use App\Entity\User;
 use App\Repository\BankAccountRepository;
 use App\Repository\PaypalAccountRepository;
+use App\Service\Transfer\PaymentOptionSummaryContainer;
 
 class PaymentOptionService
 {
@@ -45,57 +46,39 @@ class PaymentOptionService
     {
     }
 
-    /**
-     * getActivePaymentOptionsOfUser
-     *
-     * @param User $user
-     * @param bool $includeBank
-     * @param bool $includePaypal
-     *
-     * @return array
-     */
-    public function getActivePaymentOptionsOfUser(User $user, bool $includeBank = true, bool $includePaypal = true): array
+    public function getActivePaymentOptionsOfUser(User $loaner, User $debtor, bool $active = false): PaymentOptionSummaryContainer
     {
-        $preferredBank = [];
-        $otherBank = [];
-        $preferredPaypal = [];
-        $otherPaypal = [];
+        $summary = new PaymentOptionSummaryContainer();
+        $summary->setAvailableBankAccountsLoaner(
+            $this->bankAccountRepository->findBy(['owner' => $loaner, 'enabled' => true])
+        );
+        $summary->setPreferredBankAccountLoaner(
+            $this->bankAccountRepository->findOneBy(['owner' => $loaner, 'enabled' => true, 'isPrioritised' => true])
+        );
 
-        if ($includeBank) {
-            $preferredBank = $this->bankAccountRepository->findBy(
-                [
-                    'owner' => $user,
-                    'enabled' => true,
-                    'isPrioritised' => true,
-                ]
-            );
+        $summary->setAvailableBankAccountsDebtor(
+            $this->bankAccountRepository->findBy(['owner' => $debtor, 'enabled' => true])
+        );
+        $summary->setPreferredBankAccountDebtor(
+            $this->bankAccountRepository->findOneBy(['owner' => $debtor, 'enabled' => true, 'isPrioritised' => true])
+        );
 
-            $otherBank = $this->bankAccountRepository->findBy(
-                [
-                    'owner' => $user,
-                    'enabled' => true,
-                    'isPrioritised' => false,
-                ]
-            );
-        }
 
-        if ($includePaypal) {
-            $preferredPaypal = $this->paypalAccountRepository->findBy(
-                [
-                    'owner' => $user,
-                    'enabled' => true,
-                    'isPrioritised' => true,
-                ]
-            );
-            $otherPaypal = $this->paypalAccountRepository->findBy(
-                [
-                    'owner' => $user,
-                    'enabled' => true,
-                    'isPrioritised' => false,
-                ]
-            );
-        }
-        return array_merge($preferredBank, $preferredPaypal, $otherBank, $otherPaypal);
+        $summary->setAvailablePaypalAccountsLoaner(
+            $this->paypalAccountRepository->findBy(['owner' => $loaner, 'enabled' => true])
+        );
+        $summary->setPreferredPaypalAccountLoaner(
+            $this->paypalAccountRepository->findOneBy(['owner' => $loaner, 'enabled' => true, 'isPrioritised' => true])
+        );
+
+        $summary->setAvailablePaypalAccountsDebtor(
+            $this->paypalAccountRepository->findBy(['owner' => $debtor, 'enabled' => true])
+        );
+        $summary->setPreferredPaypalAccountDebtor(
+            $this->paypalAccountRepository->findOneBy(['owner' => $debtor, 'enabled' => true, 'isPrioritised' => true])
+        );
+
+        return $summary;
     }
 
     /**

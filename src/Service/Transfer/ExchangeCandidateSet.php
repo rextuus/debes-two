@@ -9,7 +9,7 @@ use App\Service\Loan\LoanDto;
  * ExchangeCandidateSet
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2021 DocCheck Community GmbH
+ * 
  */
 class ExchangeCandidateSet
 {

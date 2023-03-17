@@ -9,7 +9,7 @@ use App\Service\Transaction\LoanAndDebtDto;
  * DebtDto
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2021 DocCheck Community GmbH
+ * 
  */
 class DebtDto extends LoanAndDebtDto
 {

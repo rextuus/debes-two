@@ -1,91 +1,147 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TransferController!{% endblock %}
+{% block title %}Banküberweisung{% endblock %}
 
 {% block body %}
-    <section class="hero-section">
-        <div class="hero-slider owl-carousel">
-            <div class="hs-item-own">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="hs-text">
-                                <h2><span>Deine</span> Überweisung!</h2>
-                                <p>Kopiere die Daten einfach in die entsprechenden Felder deines Online-Bankings</p>
-
-                                <h5>Iban</h5>
-                                <table class="table table-hover table-dark">
-                                    <tr>
-                                        <td size="15">{{ dto.iban }}</td>
-                                        <td>
-                                            <button class="btn btn-success" onclick="updateClipboard('{{ dto.iban }}')">
-                                                Copy
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <h5>BIC</h5>
-                                <table class="table table-hover table-dark">
-                                    <tr>
-                                        <td size="15">{{ dto.bic }}</td>
-                                        <td>
-                                            <button class="btn btn-success" onclick="updateClipboard('{{ dto.bic }}')">
-                                                Copy
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <h5>Kontoinhaber</h5>
-                                <table class="table table-hover table-dark">
-                                    <tr>
-                                        <td size="15">{{ dto.bankOwner }}</td>
-                                        <td>
-                                            <button class="btn btn-success"
-                                                    onclick="updateClipboard('{{ dto.bankOwner }}')">Copy
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <h5>Betrag</h5>
-                                <table class="table table-hover table-dark">
-                                    <tr>
-                                        <td size="15">{{ dto.amount }} €</td>
-                                        <td>
-                                            <button class="btn btn-success"
-                                                    onclick="updateClipboard('{{ dto.amount }}')">Copy
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <h5>Betreff</h5>
-                                <table class="table table-hover table-dark">
-                                    <tr>
-                                        <td size="15">{{ dto.reason }}</td>
-                                        <td>
-                                            <button class="btn btn-success"
-                                                    onclick="updateClipboard('{{ dto.reason }}')">Copy
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <p>Hast du deine Überweisung erfolgreich getätigt und möchtest die Schuld als bezahlt markieren?</p>
-                                {{ form_start(form, {'method': 'POST'}) }}
-                                {{ form_row(form._token) }}
-                                {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }}
-                                {{ form_widget(form.decline, {'attr': {'class': 'site-btn debt'}}) }}
-
-                            </div>
-                        </div>
-                    </div>
+    <h2><span>Deine</span> Überweisung!</h2>
+    <p>Kopiere die Daten einfach in die entsprechenden Felder deines Online-Bankings</p>
+    <div class="bank-transfer-details">
+        <div class="bank-transfer-line">
+            <div class="bank-transfer-row ">
+                <div class="bank-transfer-row-icon">
+                    <img src="{{ asset('assets/img/iban.svg') }}" alt="Tile image">
                 </div>
+                <div class="bank-transfer-row-date">IBAN</div>
+            </div>
+            <div class="bank-transfer-row-copy">
+                <div class="bank-transfer-row-copy-value">{{ dto.iban }}</div>
+                <div class="bank-transfer-row-copy-button">Copy</div>
             </div>
         </div>
-    </section>
+        <div class="bank-transfer-line">
+
+            <div class="bank-transfer-row">
+                <div class="bank-transfer-row-icon">
+                    <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
+                </div>
+                <div class="bank-transfer-row-date">{{ dto.bic }}</div>
+            </div>
+            <div class="bank-transfer-row-copy">
+                <div class="bank-transfer-row-copy-value">{{ dto.bic }}</div>
+                <div class="bank-transfer-row-copy-button">Copy</div>
+            </div>
+        </div>
+        <div class="bank-transfer-line">
+
+            <div class="bank-transfer-row">
+                <div class="bank-transfer-row-icon">
+                    <img src="{{ asset('assets/img/person.svg') }}" alt="Tile image">
+                </div>
+                <div class="bank-transfer-row-date">{{ dto.bankOwner }}</div>
+            </div>
+            <div class="bank-transfer-row-copy">
+                <div class="bank-transfer-row-copy-value">{{ dto.bankOwner }}</div>
+                <div class="bank-transfer-row-copy-button">Copy</div>
+            </div>
+        </div>
+        <div class="bank-transfer-line">
+
+            <div class="bank-transfer-row">
+                <div class="bank-transfer-row-icon">
+                    <img src="{{ asset('assets/img/party.svg') }}" alt="Tile image">
+                </div>
+                <div class="bank-transfer-row-date">{{ dto.amount }}</div>
+            </div>
+            <div class="bank-transfer-row-copy">
+                <div class="bank-transfer-row-copy-value">{{ dto.amount }}</div>
+                <div class="bank-transfer-row-copy-button">Copy</div>
+            </div>
+        </div>
+        <div class="bank-transfer-line">
+
+            <div class="bank-transfer-row">
+                <div class="bank-transfer-row-icon">
+                    <img src="{{ asset('assets/img/reason.svg') }}" alt="Tile image">
+                </div>
+                <div class="bank-transfer-row-date">{{ dto.reason }}</div>
+            </div>
+            <div class="bank-transfer-row-copy">
+                <div class="bank-transfer-row-copy-value">{{ dto.reason }}</div>
+                <div class="bank-transfer-row-copy-button">Copy</div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <h5>Iban</h5>
+    <table class="table table-hover table-dark">
+        <tr>
+            <td size="15">{{ dto.iban }}</td>
+            <td>
+                <button class="btn btn-success" onclick="updateClipboard('{{ dto.iban }}')">
+                    Copy
+                </button>
+            </td>
+        </tr>
+    </table>
+
+    <h5>BIC</h5>
+    <table class="table table-hover table-dark">
+        <tr>
+            <td size="15">{{ dto.bic }}</td>
+            <td>
+                <button class="btn btn-success" onclick="updateClipboard('{{ dto.bic }}')">
+                    Copy
+                </button>
+            </td>
+        </tr>
+    </table>
+
+    <h5>Kontoinhaber</h5>
+    <table class="table table-hover table-dark">
+        <tr>
+            <td size="15">{{ dto.bankOwner }}</td>
+            <td>
+                <button class="btn btn-success"
+                        onclick="updateClipboard('{{ dto.bankOwner }}')">Copy
+                </button>
+            </td>
+        </tr>
+    </table>
+
+    <h5>Betrag</h5>
+    <table class="table table-hover table-dark">
+        <tr>
+            <td size="15">{{ dto.amount }} €</td>
+            <td>
+                <button class="btn btn-success"
+                        onclick="updateClipboard('{{ dto.amount }}')">Copy
+                </button>
+            </td>
+        </tr>
+    </table>
+
+    <h5>Betreff</h5>
+    <table class="table table-hover table-dark">
+        <tr>
+            <td size="15">{{ dto.reason }}</td>
+            <td>
+                <button class="btn btn-success"
+                        onclick="updateClipboard('{{ dto.reason }}')">Copy
+                </button>
+            </td>
+        </tr>
+    </table>
+
+    <p>Hast du deine Überweisung erfolgreich getätigt und möchtest die Schuld als bezahlt markieren?</p>
+    {{ form_start(form, {'method': 'POST'}) }}
+    {{ form_row(form._token) }}
+    {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }}
+    {{ form_widget(form.decline, {'attr': {'class': 'site-btn debt'}}) }}
+
+
 
     <script>
         function updateClipboard(newClip) {

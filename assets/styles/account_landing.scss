@@ -198,6 +198,11 @@
 
     padding: 5px;
     margin: 3px;
+
+    text-decoration: none;
+    &.negative{
+        background: $balance-negative;
+    }
 }
 
 .balance-part-detail-header-variant{

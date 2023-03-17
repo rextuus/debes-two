@@ -53,11 +53,16 @@ class LoanService
     }
 
     /**
-     * @return Transaction[]
+     * @return Loan[]
      */
     public function getAllLoanTransactionsForUserAndSate(User $owner, string $state, float $amount): array
     {
         return $this->loanRepository->getAllLoanTransactionsForUserAndSate($owner, $state, $amount);
+    }
+
+    public function getCountForAllLoanTransactionsForUserAndSate(User $owner, string $state, float $amount): int
+    {
+        return $this->loanRepository->getCountForAllLoanTransactionsForUserAndSate($owner, $state, $amount);
     }
 
     /**

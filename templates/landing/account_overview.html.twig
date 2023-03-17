@@ -53,16 +53,16 @@
                         </div>
                     </div>
                     <div class="balance-part-total">
-                        <p><span id="total_loans">442,54</span> &euro;</p>
+                        <p><span id="total_loans">{{ totalLoan }}</span> &euro;</p>
                     </div>
                     <div class="balance-part-summary">
-                        <div class="balance-part-detail-header">
+                        <a href="{{ path('landing') }}" class="balance-part-detail-header">
                             <div class="balance-part-detail-header-variant">Offen:</div>
-                            <div class="balance-part-detail-header-amount">1</div>
-                        </div>
+                            <div class="balance-part-detail-header-amount">{{ openLoans }}</div>
+                        </a>
                         <div class="balance-part-detail-header">
                             <div class="balance-part-detail-header-variant">Akzeptiert:</div>
-                            <div class="balance-part-detail-header-amount">0</div>
+                            <div class="balance-part-detail-header-amount">{{ acceptedLoans }}</div>
                         </div>
                     </div>
                 </div>
@@ -76,17 +76,17 @@
 
                     </div>
                     <div class="balance-part-total balance-negative">
-                        <p><span id="total_debts">623,85</span> &euro;</p>
+                        <p><span id="total_debts">{{ totalDebt }}</span> &euro;</p>
                     </div>
                     <div class="balance-part-summary">
-                        <div class="balance-part-detail-header">
+                        <a href="{{ path('account_debts') }}?variant=new" class="balance-part-detail-header negative">
                             <div class="balance-part-detail-header-variant">Offen:</div>
-                            <div class="balance-part-detail-header-amount">2</div>
-                        </div>
-                        <div class="balance-part-detail-header">
+                            <div class="balance-part-detail-header-amount">{{ openDebts }}</div>
+                        </a>
+                        <a href="{{ path('account_debts') }}?variant=accepted" class="balance-part-detail-header negative">
                             <div class="balance-part-detail-header-variant">Akzeptiert:</div>
-                            <div class="balance-part-detail-header-amount">4</div>
-                        </div>
+                            <div class="balance-part-detail-header-amount">{{ acceptedDebts }}</div>
+                        </a>
                     </div>
                 </div>
             </div>

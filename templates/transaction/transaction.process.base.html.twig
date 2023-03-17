@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Schuld begleichen{% endblock %}
+{% block body %}
+<div class="tab-nav">
+    <button class="tab-button {{ tabClasses[0] }} " data-tab="tab-1" data-name="Bank"
+            data-image="{{ asset('assets/img/bank-account.svg') }}">
+    </button>
+    <button class="tab-button {{ tabClasses[1] }}" data-tab="tab-2" data-name="Paypal"
+            data-image="{{ asset('assets/img/paypal-account.svg') }}">
+    </button>
+    <button class="tab-button {{ tabClasses[2] }}" data-tab="tab-3" data-name="Verrechnung"
+            data-image="{{ asset('assets/img/exchange.svg') }}">
+    </button>
+</div>
+<div class="page-header">
+    <div class="page-header-text">
+        {{ tabName }}
+    </div>
+    <div class="page-header-image">
+        <img src="{{ asset(icon) }}" alt="Tile image">
+    </div>
+</div>
+<div class="content-body">
+    <div id="tab-1" class="tab active">
+
+        {% if showBank %}
+            {{ transfer_bank(dto, bankForm) | raw }}
+        {% else %}
+            Der Pimmel gegenüber schuldet dir leider nichts. Da können wir also nicht verrechnen!
+        {% endif %}
+    </div>
+    <div id="tab-2" class="tab">
+        {% if showPaypal %}
+            {{ transfer_paypal(dto, paypalForm) | raw }}
+        {% else %}
+            Der Pimmel gegenüber schuldet dir leider nichts. Da können wir also nicht verrechnen!
+        {% endif %}
+    </div>
+    <div id="tab-3" class="tab">
+        {% if showExchange %}
+            {{ transfer_exchange(dto, exchangeForm) | raw }}
+        {% else %}
+            Der Pimmel gegenüber schuldet dir leider nichts. Da können wir also nicht verrechnen!
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

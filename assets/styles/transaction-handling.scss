@@ -221,7 +221,7 @@
 }
 
 .reason{
-  background-color: $balance-positive;
+  background-color: $form-button;
   padding: 3px;
   border-radius: 4px;
 }
@@ -309,4 +309,55 @@
   .exchange-collapsable-text{
 
   }
+}
+
+
+.bank-transfer-details{
+  background-color: $body-diff;
+  padding: 15px;
+  .bank-transfer-line{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: $default-margin-b-s;
+    .bank-transfer-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: $default-margin-b-s;
+    }
+    .bank-transfer-row-copy{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .bank-transfer-row-copy-value{
+        display: inline-block;
+        margin-left: $default-margin-lr;
+      }
+      .bank-transfer-row-copy-button{
+        margin-left: auto;
+        margin-right: $default-margin-lr;
+
+      }
+    }
+  }
+
+}
+
+
+.bank-transfer-row-icon {
+  margin-right: 10px;
+  border: 1px solid $font-color-white;
+  color: $font-color-white;
+  padding: 2px;
+  background-color: $font-color-white;
+}
+
+.bank-transfer-row-icon img {
+  width: 25px;
+  height: 25px;
+}
+
+.bank-transfer-row-date {
+  color: black;
 }

@@ -1,0 +1,17 @@
+{{ transaction_part_summary(dto) | raw }}
+<div class="form-area">
+    {{ form_start(paypalForm, {'method': 'POST'}) }}
+    <div class="my-custom-class-for-errors">
+        {{ form_errors(paypalForm) }}
+    </div>
+    <div class="form-input-field">
+        {{ form_widget(paypalForm.paymentOption, {'attr': {'class': 'form-style'}}) }}
+    </div>
+    {{ form_row(paypalForm._token) }}
+    <div class="form-submit-field">
+        {{ form_widget(paypalForm.submit, {'attr': {'class': 'btn'}}) }}
+    </div>
+    <div class="form-submit-field">
+        {{ form_widget(paypalForm.decline, {'attr': {'class': 'btn', 'name': "paypalForm"}}) }}
+    </div>
+</div>

@@ -34,7 +34,10 @@ function countDown(id, target, direction) {
 
         // Display the initial value
         document.getElementById(id).innerHTML = current;
-
+        if (current === originalValue){
+            resolve();
+            return;
+        }
         // Run the countdown every 10 milliseconds
         const intervalId = setInterval(function () {
             // Decrement the current value

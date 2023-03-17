@@ -26,7 +26,7 @@ use Doctrine\ORM\ORMException;
  * ExchangeProcessor
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2021 DocCheck Community GmbH
+ * 
  */
 class ExchangeProcessor
 {

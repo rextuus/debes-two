@@ -1,10 +1,10 @@
 <div class="tab-nav">
-    <button class="tab-button active " data-tab="tab-1" data-name="Neu" data-image="{{ asset('assets/img/create.svg') }}">
+    <button class="tab-button {{ tabClasses[0] }} " data-tab="tab-1" data-name="Neu" data-image="{{ asset('assets/img/create.svg') }}">
     </button>
-    <button class="tab-button " data-tab="tab-2" data-name="Akzeptiert" data-image="{{ asset('assets/img/accept.svg') }}">
+    <button class="tab-button {{ tabClasses[1] }}" data-tab="tab-2" data-name="Akzeptiert" data-image="{{ asset('assets/img/accept.svg') }}">
     </button>
-    <button class="tab-button " data-tab="tab-3" data-name="Bezahlt" data-image="{{ asset('assets/img/paid.svg') }}"></button>
-    <button class="tab-button " data-tab="tab-4" data-name="Erledigt" data-image="{{ asset('assets/img/party.svg') }}"></button>
+    <button class="tab-button {{ tabClasses[2] }}" data-tab="tab-3" data-name="Bezahlt" data-image="{{ asset('assets/img/paid.svg') }}"></button>
+    <button class="tab-button {{ tabClasses[3] }}" data-tab="tab-4" data-name="Erledigt" data-image="{{ asset('assets/img/party.svg') }}"></button>
 </div>
 <div class="page-header">
     <div class="page-header-text">
@@ -15,19 +15,29 @@
     </div>
 </div>
 <div class="content-body">
-       <div id="tab-1" class="tab active">
+       <div id="tab-1" class="tab {{ tabClasses[0] }}">
+           {% if  ready|length == 0%}
+               <div class="empty-list-info">
+                   Hier werden alle neuen von dir noch nicht akzeptierte Transaktionen angezeigt. Momentan hast du keine Transaktionen dieser Art!
+               </div>
+           {% endif %}
            {% for part in ready%}
                {{ transaction_part_content_card(part) |raw }}
            {% endfor %}
     </div>
 
-    <div id="tab-2" class="tab">
+    <div id="tab-2" class="tab {{ tabClasses[1] }}">
+        {% if  accepted|length == 0%}
+            <div class="empty-list-info">
+                Hier werden alle bereits akzeptierten, aber von dir noch nicht getilgte Transaktionen angezeigt. Momentan hast du keine Transaktionen dieser Art!
+            </div>
+        {% endif %}
         {% for part in accepted%}
             {{ transaction_part_content_card(part) |raw }}
         {% endfor %}
     </div>
 
-    <div id="tab-3" class="tab">
+    <div id="tab-3" class="tab {{ tabClasses[2] }}">
         {% if  cleared|length == 0%}
         <div class="empty-list-info">
             Hier werden bereits bezahlte, aber von dir noch nicht kontrollierte Transaktionen angezeigt. Momentan hast du keine Transaktionen dieser Art!
@@ -38,13 +48,15 @@
         {% endfor %}
     </div>
 
-    <div id="tab-4" class="tab">
+    <div id="tab-4" class="tab {{ tabClasses[3] }}">
+        {% if  confirmed|length == 0%}
+            <div class="empty-list-info">
+                Hier werden alle komplett abgeschlossen Transaktionen angezeigt. Momentan hast du keine Transaktionen dieser Art!
+            </div>
+        {% endif %}
         {% for part in confirmed%}
             {{ transaction_part_content_card(part) |raw }}
         {% endfor %}
-        <div class="empty-list-info">
-            Hier werden bereits bezahlte, aber von dir noch nicht kontrollierte Transaktionen angezeigt. Momentan hast du keine Transaktionen dieser Art!
-        </div>
     </div>
 
 

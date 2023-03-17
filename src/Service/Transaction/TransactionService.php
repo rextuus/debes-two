@@ -144,12 +144,11 @@ class TransactionService
         $dtos = array();
         $debtTransactions = $this->debtService->getAllDebtTransactionsForUser($owner);
         foreach ($debtTransactions as $transaction) {
-            $dtos[] = \App\Service\Transaction\TransactionDtos\TransactionDto::createFromTransaction($transaction, true);
-            $events = $this->transactionChangeEventService->getAllByTransaction($transaction);
+            $dtos[] = $this->dtoProvider->createTransactionDto($transaction, true);
         }
         $loanTransactions = $this->loanService->getAllLoanTransactionsForUser($owner);
         foreach ($loanTransactions as $transaction) {
-            $dtos[] = \App\Service\Transaction\TransactionDtos\TransactionDto::createFromTransaction($transaction, false);
+            $dtos[] = $this->dtoProvider->createTransactionDto($transaction, false);
         }
         return $dtos;
     }
@@ -175,6 +174,11 @@ class TransactionService
             $dtos[] = $this->dtoProvider->createTransactionDto($debt->getTransaction(), true);
         }
         return $dtos;
+    }
+
+    public function getCountForDebtTransactionsForUserAndState(User $user, string $state): int
+    {
+        return $this->debtService->getCountForDebtTransactionsForUserAndState($user, $state);
     }
 
     public function createDtoFromTransaction(
@@ -204,6 +208,24 @@ class TransactionService
     public function getAllLoanTransactionsForUserAndState(User $owner, string $state): array
     {
         return $this->loanService->getAllLoanTransactionsForUserAndSate($owner, $state, 0.0);
+    }
+
+    /**
+     * @return TransactionDtos\TransactionDto[]
+     */
+    public function getAllLoanTransactionsForUserAndState2(User $owner, string $state): array
+    {
+        $dtos = [];
+        $loans = $this->loanService->getAllLoanTransactionsForUserAndSate($owner, $state, 0.0);
+        foreach ($loans as $loan) {
+            $dtos[] = $this->dtoProvider->createTransactionDto($loan->getTransaction(), false);
+        }
+        return $dtos;
+    }
+
+    public function getCountForAllLoanTransactionsForUserAndSate(User $owner, string $state): int
+    {
+        return $this->loanService->getCountForAllLoanTransactionsForUserAndSate($owner, $state, 0.0);
     }
 
     public function confirmTransaction(Transaction $transaction): void

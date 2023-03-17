@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * ImportLegacyDatabaseCommand
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2021 DocCheck Community GmbH
+ * 
  */
 class ImportLegacyDatabaseCommand extends Command
 {

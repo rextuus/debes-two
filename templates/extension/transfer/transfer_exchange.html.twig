@@ -1,0 +1,20 @@
+{{ transaction_part_summary(dto) | raw }}
+Mit welcher Schuldlast möchtest du deine eigene Schuld verrechnen?
+<div class="exchange-choice">
+    <div class="form-area">
+        {{ form_start(exchangeForm, {'method': 'POST'}) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(exchangeForm) }}
+        </div>
+        <div class="form-input-field">
+            {{ form_widget(exchangeForm.loan, {'attr': {'class': 'form-style'}}) }}
+        </div>
+        {{ form_row(exchangeForm._token) }}
+        <div class="form-submit-field">
+            {{ form_widget(exchangeForm.submit, {'attr': {'class': 'btn'}}) }}
+        </div>
+        <div class="form-submit-field">
+            {{ form_widget(exchangeForm.decline, {'attr': {'class': 'btn', 'name': "exchangeForm"}}) }}
+        </div>
+    </div>
+</div>

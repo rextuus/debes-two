@@ -1,0 +1,17 @@
+{{ transaction_part_summary(dto) | raw }}
+<div class="form-area">
+    {{ form_start(bankForm, {'method': 'POST'}) }}
+    <div class="my-custom-class-for-errors">
+        {{ form_errors(bankForm) }}
+    </div>
+    <div class="form-input-field">
+        {{ form_widget(bankForm.paymentOption, {'attr': {'class': 'form-style'}}) }}
+    </div>
+    {{ form_row(bankForm._token) }}
+    <div class="form-submit-field">
+        {{ form_widget(bankForm.submit, {'attr': {'class': 'btn'}}) }}
+    </div>
+    <div class="form-submit-field">
+        {{ form_widget(bankForm.decline, {'attr': {'class': 'btn', 'name': "bankForm"}}) }}
+    </div>
+</div>

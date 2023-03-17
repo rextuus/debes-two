@@ -19,53 +19,52 @@
         <div class="row row-info">
             <div class="left-side-icon">@{{ part.transactionPartner }}</div>
             <div class="left-side-icon">{{ part.totalAmount }} &euro;</div>
-            <div class="right-side-icon">{{ part.state }}</div>
+            <div class="right-side-icon state-icon">
+                <img src="{{ asset(cardIcon) }}" alt="Tile image">
+            </div>
         </div>
     </div>
     <div class="card-body hidden">
         <div class="description body-element">
-            {% if part.isDebtVariant %}
-                Du schuldest UserName noch Amount für Reason
-            {% else %}
-                Du bekommst von UserName noch Amount für Reason
-            {% endif %}
+            {{ infoText}}
         </div>
-        <div class="transaction-details body-element">
-            <div class="transaction-state {% if part.isDebtVariant %}is-debt{% endif %} {% if part.state > 0 %}active {% endif %}">
-                <div class="state-icon ">
-                    <img src="{{ asset('assets/img/create.svg') }}" alt="Tile image">
-                </div>
-                <div class="state-date">08.09.1999</div>
-            </div>
-            <div class="transaction-state {% if part.isDebtVariant %}is-debt{% endif %} {% if part.state > 1 %}active {% endif %}">
-                <div class="state-icon">
-                    <img src="{{ asset('assets/img/accept.svg') }}" alt="Tile image">
-                </div>
-                <div class="state-date">Akzeptiert</div>
-            </div>
-            <div class="transaction-state {% if part.state > 2 %}active {% endif %}">
-                <div class="state-icon">
-                    <img src="{{ asset('assets/img/paid.svg') }}" alt="Tile image">
-                </div>
-                <div class="state-date {% if part.state > 2 %}active {% endif %}">Bezahlt</div>
-            </div>
-            <div class="transaction-state {% if part.state > 3 %}active {% endif %}">
-                <div class="state-icon">
-                    <img src="{{ asset('assets/img/party.svg') }}" alt="Tile image">
-                </div>
-                <div class="state-date {% if part.state > 3 %}active {% endif %}">Abgewickelt</div>
-            </div>
-        </div>
+        {{ transaction_part_details(part, true) | raw }}
+{#        <div class="transaction-details body-element">#}
+{#            <div class="transaction-state {% if part.isDebtVariant %}is-debt{% endif %} {% if part.state > 0 %}active {% endif %}">#}
+{#                <div class="state-icon ">#}
+{#                    <img src="{{ asset('assets/img/create.svg') }}" alt="Tile image">#}
+{#                </div>#}
+{#                <div class="state-date">08.09.1999</div>#}
+{#            </div>#}
+{#            <div class="transaction-state {% if part.isDebtVariant %}is-debt{% endif %} {% if part.state > 1 %}active {% endif %}">#}
+{#                <div class="state-icon">#}
+{#                    <img src="{{ asset('assets/img/accept.svg') }}" alt="Tile image">#}
+{#                </div>#}
+{#                <div class="state-date">Akzeptiert</div>#}
+{#            </div>#}
+{#            <div class="transaction-state {% if part.state > 2 %}active {% endif %}">#}
+{#                <div class="state-icon">#}
+{#                    <img src="{{ asset('assets/img/paid.svg') }}" alt="Tile image">#}
+{#                </div>#}
+{#                <div class="state-date {% if part.state > 2 %}active {% endif %}">Bezahlt</div>#}
+{#            </div>#}
+{#            <div class="transaction-state {% if part.state > 3 %}active {% endif %}">#}
+{#                <div class="state-icon">#}
+{#                    <img src="{{ asset('assets/img/party.svg') }}" alt="Tile image">#}
+{#                </div>#}
+{#                <div class="state-date {% if part.state > 3 %}active {% endif %}">Abgewickelt</div>#}
+{#            </div>#}
+{#        </div>#}
         <div class="next-state-button body-element">
             {% if acceptLink != '' %}
-            <a href="{{ path(acceptLink, {'slug': slug}) }}?variant=debtor" class="accept-link accept">
-                <img src="{{ asset('assets/img/accept.svg') }}" alt="Button Image">
+            <a href="{{ path(acceptLink, {'slug': slug}) }}?variant=1" class="accept-link accept">
+                <img src="{{ asset(acceptIcon) }}" alt="Button Image">
                 <div class="next-state-button-text">{{ acceptButton }}</div>
             </a>
             {% endif %}
             {% if declineLink != '' %}
             <a href="{{ path(declineLink, {'slug': slug}) }}?variant=debtor" class="accept-link decline">
-                <img class="rotate" src="{{ asset('assets/img/accept.svg') }}" alt="Button Image">
+                <img class="" src="{{ asset(declineIcon) }}" alt="Button Image">
                 <div class="next-state-button-text">{{ declineButton }}</div>
             </a>
             {% endif %}

@@ -1,5 +1,8 @@
 @import "variables";
-
+$shadow-size: 8px;
+$shadow-opacity: 0.2;
+$content-card-shadow-negative: $shadow-size $shadow-size $shadow-size rgba(169, 57, 57, $shadow-opacity);
+$content-card-shadow-positive: $shadow-size $shadow-size $shadow-size rgba(108, 145, 91, $shadow-opacity);
 .content-card {
     max-width: 100%;
     margin: 5px;
@@ -8,6 +11,7 @@
     overflow: hidden;
     background-color: #424243;
     margin-bottom: 20px;
+    box-shadow: $content-card-shadow-positive;
 }
 
 .card-header {
@@ -190,5 +194,6 @@
         .date-since {
             border-bottom: 4px solid $balance-negative;
         }
+        box-shadow: $content-card-shadow-negative;
     }
 }

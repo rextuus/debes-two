@@ -34,18 +34,55 @@ class TransactionExtension extends AbstractExtension
 
     public function renderTransactionPartContentCard(TransactionDto $part): string
     {
-        $acceptButton = 'Bezahlen';
-        $declineButton = 'Abgeben';
-        $acceptLink = 'transaction_process';
+        $acceptButton = 'Ja';
+        $declineButton = 'Nein';
+        $acceptLink = 'transfer_overview';
         $declineLink = 'transaction_process';
+        $acceptIcon = 'assets/img/accept.svg';
+        $declineIcon = 'assets/img/warning.svg';
 
-        switch ($part->getState()){
+        $cardIcon = 'assets/img/create.svg';
+
+        switch ($part->getState()) {
             case 2:
-                $declineLink = '';
+                // accepted => pay/break | remember
+                $cardIcon = 'assets/img/accept.svg';
+                if ($part->isDebtVariant()){
+                    $acceptLink = 'transfer_overview';
+                    $acceptButton = 'Bezahlen';
+                    $acceptIcon = 'assets/img/paid.svg';
+
+                    $declineLink = 'transaction_process';
+                    $declineButton = 'Reklamieren';
+                    $declineIcon = 'assets/img/warning.svg';
+                }else{
+                    $acceptLink = 'transfer_overview';
+                    $acceptButton = 'Erinnern';
+                    $acceptIcon = 'assets/img/email.svg';
+
+                    $declineLink = '';
+                }
+
                 break;
             case 3:
-                $acceptLink = '';
-                $declineButton = 'Hinweis senden';
+                // paid => remember | confirm
+                if ($part->isDebtVariant()) {
+                    $acceptLink = '';
+
+                    $declineLink = 'transaction_process';
+                    $declineButton = 'Hinweis senden';
+                    $declineIcon = 'assets/img/warning.svg';
+                }else{
+                    $acceptLink = 'transaction_process';
+                    $acceptButton = 'Bestätigen';
+                    $acceptIcon = 'assets/img/party.svg';
+
+                    $declineLink = 'transaction_process';
+                    $declineButton = 'Bemängeln';
+                    $declineIcon = 'assets/img/warning.svg';
+                }
+
+                $cardIcon = 'assets/img/paid.svg';
                 break;
         }
 
@@ -53,12 +90,16 @@ class TransactionExtension extends AbstractExtension
             'extension/transaction_part_card.html.twig',
             [
                 'part' => $part,
-                'ago'  => $this->timeConverter->getUserFriendlyDateTime($part->getEdited()),
+                'ago' => $this->timeConverter->getUserFriendlyDateTime($part->getEdited()),
                 'acceptButton' => $acceptButton,
                 'acceptLink' => $acceptLink,
                 'slug' => $part->getTransactionSlug(),
                 'declineButton' => $declineButton,
                 'declineLink' => $declineLink,
+                'acceptIcon' => $acceptIcon,
+                'declineIcon' => $declineIcon,
+                'cardIcon' => $cardIcon,
+                'infoText' => $this->buildInfoText($part)
             ]
         );
     }
@@ -68,13 +109,13 @@ class TransactionExtension extends AbstractExtension
         return $this->environment->render(
             'extension/transaction_part_summary.html.twig',
             [
-                'dto'         => $part,
+                'dto' => $part,
                 'debtVariant' => $part->isDebtVariant(),
             ]
         );
     }
 
-    public function renderTransactionPartDetails(TransactionDto $part, bool $prefixed = false): string
+    public function renderTransactionPartDetails(TransactionDto $part, bool $prefixed = true): string
     {
         $created = $part->getCreated() ?: 'Erstellt';
         if ($prefixed && $part->getCreated()) {
@@ -110,18 +151,41 @@ class TransactionExtension extends AbstractExtension
                 }
             }
         }
+
         return $this->environment->render(
             'extension/transaction_details.html.twig',
             [
-                'created'     => $created,
-                'accepted'    => $accepted,
-                'cleared'     => $cleared,
-                'confirmed'   => $confirmed,
-                'isAccepted'  => $isAccepted,
-                'isCleared'   => $isCleared,
+                'created' => $created,
+                'accepted' => $accepted,
+                'cleared' => $cleared,
+                'confirmed' => $confirmed,
+                'isAccepted' => $isAccepted,
+                'isCleared' => $isCleared,
                 'isConfirmed' => $isConfirmed,
-                'part'        => $part,
+                'part' => $part,
+                'variantClass' => $part->isDebtVariant() ? 'is-debt' : '',
             ]
+        );
+    }
+
+    private function buildInfoText(TransactionDto $part): string
+    {
+        if ($part->getState() === Transaction::DTO_MAPPING[Transaction::STATE_CLEARED]){
+            if ($part->isDebtVariant()){
+                return 'Du hast diese Schuld bereits bezahlt und die Gegenpartei muss das nur noch bestätigen';
+            }
+            return 'Die wurde das Geld für diese Transaktion bereits überwiesen. Bestätige bitte den Eingang!';
+        }
+
+        $template = 'Du bekommst von %s noch %.2f € für %s';
+        if ($part->isDebtVariant()){
+            $template = 'Du schuldest %s noch %.2f € für %s';
+        }
+        return sprintf(
+            $template,
+            $part->getTransactionPartner(),
+            $part->getTotalAmount(),
+            $part->getReason()
         );
     }
 }

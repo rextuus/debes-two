@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Transaction;
 use App\Entity\User;
 use App\Service\Transaction\TransactionService;
 use App\Service\User\UserService;
@@ -27,10 +28,22 @@ class LandingController extends AbstractController
             throw new Exception();
         }
         $transactions = $transactionService->getAllTransactionBelongingUser($user);
-        dump($transactions[0]);
-        return $this->render('landing/index.html.twig', [
+        $totalDebts = $transactionService->getTotalDebtsForUser($user);
+        $totalLoans = $transactionService->getTotalLoansForUser($user);
+        $openDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_CREATED);
+        $acceptedDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_ACCEPTED);
+        $openLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_CREATED);
+        $acceptedLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_ACCEPTED);
+
+        return $this->render('landing/account_overview.html.twig', [
             'controller_name' => 'LandingController',
             'transactions' => $transactions,
+            'totalDebt' => $totalDebts,
+            'totalLoan' => $totalLoans,
+            'openDebts' => $openDebts,
+            'openLoans' => $openLoans,
+            'acceptedDebts' => $acceptedDebts,
+            'acceptedLoans' => $acceptedLoans,
         ]);
     }
 }

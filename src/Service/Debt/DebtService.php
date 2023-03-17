@@ -59,6 +59,11 @@ class DebtService
         return $this->debtRepository->findAllDebtsForUserAndState($user, $state);
     }
 
+    public function getCountForDebtTransactionsForUserAndState(User $user, string $state): int
+    {
+        return $this->debtRepository->getCountForAllDebtsForUserAndState($user, $state);
+    }
+
     public function getTotalDebtsForUser(User $user): float
     {
         return $this->debtRepository->getTotalDebtsForUser($user);

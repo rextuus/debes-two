@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Transfer;
 
+use App\Entity\BankAccount;
+use App\Entity\Debt;
+use App\Entity\PaymentOption;
 use App\Service\Transfer\PrepareTransferData;
-use App\Service\Transfer\TransferService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -14,32 +16,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * PrepareTransferType
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2021 DocCheck Community GmbH
+ * 
  */
 class PrepareTransferType extends AbstractType
 {
-    /**
-     * @var TransferService
-     */
-    private $transferService;
 
-    /**
-     * PrepareTransferType constructor.
-     */
-    public function __construct(TransferService $paymentOptionService)
+    private string $name;
+
+    public function __construct()
     {
-        $this->transferService = $paymentOptionService;
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($options['payment_accounts'][0] instanceof BankAccount){
+            $this->name = 'transfer_bank';
+        }
         $builder
             ->add(
                 'paymentOption',
                 ChoiceType::class,
                 [
-                    'choices' => $options['label']['transaction'],
-                    'data' => $options['label']['transaction'],
+                    'choices' => $this->prepareOptions($options['payment_accounts']),
+                    'data' => $options['payment_accounts'],
                 ]
             )
             ->add('submit', SubmitType::class, ['label' => 'Überweisung vorbereiten'])
@@ -50,6 +50,20 @@ class PrepareTransferType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PrepareTransferData::class,
+            'payment_accounts' => PaymentOption::class,
         ]);
+    }
+
+    /**
+     * @param PaymentOption[] $paymentOptions
+     */
+    private function prepareOptions(array $paymentOptions): array
+    {
+        $choices = [];
+        foreach ($paymentOptions as $paymentOption){
+            $choiceName = $paymentOption->getDescription();
+            $choices[$choiceName] = $paymentOption;
+        }
+        return $choices;
     }
 }

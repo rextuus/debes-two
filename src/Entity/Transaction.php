@@ -23,6 +23,10 @@ class Transaction
     const STATE_CLEARED = 'cleared';
     const STATE_CONFIRMED = 'confirmed';
 
+    const DTO_MAPPING = [
+        self::STATE_CLEARED => 3
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

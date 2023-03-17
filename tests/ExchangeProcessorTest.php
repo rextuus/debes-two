@@ -16,7 +16,7 @@ use App\Service\Transfer\ExchangeProcessor;
  * ExchangeProcessorTest
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2021 DocCheck Community GmbH
+ * 
  */
 class ExchangeProcessorTest extends FixtureTestCase
 {

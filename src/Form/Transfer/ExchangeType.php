@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Transfer;
 
 use App\Entity\Debt;
 use App\Service\Loan\LoanDto;
-use App\Service\Loan\LoanService;
 use App\Service\Transfer\ExchangeProcessor;
 use App\Service\Transfer\PrepareExchangeTransferData;
 use Symfony\Component\Form\AbstractType;
@@ -17,28 +16,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * ExchangeType
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2021 DocCheck Community GmbH
+ * 
  */
 class ExchangeType extends AbstractType
 {
-    /**
-     * @var LoanService
-     */
-    private $loanService;
-
-    /**
-     * @var ExchangeProcessor
-     */
-    private $exchangeProcessor;
-
-    /**
-     * @param LoanService $loanService
-     * @param ExchangeProcessor $exchangeProcessor
-     */
-    public function __construct(LoanService $loanService, ExchangeProcessor $exchangeProcessor)
+    public function __construct(private ExchangeProcessor $exchangeProcessor)
     {
-        $this->loanService = $loanService;
-        $this->exchangeProcessor = $exchangeProcessor;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -64,13 +47,6 @@ class ExchangeType extends AbstractType
         ]);
     }
 
-    /**
-     * prepareOptions
-     *
-     * @param Debt $debt
-     *
-     * @return array
-     */
     private function prepareOptions(Debt $debt): array
     {
         $candidates = $this->exchangeProcessor->findExchangeCandidatesForTransactionPart($debt);
