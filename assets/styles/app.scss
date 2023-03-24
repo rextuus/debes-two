@@ -1,6 +1,6 @@
 @import "variables";
 body{
-    background: $body-main;
+    background: $color-body-main;
     color: #d7e6cf;
     font-family: arial, verdana, sans-serif;
     margin: 0;
@@ -11,16 +11,16 @@ body{
 }
 
 .page-header{
-    background: $header-purple;
+    background: $color-header-purple;
     font-weight: bold;
     font-size: 1.9em;
 
     display: flex;
-    flex-wrap: wrap;
+    //flex-wrap: wrap;
     justify-content: flex-start;
 
     padding: 15px;
-    margin-bottom: 15px;
+    margin-bottom: $default-m-b-s;
 }
 
 .page-header-text{
@@ -44,8 +44,8 @@ body{
 
 .content-body{
     height: 100%;
-    margin-right: 8px;
-    margin-left: 8px;
+    margin-right: $default-m-lr-m;
+    margin-left: $default-m-lr-m;
     overflow: auto;
 }
 
@@ -54,9 +54,9 @@ body{
     max-width: 100%;
     padding: 15px;
     font-size: 1.5em;
-    margin: 20px auto;
-    border: 1px solid $body-diff;
-    background-color: $body-diff;
+    margin: 0px auto $default-m-b-m;
+    border: 1px solid $color-body-diff;
+    background-color: $color-body-diff;
     border-radius: 8px;
 }
 
@@ -68,6 +68,20 @@ body{
     color: #000000 !important;
 }
 
+// base classes
 .bold{
     font-weight: bold;
+}
+.has-mb-s{
+    margin-bottom: $default-m-b-s;
+}
+.has-mb-m{
+    margin-bottom: $default-m-b-m;
+}
+.has-default-border{
+    border: 1px solid #424243;
+    border-radius: $default-border-radius;
+}
+.text-small{
+    font-size: $smaller-text;
 }

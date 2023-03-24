@@ -5,17 +5,16 @@ namespace App\Controller;
 use App\Entity\BankAccount;
 use App\Entity\PaypalAccount;
 use App\Entity\User;
-use App\Form\BankAccountCreateType;
-use App\Form\BankAccountUpdateType;
-use App\Form\PaypalAccountCreateType;
-use App\Form\PaypalAccountUpdateType;
+use App\Form\BankAccount\BankAccountCreateType;
+use App\Form\BankAccount\BankAccountUpdateType;
+use App\Form\PaypalAccount\PaypalAccountCreateType;
+use App\Form\PaypalAccount\PaypalAccountUpdateType;
 use App\Service\PaymentOption\BankAccountData;
 use App\Service\PaymentOption\BankAccountService;
 use App\Service\PaymentOption\BankAccountUpdateData;
 use App\Service\PaymentOption\PaypalAccountCreateData;
 use App\Service\PaymentOption\PaypalAccountService;
 use App\Service\PaymentOption\PaypalAccountUpdateData;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +38,7 @@ class PaymentController extends AbstractController
     }
 
     /**
-     * @Route("/create/bank", name="payment_create_bank")
+     * @Route("/payment/create/bank", name="payment_create_bank")
      */
     public function createNewBankAccount(Request $request, BankAccountService $bankAccountService): Response
     {
@@ -67,7 +66,7 @@ class PaymentController extends AbstractController
     }
 
     /**
-     * @Route("/edit/bank/{id}", name="payment_update_bank")
+     * @Route("/payment/edit/bank/{id}", name="payment_update_bank")
      */
     public function updateBankAccount(
         BankAccount $bankAccount,
@@ -93,9 +92,7 @@ class PaymentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/paypal/bank", name="payment_create_paypal")
-     */
+    #[Route('/payment/create/paypal', name: 'payment_create_paypal')]
     public function createNewPaypalAccount(Request $request, PaypalAccountService $paypalAccountService): Response
     {
         /** @var User $requester */
@@ -110,9 +107,9 @@ class PaymentController extends AbstractController
             /** @var PaypalAccountCreateData $data */
             $data = $form->getData();
 
-            $paypalAccountService->storePaypalAccount($data);
+            $paypalAccount = $paypalAccountService->storePaypalAccount($data);
 
-            return $this->redirect($this->generateUrl('payment_overview'));
+            return $this->redirect($this->generateUrl('payment_update_paypal', ['id' => $paypalAccount->getId()]));
         }
 
         return $this->render('payment/paypal.create.html.twig', [
@@ -122,7 +119,7 @@ class PaymentController extends AbstractController
     }
 
     /**
-     * @Route("/edit/paypal/{id}", name="payment_update_paypal")
+     * @Route("/payment/edit/paypal/{id}", name="payment_update_paypal")
      */
     public function updatePaypalAccount(
         PaypalAccount $paypalAccount,
@@ -137,13 +134,12 @@ class PaymentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var PaypalAccountUpdateData $data */
             $data = $form->getData();
-
             $paypalAccountService->update($paypalAccount, $data);
 
-            return $this->redirect($this->generateUrl('payment_overview'));
+            return $this->redirect($this->generateUrl('payment_update_paypal', ['id' => $paypalAccount->getId()]));
         }
 
-        return $this->render('payment/paypal.edit.html.twig', [
+        return $this->render('payment/paypal.update.html.twig', [
             'form' => $form->createView(),
         ]);
     }

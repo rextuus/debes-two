@@ -1,0 +1,22 @@
+@import "variables";
+
+.flash-message {
+    background-color: $color-balance-positive;
+    animation: fadeInOut 3s ease-in-out forwards;
+    padding: 10px;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

@@ -16,6 +16,9 @@ class PaypalAccount extends PaymentOption
     #[ORM\OneToMany(targetEntity: PaymentAction::class, mappedBy: 'paypalAccountSender')]
     private $paymentActions;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $paypalMeLink = null;
+
     public function __construct()
     {
         $this->paymentActions = new ArrayCollection();
@@ -59,6 +62,18 @@ class PaypalAccount extends PaymentOption
                 $paymentAction->setPaypalAccountSender(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPaypalMeLink(): ?string
+    {
+        return $this->paypalMeLink;
+    }
+
+    public function setPaypalMeLink(?string $paypalMeLink): self
+    {
+        $this->paypalMeLink = $paypalMeLink;
 
         return $this;
     }

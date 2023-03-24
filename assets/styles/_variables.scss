@@ -1,13 +1,26 @@
 //colors
-$body-main: #292f24;
-$body-diff: #424243;
-$body-diff-2: #5d5d5d;
-$header-purple: #80596f;
-$balance-negative: #a93939;
-$balance-positive: #6c915b;
-$form-button: #688059;
-$font-color-white: #d7e6cf;
+$color-body-main: #292f24;
+$color-body-diff: #424243;
+$color-body-diff-2: #5d5d5d;
+$color-footer: #3d443d;
+$color-header-purple: #80596f;
+$color-header-main: #688059;
+$color-balance-negative: #a93939;
+$color-balance-positive: #6c915b;
+$color-form-button: #688059;
+$color-font-white: #d7e6cf;
 
 //distance
-$default-margin-lr: 3px;
-$default-margin-b-s: 10px;
+$default-m-lr-s: 3px;
+$default-m-lr-m: 8px;
+$default-m-b-s: 10px;
+$default-m-b-m: 20px;
+
+//border
+$default-border-radius: 8px;
+
+//text
+$smaller-text: 0.8em;
+
+// images sizes
+$home-button-img-size: 35px;

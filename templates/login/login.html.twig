@@ -18,17 +18,12 @@
         <div class="page-header-image">
             <img src="{{ asset('assets/img/login.svg') }}" alt="Tile image">
         </div>
-
     </div>
 
-
     <div class="content-body">
-
         <div id="tab-1" class="tab active">
             {% if last_username %}
-
                 <div class="empty-list-info font-size-1-2">Willkommen zurück {{ last_username }}</div>
-
             {% else %}
                 {% if error %}
                     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -62,13 +57,8 @@
                         <button class="btn" type="submit">login</button>
                     </form>
                 </div>
+                <a href="{{ path('app_forgot_password_request') }}">Passwort vergessen?</a>
             {% endif %}
-
-
-            {# If you want to control the URL the user is redirected to on success
-{#        <input type="hidden" name="_target_path" value="/account"> #}
-
-
         </div>
     </div>
 {% endblock %}

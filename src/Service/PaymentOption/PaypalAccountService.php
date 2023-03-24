@@ -42,15 +42,16 @@ class PaypalAccountService
      *
      * @param PaypalAccountData $paypalAccountData
      *
-     * @return void
+     * @return PaypalAccount
      * @throws Exception
      */
-    public function storePaypalAccount(PaypalAccountData $paypalAccountData): void
+    public function storePaypalAccount(PaypalAccountData $paypalAccountData): PaypalAccount
     {
         /** @var PaypalAccount $paypalAccount */
         $paypalAccount = $this->paymentOptionFactory->createByData($paypalAccountData);
 
         $this->paypalAccountRepository->persist($paypalAccount);
+        return $paypalAccount;
     }
 
     /**

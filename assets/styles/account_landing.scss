@@ -2,7 +2,7 @@
 
 .statistics {
     background: #424243;
-    border: 2px solid $header-purple;
+    border: 2px solid $color-header-purple;
     border-radius: 8px;
     margin-right: 3px;
     max-width: 100%;
@@ -30,7 +30,7 @@
 .tile {
     width: calc(25% - 20px); /* calculate the width to be half of the screen width and subtract some padding */
     height: calc(25% - 20px); /* set the height to be equal to the width */
-    background-color: $balance-positive; /* add a background color for styling purposes */
+    background-color: $color-balance-positive; /* add a background color for styling purposes */
     margin: 5px; /* add some padding between the tiles */
     display: flex;
     flex-direction: column;
@@ -38,7 +38,7 @@
     justify-content: center;
     cursor: pointer;
 
-    border: 2px solid $header-purple;
+    border: 2px solid $color-header-purple;
     border-radius: 8px;
 
     position: relative; /* add a positioning context for the hover effect */
@@ -110,7 +110,7 @@
 }
 
 .balance {
-    border: 1px solid $header-purple;
+    border: 1px solid $color-header-purple;
     border-radius: 3px;
 }
 
@@ -142,8 +142,8 @@
 }
 
 .balance-text {
-    background: $header-purple;
-    border: 1px solid $header-purple;
+    background: $color-header-purple;
+    border: 1px solid $color-header-purple;
     border-radius: 3px;
 }
 
@@ -171,7 +171,7 @@
 
     font-size: 2.1rem;
     font-weight: bold;
-    color: $balance-positive;
+    color: $color-balance-positive;
 
     padding-left: 10px;
     padding-right: 10px;
@@ -201,7 +201,7 @@
 
     text-decoration: none;
     &.negative{
-        background: $balance-negative;
+        background: $color-balance-negative;
     }
 }
 
@@ -237,5 +237,5 @@
 }
 
 .balance-negative {
-    color: $balance-negative;
+    color: $color-balance-negative;
 }

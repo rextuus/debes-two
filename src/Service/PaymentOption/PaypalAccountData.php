@@ -5,24 +5,27 @@ namespace App\Service\PaymentOption;
 class PaypalAccountData extends PaymentOptionData
 {
 
-    /**
-     * @var string
-     */
-    private $email;
+    private string $email;
 
-    /**
-     * @return string
-     */
+    private ?string $paypalMeLink;
+
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     */
     public function setEmail(string $email): void
     {
         $this->email = $email;
+    }
+
+    public function getPaypalMeLink(): ?string
+    {
+        return $this->paypalMeLink;
+    }
+
+    public function setPaypalMeLink(?string $paypalMeLink): void
+    {
+        $this->paypalMeLink = $paypalMeLink;
     }
 }

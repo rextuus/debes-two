@@ -50,7 +50,7 @@ class MailService
     public function sendNotificationMail(Transaction $transaction, string $mailVariant, PaymentAction $paymentAction = null)
     {
         if ($_ENV['APP_ENV'] === 'dev' || $_ENV['APP_ENV'] === 'test') {
-            return;
+//            return;
         }
         $receiver = $transaction->getDebts()[0]->getOwner();
 
@@ -134,5 +134,15 @@ class MailService
             ]);
 
         $this->mailer->send($email);
+    }
+
+    public function sendTestMail(){
+        $email = (new TemplatedEmail())
+            ->from(self::DEBES_MAIL_ADDRESS)
+            ->to('wrextuus@gmail.com')
+            ->subject('Mail Service Test for debes')
+            ->text('Mailing works fine');
+        $this->mailer->send($email);
+        dd($email);
     }
 }

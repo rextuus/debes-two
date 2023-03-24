@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionService;
 use App\Service\User\UserService;
 use Exception;
@@ -21,8 +22,10 @@ class LandingController extends AbstractController
     }
 
     #[Route('/', name: 'landing')]
-    public function index(UserService $userService, TransactionService $transactionService): Response
+    public function index(UserService $userService, TransactionService $transactionService, MailService $mailService): Response
     {
+        $mailService->sendTestMail();
+
         $user = $this->security->getUser();
         if (!$user instanceof User){
             throw new Exception();

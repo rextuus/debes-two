@@ -3,7 +3,7 @@
 /* Style the tab navigation */
 .tab-nav {
     display: flex;
-    border-bottom: 1px solid $header-purple;
+    border-bottom: 1px solid $color-header-purple;
 }
 
 .tab-button {
@@ -22,7 +22,7 @@
 }
 
 .tab-button.active {
-    background-color: $header-purple;
+    background-color: $color-header-purple;
     font-weight: bold;
     color: #ddd;
 

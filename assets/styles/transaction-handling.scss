@@ -1,10 +1,11 @@
 @import "variables";
+@import "form";
 
 .transaction-summary{
   background: #424243;
-  border: 2px solid $header-purple;
+  border: 2px solid $color-header-purple;
   border-radius: 8px;
-  margin-right: $default-margin-lr;
+  margin-right: $default-m-lr-s;
   max-width: 100%;
   margin-bottom: 15px;
 }
@@ -12,8 +13,8 @@
   color: black;
   font-weight: bold;
   font-size: 1.8rem;
-  background-color: $header-purple;
-  border: 1px solid $header-purple;
+  background-color: $color-header-purple;
+  border: 1px solid $color-header-purple;
   //border-radius: 8px;
 }
 
@@ -21,8 +22,8 @@
   display: flex;
   flex-direction: column;
   padding: 5px;
-  background-color: $body-diff;
-  border: 1px solid $header-purple;
+  background-color: $color-body-diff;
+  border: 1px solid $color-header-purple;
   //border-radius: 8px;
   margin: 5px 0px;
 }
@@ -40,13 +41,13 @@
 
 .summary-transaction-details{
   padding: 5px;
-  background-color: $body-diff;
-  border: 1px solid $header-purple;
+  background-color: $color-body-diff;
+  border: 1px solid $color-header-purple;
 }
 
 .exchange-choice{
   max-width: 100%;
-  background-color: $body-diff;
+  background-color: $color-body-diff;
 }
 
 .exchange-preview{
@@ -89,10 +90,10 @@
 }
 
 .exchange-preview-part{
-  background-color: $body-diff;
+  background-color: $color-body-diff;
   //border-radius: 8px;
-  margin-right: $default-margin-lr;
-  margin-left: $default-margin-lr;
+  margin-right: $default-m-lr-s;
+  margin-left: $default-m-lr-s;
   max-width: 100%;
 
 
@@ -100,7 +101,7 @@
 .exchange-preview-part.positive{
   //background-color: $balance-positive;
   //border-top: 2px solid $balance-positive;
-  border-right: 10px solid $balance-positive;
+  border-right: 10px solid $color-balance-positive;
   //border-left: 1px solid $body-diff;
   //border-bottom: 1px solid $body-diff;
   border-top-left-radius: 8px;
@@ -111,7 +112,7 @@
 }
 
 .exchange-preview-part.negative{
-  border-left: 10px solid $balance-negative;
+  border-left: 10px solid $color-balance-negative;
   border-top-right-radius: 8px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -121,17 +122,17 @@
 }
 
 .exchange-preview-part-arrow.positive{
-  border-right: 10px solid $balance-positive;
+  border-right: 10px solid $color-balance-positive;
   padding-bottom: 30px;
   border-bottom-right-radius: 8px;
-  margin-right: $default-margin-lr;
+  margin-right: $default-m-lr-s;
 }
 
 .exchange-preview-part-arrow.negative{
-  border-left: 10px solid $balance-negative;
+  border-left: 10px solid $color-balance-negative;
   padding-bottom: 30px;
   border-top-left-radius: 8px;
-  margin-left: $default-margin-lr;
+  margin-left: $default-m-lr-s;
 }
 
 .exchange-preview-part-header{
@@ -141,14 +142,14 @@
 }
 
 .exchange-preview-part-header.positive{
-  background-color: $balance-positive;
-  border-left: 10px solid $balance-positive;
+  background-color: $color-balance-positive;
+  border-left: 10px solid $color-balance-positive;
   border-top-left-radius: 8px;
   //border-bottom-left-radius: 8px;
 }
 .exchange-preview-part-header.negative{
-  background-color: $balance-negative;
-  border-left: 10px solid $balance-negative;
+  background-color: $color-balance-negative;
+  border-left: 10px solid $color-balance-negative;
   //border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
@@ -157,7 +158,7 @@
   display: flex;
   flex-direction: column;
   padding: 5px;
-  background-color: $body-diff;
+  background-color: $color-body-diff;
   //border-top-left-radius: 8px;
   //border-bottom-left-radius: 8px;
   border-radius: 8px;
@@ -179,7 +180,7 @@
   //border-top-left-radius: 8px;
   //border-bottom-left-radius: 8px;
   border-radius: 8px;
-  margin: 20px $default-margin-lr;
+  margin: 20px $default-m-lr-s;
   color: #0a0800;
   padding: 5px;
   font-size: 1.2em;
@@ -192,16 +193,16 @@
 }
 
 .exchange-result.negative{
-  background-color: $balance-negative;
+  background-color: $color-balance-negative;
 }
 .exchange-result.positive{
-  background-color: $balance-positive;
+  background-color: $color-balance-positive;
 }
 
 // exchange listing
 .exchange-list{
   background: #424243;
-  margin: 20px $default-margin-lr 10px;
+  margin: 20px $default-m-lr-s 10px;
   max-width: 100%;
   font-size: 0.7em;
 
@@ -221,7 +222,7 @@
 }
 
 .reason{
-  background-color: $form-button;
+  background-color: $color-form-button;
   padding: 3px;
   border-radius: 4px;
 }
@@ -286,7 +287,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $header-purple;
+  background-color: $color-header-purple;
   color: black;
   border-radius: 4px;
   border: 1px black solid;
@@ -300,10 +301,10 @@
     object-fit: contain;
   }
   &.deactivated{
-    background-color: $body-diff;
+    background-color: $color-body-diff;
   }
   &.active{
-    background-color: $body-diff;
+    background-color: $color-body-diff;
   }
 
   .exchange-collapsable-text{
@@ -313,51 +314,76 @@
 
 
 .bank-transfer-details{
-  background-color: $body-diff;
+  @extend .has-default-border;
+  background-color: $color-body-diff;
   padding: 15px;
+  margin-bottom: $default-m-b-m;
   .bank-transfer-line{
     display: flex;
     flex-direction: column;
-    margin-bottom: $default-margin-b-s;
+    margin-bottom: $default-m-b-s;
+    border-bottom: solid 1px black;
     .bank-transfer-row {
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin-bottom: $default-margin-b-s;
+      margin-bottom: $default-m-b-s;
+
+      .bank-transfer-row-date {
+        color: $color-font-white;
+      }
+      .bank-transfer-row-icon {
+        margin-right: 10px;
+        color: $color-font-white;
+        padding: 1px;
+        background-color: $color-font-white;
+        border: 1px solid black;
+      }
     }
+
+
+    .bank-transfer-row-icon img {
+      width: 25px;
+      height: 25px;
+    }
+
     .bank-transfer-row-copy{
       display: flex;
       flex-direction: row;
       align-items: center;
+      margin-bottom: $default-m-b-s;
 
       .bank-transfer-row-copy-value{
         display: inline-block;
-        margin-left: $default-margin-lr;
+        margin-left: $default-m-lr-s;
+        color: #0a0800;
+        font-weight: bold;
       }
       .bank-transfer-row-copy-button{
+        @extend .btn;
+        height: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
         margin-left: auto;
-        margin-right: $default-margin-lr;
-
+        margin-right: $default-m-lr-s;
       }
+    }
+    &.copied {
+      color: black;
+      .bank-transfer-row {
+        .bank-transfer-row-date{
+          color: black;
+        }
+        .bank-transfer-row-icon {
+          background-color: $color-balance-positive;
+        }
+      }
+
     }
   }
 
 }
 
 
-.bank-transfer-row-icon {
-  margin-right: 10px;
-  border: 1px solid $font-color-white;
-  color: $font-color-white;
-  padding: 2px;
-  background-color: $font-color-white;
-}
 
-.bank-transfer-row-icon img {
-  width: 25px;
-  height: 25px;
-}
 
-.bank-transfer-row-date {
-  color: black;
-}

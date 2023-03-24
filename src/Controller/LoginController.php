@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\UserLoginType;
 use App\Form\UserType;
 use App\Service\User\UserData;
+use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class LoginController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
-    public function index(AuthenticationUtils $authenticationUtils): Response
+    public function loginUser(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
@@ -27,7 +28,7 @@ class LoginController extends AbstractController
     }
 
     #[Route('/logout', name: 'app_logout')]
-    public function someAction(Security $security): Response
+    public function logoutUser(Security $security): Response
     {
         // logout the user in on the current firewall
         $response = $security->logout();
@@ -37,5 +38,26 @@ class LoginController extends AbstractController
 
         // ... return $response (if set) or e.g. redirect to the homepage
         return $this->redirect($this->generateUrl('app_login'));
+    }
+
+    #[Route('/registration', name: 'registration')]
+    public function registerNewUser(Request $request, UserService $userService): Response
+    {
+        $registrationForm = $this->createForm(UserType::class, new UserData());
+
+        $registrationForm->handleRequest($request);
+
+        if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
+            /** @var UserData $data */
+            $data = $registrationForm->getData();
+
+            $userService->storeUser($data);
+
+            return $this->redirect($this->generateUrl('app_login'));
+        }
+
+        return $this->render('login/registration.html.twig', [
+            'registrationForm' => $registrationForm->createView(),
+        ]);
     }
 }

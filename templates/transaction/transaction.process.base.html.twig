@@ -22,26 +22,31 @@
     </div>
 </div>
 <div class="content-body">
-    <div id="tab-1" class="tab active">
-
+    <div id="tab-1" class="tab {{ tabClasses[0] }}">
         {% if showBank %}
             {{ transfer_bank(dto, bankForm) | raw }}
         {% else %}
-            Der Pimmel gegenüber schuldet dir leider nichts. Da können wir also nicht verrechnen!
+        <div class="empty-list-info">
+            Der Kreditgeber besitzt leider kein Bankkonto oder möchte sein Geld nicht dorthin überwiesen haben!
+        </div>
         {% endif %}
     </div>
-    <div id="tab-2" class="tab">
+    <div id="tab-2" class="tab {{ tabClasses[1] }}">
         {% if showPaypal %}
             {{ transfer_paypal(dto, paypalForm) | raw }}
         {% else %}
-            Der Pimmel gegenüber schuldet dir leider nichts. Da können wir also nicht verrechnen!
+        <div class="empty-list-info">
+            Der Kreditgeber besitzt leider kein Paypal oder möchte sein Geld nicht dorthin überwiesen haben!
+        </div>
         {% endif %}
     </div>
-    <div id="tab-3" class="tab">
+    <div id="tab-3" class="tab {{ tabClasses[2] }}">
         {% if showExchange %}
             {{ transfer_exchange(dto, exchangeForm) | raw }}
         {% else %}
-            Der Pimmel gegenüber schuldet dir leider nichts. Da können wir also nicht verrechnen!
+        <div class="empty-list-info">
+            Der Kreditgeber hat keine Schulden bei dir, mit denen man eine Verrechnung durchführen könnte!
+        </div>
         {% endif %}
     </div>
 </div>

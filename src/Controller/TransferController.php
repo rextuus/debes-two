@@ -161,7 +161,7 @@ class TransferController extends AbstractController
         }
 
         return $this->render('transfer/send.bank.html.twig', [
-            'dto'  => $dto,
+            'dto' => $dto,
             'form' => $form->createView(),
         ]);
     }
@@ -193,8 +193,8 @@ class TransferController extends AbstractController
 
         $receiverPaypalAccount = $paypalAccountService->getPaypalAccountForUser($transaction->getLoans()[0]->getOwner());
 
-//        $dto = $this->prepareTransferDto($receiverPaypalAccount, $transaction);
-        $dto = $dtoProvider->createTransactionDto($transaction, true);
+        $dto = $this->prepareTransferDto($receiverPaypalAccount, $transaction);
+//        $dto = $dtoProvider->createTransactionDto($transaction, true);
 
         $labels = ['label' => ['submit' => 'Erledigt', 'decline' => 'Abbrechen']];
         $form = $this->createForm(ChoiceType::class, null, $labels);
@@ -421,13 +421,27 @@ class TransferController extends AbstractController
                 $bankForm->handleRequest($request);
                 if ($bankForm->isSubmitted() && $bankForm->isValid()) {
                     // process the bank form data and redirect or render a response
-                    dd($bankData);
+                    $data = $bankForm->getData();
+                    return $this->redirectToRoute(
+                        'transfer_send_bank',
+                        [
+                            'slug' => $transaction->getSlug(),
+                            'senderBankAccount' => $data->getPaymentOption()->getId()
+                        ]
+                    );
                 }
             } elseif ($paypalIsSubmitted) {
                 $paypalForm->handleRequest($request);
                 if ($paypalForm->isSubmitted() && $paypalForm->isValid()) {
                     // process the paypal form data and redirect or render a response
-                    dd('Paypal');
+                    $data = $bankForm->getData();
+                    return $this->redirectToRoute(
+                        'transfer_send_paypal',
+                        [
+                            'slug' => $transaction->getSlug(),
+                            'senderPaypalAccount' => $data->getPaymentOption()->getId()
+                        ]
+                    );
                 }
             } elseif ($exchangeIsSubmitted) {
                 $exchangeForm->handleRequest($request);
@@ -449,7 +463,7 @@ class TransferController extends AbstractController
             }
         }
 
-        $tabPreferences = $this->prepareTabReferences($request->get('tabId') ?: 1);
+        $tabPreferences = $this->prepareTabReferences($request->get('variant') ?: 1);
 
         return $this->render(
             'transaction/transaction.process.base.html.twig',

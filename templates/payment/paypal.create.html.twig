@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paypalkonto erstellen{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="page-header-text">
+            Paypalkonto erstellen
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/paypal-account.svg') }}" alt="Tile image">
+        </div>
+    </div>
+
+    <div class="content-body">
+        <div class="form-area has-mb-m">
+            {{ form_start(form, {'method': 'POST'}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="form-input-field">
+                <label class="hidden" for="paypal_account_create_email"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/email.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.email, {'attr': {'class': 'form-style', 'placeholder': 'Paypal-Mailadresse', 'id': 'email'}}) }}
+                </div>
+            </div>
+            <div class="form-input-field">
+                <label class="hidden" for="paypal_account_create_paypalMeLink"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/link.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.paypalMeLink, {'attr': {'class': 'form-style', 'placeholder': 'PaypalMe-Link', 'id': 'paypalMeLink'}}) }}
+                </div>
+            </div>
+            <div class="form-input-field">
+                <label class="hidden" for="paypal_account_create_description"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/description.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.description, {'attr': {'class': 'form-style', 'placeholder': 'Beschreibung', 'id': 'description'}}) }}
+                </div>
+            </div>
+            <div class="form-input-field">
+                <label class="hidden" for="paypal_account_create_enabled"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/activated.svg') }}" alt="Tile image">
+                    </div>
+                    <div class="toggle-switch-container">
+                        <label class="switch">
+                            <label for="paypal_account_create_enabled" class="switch-toggle-label"></label>
+                            {{ form_widget(form.enabled, {'attr': {'class': 'toggle-box', 'placeholder': 'Verfügbar', 'id': 'enabled', 'value': 1}}) }}
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-input-field">
+                <label class="hidden" for="paypal_account_create_preferred"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/favorite.svg') }}" alt="Tile image">
+                    </div>
+                    <div class="toggle-switch-container">
+                        <label class="switch">
+                            {{ form_widget(form.preferred, {'attr': {'class': 'toggle-box', 'placeholder': 'Primär', 'id': 'preferred'}}) }}
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            {{ form_row(form._token) }}
+            <div class="form-submit-field">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

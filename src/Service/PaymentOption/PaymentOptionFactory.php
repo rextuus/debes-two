@@ -46,6 +46,7 @@ class PaymentOptionFactory
         } elseif ($data instanceof PaypalAccountData) {
             /** @var PaypalAccount $paymentOption */
             $paymentOption->setEmail($data->getEmail());
+            $paymentOption->setPaypalMeLink($data->getPaypalMeLink());
         }
 
         $paymentOption->setOwner($data->getOwner());

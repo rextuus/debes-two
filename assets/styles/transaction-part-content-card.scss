@@ -44,7 +44,7 @@ $content-card-shadow-positive: $shadow-size $shadow-size $shadow-size rgba(108, 
 
 .date-since {
     font-size: 1.2em;
-    border-bottom: 4px solid $balance-positive;
+    border-bottom: 4px solid $color-balance-positive;
     margin-right: 5px;
 }
 
@@ -73,7 +73,7 @@ $content-card-shadow-positive: $shadow-size $shadow-size $shadow-size rgba(108, 
 
 
     /*for itsels*/
-    background: $balance-positive;
+    background: $color-balance-positive;
     border: 2px solid black;
     color: black;
     padding: 5px;
@@ -84,7 +84,7 @@ $content-card-shadow-positive: $shadow-size $shadow-size $shadow-size rgba(108, 
     margin-left: auto;
     display: inline-block;
 
-    background: $balance-positive;
+    background: $color-balance-positive;
     border: 2px solid black;
     color: black;
     padding: 5px;
@@ -149,12 +149,12 @@ $content-card-shadow-positive: $shadow-size $shadow-size $shadow-size rgba(108, 
 
         &.active.is-debt{
             .state-icon{
-                background: $balance-negative;
+                background: $color-balance-negative;
             }
         }
         &.active{
             .state-icon{
-                background: $balance-positive;
+                background: $color-balance-positive;
             }
             .state-date{
                 color: #d7e6cf;
@@ -186,13 +186,13 @@ $content-card-shadow-positive: $shadow-size $shadow-size $shadow-size rgba(108, 
 .content-card {
     &.is-debt {
         .left-side-icon {
-            background-color: $balance-negative;
+            background-color: $color-balance-negative;
         }
         .right-side-icon {
-            background-color: $balance-negative;
+            background-color: $color-balance-negative;
         }
         .date-since {
-            border-bottom: 4px solid $balance-negative;
+            border-bottom: 4px solid $color-balance-negative;
         }
         box-shadow: $content-card-shadow-negative;
     }

@@ -3,6 +3,17 @@
         <div class="account-landing-header">
             Hallo User
         </div>
+{#        <button id="home-button" class="link" data-link="{{ path('landing') }}"#}
+{#                data-image="{{ asset('assets/img/home.svg') }}">#}
+{#        </button>#}
+{#        <div class="home-button">#}
+{#            <img src="{{ asset('assets/img/registration.svg') }}" alt="Tile image">#}
+{#        </div>#}
+        <div class="home-button-container">
+        <a href="{{ path('landing') }}" class="home-button">
+            <img src="{{ asset('assets/img/home.svg') }}" alt="Tile image">
+        </a>
+        </div>
     </div>
     <button id="burger" class="open-main-nav">
         <span class="burger"></span>

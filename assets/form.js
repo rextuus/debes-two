@@ -20,13 +20,23 @@ inputs.forEach(function(inputElement) {
     if (!input){
         return;
     }
+
+    // checkboxes should have always a visible labe
+    if(input.classList.contains('toggle-box')){
+        var id = input.getAttribute("id");
+        var label = document.querySelector("label[for='" + id + "']");
+        if (label.innerHTML === ''){
+            label.innerHTML = input.placeholder;
+        }
+        label.style.display = "block";
+    }
+
+
     input.addEventListener("input", function() {
         // If the input field is not empty, show the corresponding label
         if (this.value) {
             var id = this.getAttribute("id");
             var label = document.querySelector("label[for='" + id + "']");
-            console.log(id);
-            console.log(label);
             if (label.innerHTML === ''){
                 label.innerHTML = this.placeholder;
             }

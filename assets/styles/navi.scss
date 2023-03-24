@@ -11,7 +11,7 @@
     bottom: 0;
     left: 0;
     right: -15px;
-    background: $balance-positive;
+    background: $color-header-main;
     transform-origin: 0 0;
     transition: all .275s .1s;
     /*background: linear-gradient(to bottom right, #89bbbe 0%, #89bbbe calc(50% - 11%), #02516c calc(50% - 10%), #02516c 100%);*/
@@ -52,7 +52,7 @@
     bottom: 0;
     left: 0;
     right: -15px;
-    background: $balance-positive;
+    background: $color-balance-positive;
     transform-origin: 0 0;
     transform: skew(-14deg) translateX(-120%);
     transition: all .275s .1s;
@@ -189,4 +189,33 @@
     font-weight: 500;
     text-align: center;
     color: #5A3B5D;
+}
+.home-button-container{
+    display: inline-block;
+}
+.home-button {
+    margin-left: $default-m-lr-m;
+    //width: calc(25% - 20px);
+    ///* calculate the width to be half of the screen width and subtract some padding */
+    //height: calc(25% - 20px);
+    /* add some padding between the tiles */
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    cursor: pointer;
+
+    /* add a positioning context for the hover effect */
+
+    img {
+        width: $home-button-img-size;
+        height: $home-button-img-size;
+    }
+}
+
+.account-landing-header{
+    color: #0a0800;
+    margin-top: $default-m-b-s;
+    margin-left: $default-m-lr-m;
+    margin-bottom: $default-m-b-s;
 }

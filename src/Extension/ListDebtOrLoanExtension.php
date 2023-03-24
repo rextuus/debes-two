@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Service\Transaction;
+namespace App\Extension;
 
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Service\Transaction\TransactionService;
 use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

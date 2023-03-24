@@ -21,9 +21,12 @@ burger.addEventListener('click', function(e){
     nav.classList.toggle('is-open');
 });
 
-slowmo.addEventListener('click', function(e){
-    this.classList.toggle('is-slowmo');
-});
+if (slowmo){
+    slowmo.addEventListener('click', function(e){
+        this.classList.toggle('is-slowmo');
+    });
+}
+
 
 /* Onload demo - dirty timeout */
 let clickEvent = new Event('click');
@@ -39,4 +42,12 @@ window.addEventListener('load', function(e) {
             slowmo.dispatchEvent(clickEvent);
         }, 3500);
     }, 5500);
+});
+
+var homeButton = document.getElementById('home-button');
+homeButton.querySelector('img').src = homeButton.getAttribute('data-image')
+homeButton.addEventListener('click', function() {
+    if (button.classList.contains('link')){
+        window.location.replace(button.getAttribute('data-link'))
+    }
 });

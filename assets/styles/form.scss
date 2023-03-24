@@ -1,13 +1,12 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*form*/
+@import "app";
 @import "variables";
 
 .form-area{
+    @extend .has-default-border;
     background: #424243;
-    border: 1px solid #424243;
-    border-radius: 8px;
     padding: 10px;
-    margin-bottom: 5px;
 }
 
 .form-style {
@@ -104,6 +103,78 @@ label{
     color: #5d5d5d;
 }
 
+.toggle-switch-container{
+    width: 100%;
+}
+
+//checkboy
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+$slider-height: 30px;
+$slider-button-height: 20px;
+.slider {
+    margin-left: $default-m-lr-m;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $color-body-diff;
+    -webkit-transition: .4s;
+    transition: .4s;
+    height: $slider-height;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: $slider-button-height;
+    width: $slider-button-height;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: $color-balance-positive;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
 
 /*buttons*/
 .next-state-button{
@@ -125,8 +196,8 @@ label{
 
         border: 2px solid black;
         border-radius: 9px;
-        margin-right: $default-margin-lr;
-        margin-left: $default-margin-lr;
+        margin-right: $default-m-lr-s;
+        margin-left: $default-m-lr-s;
     }
 }
 
@@ -139,11 +210,11 @@ label{
     border: 2px solid black;
     border-radius: 9px;
     color: black;
-    margin-right: $default-margin-lr;
-    margin-left: $default-margin-lr;
+    margin-right: $default-m-lr-s;
+    margin-left: $default-m-lr-s;
 }
 .accept{
-    background-color: $balance-positive; /* Green background */
+    background-color: $color-balance-positive; /* Green background */
 
 }
 .decline{
