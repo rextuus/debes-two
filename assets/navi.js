@@ -45,9 +45,12 @@ window.addEventListener('load', function(e) {
 });
 
 var homeButton = document.getElementById('home-button');
-homeButton.querySelector('img').src = homeButton.getAttribute('data-image')
-homeButton.addEventListener('click', function() {
-    if (button.classList.contains('link')){
-        window.location.replace(button.getAttribute('data-link'))
-    }
-});
+if (homeButton){
+    homeButton.querySelector('img').src = homeButton.getAttribute('data-image')
+    homeButton.addEventListener('click', function() {
+        if (button.classList.contains('link')){
+            window.location.replace(button.getAttribute('data-link'))
+        }
+    });
+}
+

@@ -7,6 +7,7 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/transaction-part-content-card.scss';
+import './styles/payment-option-content-card.scss';
 import './styles/account-debt-overview.scss';
 
 // start the Stimulus application

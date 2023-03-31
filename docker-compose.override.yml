@@ -8,7 +8,13 @@ services:
 ###< doctrine/doctrine-bundle ###
 
 ###> symfony/mailer ###
-  mailer:
-    image: schickling/mailcatcher
-    ports: ["1025", "1080"]
+#  mailer:
+#    image: schickling/mailcatcher
+#    ports: ["1025", "1080"]
+  mailcatcher:
+    container_name: mailcatcher
+    image: stpaquet/alpinemailcatcher:latest
+    ports:
+      - "1080:1080"
+      - "1025:1025"
 ###< symfony/mailer ###

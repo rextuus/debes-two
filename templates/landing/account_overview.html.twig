@@ -13,14 +13,11 @@
     <body>
 
     <div class="tile-container">
-        <a href="#" class="tile" data-url="{{ path('landing') }}" data-caption="Tile 1">
+        <a href="{{ path('transaction_create_simple') }}" class="tile" data-url="{{ path('transaction_create_simple') }}" data-caption="">
             <img src="{{ asset('assets/img/claim.svg') }}" alt="Tile image">
         </a>
-        <a href="#" class="tile" data-url="{{ path('landing') }}">
-            <img src="{{ asset('assets/img/claim.png') }}" alt="Tile image">
-        </a>
-        <a href="#" class="tile" data-url="{{ path('landing') }}">
-            <img src="{{ asset('assets/img/history.png') }}" alt="Tile image">
+        <a href="{{ path('payment_overview') }}" class="tile" data-url="{{ path('payment_overview') }}" data-caption="">
+            <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
         </a>
     </div>
 
@@ -37,7 +34,7 @@
                     </div>
 
                     <div class="balance-image">
-                        <img id="balance_image" src="{{ asset('assets/img/tendence.png') }}" alt="Image description" width="60" height="60">
+                        <img id="balance_image" class="{% if totalBalance <= 0%}mirrored svg-icon-fill-negative{% endif %}" src="{{ asset('assets/img/up-trend.svg') }}" alt="Image description" width="60" height="60">
                     </div>
                 </div>
 
@@ -49,21 +46,21 @@
                     <div class="balance-part-header">
                         <div class="balance-part-header-element">Verliehen</div>
                         <div class="part-balance-part-header-element-image">
-                            <img src="{{ asset('assets/img/tendence.png') }}" alt="Image description" width="30" height="30">
+                            <img src="{{ asset('assets/img/up-trend.svg') }}" alt="Image description" width="30" height="30">
                         </div>
                     </div>
                     <div class="balance-part-total">
                         <p><span id="total_loans">{{ totalLoan }}</span> &euro;</p>
                     </div>
                     <div class="balance-part-summary">
-                        <a href="{{ path('landing') }}" class="balance-part-detail-header">
+                        <a href="{{ path('account_loans') }}?variant=new" class="balance-part-detail-header">
                             <div class="balance-part-detail-header-variant">Offen:</div>
                             <div class="balance-part-detail-header-amount">{{ openLoans }}</div>
                         </a>
-                        <div class="balance-part-detail-header">
+                        <a href="{{ path('account_loans') }}?variant=accepted" class="balance-part-detail-header">
                             <div class="balance-part-detail-header-variant">Akzeptiert:</div>
                             <div class="balance-part-detail-header-amount">{{ acceptedLoans }}</div>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
@@ -71,7 +68,7 @@
                     <div class="balance-part-header">
                         <div class="balance-part-header-element">Geborgt</div>
                         <div class="part-balance-part-header-element-image">
-                            <img src="{{ asset('assets/img/tendence.png') }}" alt="Image description" width="30" height="30">
+                            <img class="mirrored" src="{{ asset('assets/img/up-trend.svg') }}" alt="Image description" width="30" height="30">
                         </div>
 
                     </div>

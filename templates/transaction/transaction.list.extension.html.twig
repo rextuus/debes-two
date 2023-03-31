@@ -1,3 +1,10 @@
+<div class="extra-page-header">
+    {% if debtVariant %}
+        Schulden
+    {% else %}
+        Verliehen
+    {% endif %}
+</div>
 <div class="tab-nav">
     <button class="tab-button {{ tabClasses[0] }} " data-tab="tab-1" data-name="Neu" data-image="{{ asset('assets/img/create.svg') }}">
     </button>

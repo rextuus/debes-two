@@ -6,6 +6,7 @@ DROP TABLE exchange;
 DROP TABLE loan;
 DROP TABLE debt;
 DROP TABLE transactions;
+DROP TABLE reset_password_request;
 DROP TABLE user;
 
 CREATE USER 'debes_user'@'localhost' IDENTIFIED BY 'password';

@@ -65,20 +65,11 @@ class BankAccountService
     }
 
     /**
-     * getBackAccountsOfUser
-     *
-     * @param User $user
-     *
-     * @return array
+     * @return BankAccount[]
      */
     public function getBankAccountsOfUser(User $user): array
     {
-        $accounts = $this->bankAccountRepository->findBy(['owner' => $user]);
-        $dtos = array();
-        foreach ($accounts as $account) {
-            $dtos[] = $this->createDtoFromEntity($account);
-        }
-        return $dtos;
+        return $this->bankAccountRepository->findBy(['owner' => $user]);
     }
 
     /**

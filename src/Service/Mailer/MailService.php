@@ -4,14 +4,21 @@ namespace App\Service\Mailer;
 
 use App\Entity\PaymentAction;
 use App\Entity\Transaction;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Bridge\Twig\Mime\BodyRenderer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Mailer\EventListener\MessageListener;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport;
+use Twig\Environment;
 
 /**
  * MailService
  *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
+ * @author Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
  * 
  */
 class MailService
@@ -27,18 +34,11 @@ class MailService
     public const MAIL_DEBT_TRANSFERRED = 'debt_transferred';
     public const MAIL_DEBT_CONFIRMED = 'debt_confirmed';
 
-    /**
-     * @var MailerInterface
-     */
-    private $mailer;
-
-    /**
-     * MailService constructor.
-     * @param MailerInterface $mailer
-     */
-    public function __construct(MailerInterface $mailer)
+    public function __construct(private CustomMailer $mailer)
     {
-        $this->mailer = $mailer;
+//        $mailDsn = $_ENV['MAILER_DSN_REAL'];
+//        $transport = Transport::fromDsn($mailDsn);
+//        $this->mailer = new Mailer($transport);
     }
 
     /**
@@ -115,6 +115,22 @@ class MailService
         $transactions = 0;
         $debts = 0;
 
+//        $renderedHtml = $this->renderer->render(
+//            $template,
+//            [
+//                'userName' => $receiver->getFirstName(),
+//                'text' => $text,
+//                'interacter' => $transaction->getLoans()[0]->getOwner()->getFirstName(),
+//                'reason' => $transaction->getReason(),
+//                'amount' => $transaction->getAmount(),
+//                'problems' => $problems,
+//                'transactions' => $transactions,
+//                'debts' => $debts,
+//                'slug' => $slug,
+//                'paymentAction' => $paymentAction,
+//            ]
+//        );
+
         $email = (new TemplatedEmail())
             ->from(self::DEBES_MAIL_ADDRESS)
             ->to($receiver->getEmail())
@@ -133,6 +149,13 @@ class MailService
                 'paymentAction' => $paymentAction,
             ]);
 
+//        $bodyRender = new BodyRenderer($this->renderer);
+//        $bodyRender->render($email);
+//
+//        $transport = Transport::fromDsn('smtp://127.0.0.1:1025');
+//        $mailer = new Mailer($transport);
+//        $mailer->send($email);
+
         $this->mailer->send($email);
     }
 
@@ -142,7 +165,19 @@ class MailService
             ->to('wrextuus@gmail.com')
             ->subject('Mail Service Test for debes')
             ->text('Mailing works fine');
+
+//        $mailDsn = $_ENV['MAILER_DSN'];
+//        dump($mailDsn);
+//        $mailDsn = $_ENV['MAILER_DSN_REAL'];
+//        dump($mailDsn);
+//
+//        $transport = Transport::fromDsn('smtp://0.0.0.0:1025');
+//        $transport = Transport::fromDsn('smtp://debes@wh-company.de:M6264P687783D78@smtp.strato.de:465/?encryption=ssl$auth_mode=login');
+//        $transport = Transport::fromDsn($mailDsn);
+//        $transport = Transport::fromDsn('smtp://127.0.0.1:1025');
+//        $mailer = new Mailer($transport);
+////        dd($this->mailer);
+///
         $this->mailer->send($email);
-        dd($email);
     }
 }

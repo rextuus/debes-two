@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Service\Mailer\CustomMailer;
 use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionService;
 use App\Service\User\UserService;
@@ -21,11 +22,9 @@ class LandingController extends AbstractController
     {
     }
 
-    #[Route('/', name: 'landing')]
+    #[Route('/', name: 'app_home')]
     public function index(UserService $userService, TransactionService $transactionService, MailService $mailService): Response
     {
-        $mailService->sendTestMail();
-
         $user = $this->security->getUser();
         if (!$user instanceof User){
             throw new Exception();
@@ -33,6 +32,7 @@ class LandingController extends AbstractController
         $transactions = $transactionService->getAllTransactionBelongingUser($user);
         $totalDebts = $transactionService->getTotalDebtsForUser($user);
         $totalLoans = $transactionService->getTotalLoansForUser($user);
+        $totalBalance = $totalLoans - $totalDebts;
         $openDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_CREATED);
         $acceptedDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_ACCEPTED);
         $openLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_CREATED);
@@ -40,6 +40,7 @@ class LandingController extends AbstractController
 
         return $this->render('landing/account_overview.html.twig', [
             'controller_name' => 'LandingController',
+            'totalBalance' => $totalBalance,
             'transactions' => $transactions,
             'totalDebt' => $totalDebts,
             'totalLoan' => $totalLoans,

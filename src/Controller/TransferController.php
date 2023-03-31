@@ -113,7 +113,8 @@ class TransferController extends AbstractController
         Transaction $transaction,
         BankAccount $senderBankAccount,
         Request     $request,
-        DtoProvider $dtoProvider
+        DtoProvider $dtoProvider,
+        MailService $mailService
     ): Response
     {
         /** @var User $requester */
@@ -302,7 +303,7 @@ class TransferController extends AbstractController
         $debtId = $session->get('debt_id');
         $loanId = $session->get('loan_id');
         if (is_null($debtId) || is_null($loanId)) {
-            return $this->redirectToRoute('landing', []);
+            return $this->redirectToRoute('account_overview', []);
         }
 
         $debt = $debtService->getDebtById($debtId);
@@ -368,12 +369,16 @@ class TransferController extends AbstractController
         $showPaypal = $paymentOptions->bothHavePaypalOptions();
 
         $paypalData = (new PrepareTransferData());
-        $paypalData->setPaymentOption($paymentOptions->getAvailablePaypalAccountsDebtor()[0]);
-        $paypalForm = $this->createForm(
-            PreparePaypalType::class,
-            $paypalData,
-            ['payment_accounts' => $paymentOptions->getAvailablePaypalAccountsDebtor()]
-        );
+        $paypalForm = null;
+        if (!empty($paymentOptions->getAvailablePaypalAccountsDebtor())){
+            $paypalData->setPaymentOption($paymentOptions->getAvailablePaypalAccountsDebtor()[0]);
+            $paypalForm = $this->createForm(
+                PreparePaypalType::class,
+                $paypalData,
+                ['payment_accounts' => $paymentOptions->getAvailablePaypalAccountsDebtor()]
+            );
+            $showPaypal = false;
+        }
 
         // prepare exchange tab
         $candidates = $exchangeProcessor->findExchangeCandidatesForTransactionPart($debt);
@@ -474,7 +479,7 @@ class TransferController extends AbstractController
                     'showExchange' => $showExchange,
                     'bankForm' => $bankForm->createView(),
                     'showBank' => $showBank,
-                    'paypalForm' => $paypalForm->createView(),
+                    'paypalForm' => $showPaypal ? $paypalForm->createView() : null,
                     'showPaypal' => $showPaypal,
                 ],
                 $tabPreferences

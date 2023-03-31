@@ -3,57 +3,58 @@
 {% block title %}Hello PaymentController!{% endblock %}
 
 {% block body %}
-    <section class="hero-section">
-        <div class="hero-slider owl-carousel">
-            <div class="hs-item">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="hs-text">
-                                <h2><span>Das Wichtigste</span> zuerst</h2>
+    <div class="page-header">
+        <div class="page-header-text">
+            Geld einfordern
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/claim.svg') }}" alt="Tile image">
+        </div>
 
-                                {{ form_start(form, {'method': 'POST'}) }}
-                                <div class="my-custom-class-for-errors">
-                                    {{ form_errors(form) }}
-                                </div>
+    </div>
+    <div class="content-body">
 
-                                <div class="row">
-                                    <div class="col">
-                                        <div>
-                                            {{ form_label(form.reason, 'Beschreibung', {'label_attr': {'class': 'h2'}}) }}
-                                        </div>
-                                        {{ form_widget(form.reason, {'attr': {'class': 'earch-form input'}}) }}
-
-                                    <br>
-
-                                        <div>
-                                            {{ form_label(form.amount, 'Betrag', {'label_attr': {'class': 'h2'}}) }}
-                                        </div>
-                                        {{ form_widget(form.amount, {'attr': {'class': 'earch-form input'}}) }}
-
-                                    <br>
-
-                                        <div>
-                                            {{ form_label(form.owner, 'Schuldner', {'label_attr': {'class': 'h2'}}) }}
-                                        </div>
-                                        {{ form_widget(form.owner, {'attr': {'class': 'earch-form input'}}) }}
-
-                                    <br>
-
-
-                                    {{ form_row(form._token) }}
-
-                                    <div>
-                                        <br>
-                                        {{ form_widget(form.submit, {'attr': {'class': 'site-btn'}}) }}
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
+        <div class="form-area">
+            {{ form_start(form, {'method': 'POST'}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+            <div class="form-input-field">
+                <label style="display: block;" for="transaction_create_simple_target">Schuldner</label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/target-person.svg') }}" alt="Tile image">
                     </div>
+                    {{ form_widget(form.owner, {'attr': {'class': 'form-style'}}) }}
                 </div>
             </div>
+
+            <div class="form-input-field">
+                <label class="hidden" for="transaction_create_simple_amount">Betrag</label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/coins.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.amount, {'attr': {'data-type': "currency", 'class': 'form-style', 'id': 'amount', 'type': 'text', 'name': 'currency-field', 'placeholder':"1.000,00 €", 'value': ""}}) }}
+                </div>
+            </div>
+
+            <div class="form-input-field">
+                <label class="hidden" for="transaction_create_simple_reason">Grund</label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/reason.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.reason, {'attr': {'class': 'form-style', 'placeholder': 'Grund', 'id': 'reason'}}) }}
+                </div>
+            </div>
+
+            {{ form_row(form._token) }}
+            <div class="form-submit-field">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+            </div>
         </div>
-    </section>
+
+
+    </div>
 {% endblock %}

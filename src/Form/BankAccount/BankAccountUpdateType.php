@@ -11,6 +11,7 @@ class BankAccountUpdateType extends AbstractBankAccountType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
         $builder->add('submit', SubmitType::class, ['label' => 'Änderungen speichern']);
     }
 

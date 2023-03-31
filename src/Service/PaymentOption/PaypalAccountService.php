@@ -55,20 +55,11 @@ class PaypalAccountService
     }
 
     /**
-     * getPaypalAccountsOfUser
-     *
-     * @param User $user
-     *
-     * @return array
+     * @return PaypalAccount[]
      */
     public function getPaypalAccountsOfUser(User $user): array
     {
-        $accounts = $this->paypalAccountRepository->findBy(['owner' => $user]);
-        $dtos = array();
-        foreach ($accounts as $account) {
-            $dtos[] = $this->createDtoFromEntity($account);
-        }
-        return $dtos;
+        return $this->paypalAccountRepository->findBy(['owner' => $user]);
     }
 
     /**

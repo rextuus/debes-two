@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Paypalkonto erstellen{% endblock %}
+{% block title %}Bankkonto erstellen{% endblock %}
 
 {% block body %}
     <div class="page-header">
         <div class="page-header-text">
-            Paypalkonto erstellen
+            Bankkonto erstellen
         </div>
         <div class="page-header-image">
-            <img src="{{ asset('assets/img/paypal-account.svg') }}" alt="Tile image">
+            <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
         </div>
     </div>
 
@@ -20,25 +20,44 @@
             </div>
 
             <div class="form-input-field">
-                <label class="hidden" for="paypal_account_create_email"></label>
+                <label class="hidden" for="bank_account_create_iban"></label>
                 <div class="image-form-row">
                     <div class="image-form-row-image">
-                        <img src="{{ asset('assets/img/email.svg') }}" alt="Tile image">
+                        <img src="{{ asset('assets/img/iban.svg') }}" alt="Tile image">
                     </div>
-                    {{ form_widget(form.email, {'attr': {'class': 'form-style', 'placeholder': 'Paypal-Mailadresse', 'id': 'email'}}) }}
+                    {{ form_widget(form.iban, {'attr': {'class': 'form-style', 'placeholder': 'IBAN', 'id': 'iban'}}) }}
                 </div>
             </div>
             <div class="form-input-field">
-                <label class="hidden" for="paypal_account_create_paypalMeLink"></label>
+                <label class="hidden" for="bank_account_create_bic"></label>
                 <div class="image-form-row">
                     <div class="image-form-row-image">
-                        <img src="{{ asset('assets/img/link.svg') }}" alt="Tile image">
+                        <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
                     </div>
-                    {{ form_widget(form.paypalMeLink, {'attr': {'class': 'form-style', 'placeholder': 'PaypalMe-Link', 'id': 'paypalMeLink'}}) }}
+                    {{ form_widget(form.bic, {'attr': {'class': 'form-style', 'placeholder': 'BIC', 'id': 'bic'}}) }}
                 </div>
             </div>
             <div class="form-input-field">
-                <label class="hidden" for="paypal_account_create_description"></label>
+                <label class="hidden" for="bank_account_create_bankName"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.bankName, {'attr': {'class': 'form-style', 'placeholder': 'Krediinstitut', 'id': 'bankName'}}) }}
+                </div>
+            </div>
+            <div class="form-input-field">
+                <label class="hidden" for="bank_account_create_accountName"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/person.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.accountName, {'attr': {'class': 'form-style', 'placeholder': 'Kontoinhaber', 'id': 'bic'}}) }}
+                </div>
+            </div>
+
+            <div class="form-input-field">
+                <label class="hidden" for="bank_account_create_description"></label>
                 <div class="image-form-row">
                     <div class="image-form-row-image">
                         <img src="{{ asset('assets/img/description.svg') }}" alt="Tile image">
@@ -47,14 +66,14 @@
                 </div>
             </div>
             <div class="form-input-field">
-                <label class="hidden" for="paypal_account_create_enabled"></label>
+                <label class="hidden" for="bank_account_create_enabled"></label>
                 <div class="image-form-row">
                     <div class="image-form-row-image">
                         <img src="{{ asset('assets/img/activated.svg') }}" alt="Tile image">
                     </div>
                     <div class="toggle-switch-container">
                         <label class="switch">
-                            <label for="paypal_account_create_enabled" class="switch-toggle-label"></label>
+                            <label for="bank_account_create_enabled" class="switch-toggle-label"></label>
                             {{ form_widget(form.enabled, {'attr': {'class': 'toggle-box', 'placeholder': 'Verfügbar', 'id': 'enabled', 'value': 1}}) }}
                             <span class="slider round"></span>
                         </label>
@@ -62,7 +81,7 @@
                 </div>
             </div>
             <div class="form-input-field">
-                <label class="hidden" for="paypal_account_create_preferred"></label>
+                <label class="hidden" for="bank_account_create_preferred"></label>
                 <div class="image-form-row">
                     <div class="image-form-row-image">
                         <img src="{{ asset('assets/img/favorite.svg') }}" alt="Tile image">

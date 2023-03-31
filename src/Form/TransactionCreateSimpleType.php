@@ -6,8 +6,10 @@ use App\Entity\User;
 use App\Service\Transaction\TransactionData;
 use App\Service\User\UserService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,7 +33,7 @@ class TransactionCreateSimpleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('amount', MoneyType::class)
+            ->add('amount', TextType::class)
             ->add('reason', TextType::class)
             ->add(
                 'owner',
@@ -42,6 +44,18 @@ class TransactionCreateSimpleType extends AbstractType
                 ]
             )
             ->add('submit', SubmitType::class, ['label' => 'Transaktion erstellen']);
+
+        $builder->get('amount')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($currency): string {
+                    // transform the string back to an array
+                    return $currency . ' €';
+                },
+                function ($stringCurrency): float {
+                    return (float) str_replace(' €', '', $stringCurrency);
+                }
+            ))
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

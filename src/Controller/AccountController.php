@@ -2,38 +2,56 @@
 
 namespace App\Controller;
 
+use App\Entity\Transaction;
 use App\Entity\User;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
 use App\Service\Transaction\TransactionService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
+#[Route('/me')]
 class AccountController extends AbstractController
 {
-    #[Route('/me', name: 'account_overview')]
+    public function __construct(private Security $security)
+    {
+    }
+
+    #[Route('/', name: 'account_overview')]
     public function listTransactionsForUser(TransactionService $transactionService): Response
     {
-        /** @var User $requester */
-        $requester = $this->getUser();
+        $user = $this->security->getUser();
+        if (!$user instanceof User){
+            throw new Exception();
+        }
+        $transactions = $transactionService->getAllTransactionBelongingUser($user);
+        $totalDebts = $transactionService->getTotalDebtsForUser($user);
+        $totalLoans = $transactionService->getTotalLoansForUser($user);
+        $totalBalance = $totalLoans - $totalDebts;
+        $openDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_CREATED);
+        $acceptedDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_ACCEPTED);
+        $openLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_CREATED);
+        $acceptedLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_ACCEPTED);
 
-        $transactions = $transactionService->getAllTransactionBelongingUser($requester);
-
-        $loans = $transactionService->getTotalLoansForUser($requester);
-        $debts = $transactionService->getTotalDebtsForUser($requester);
-
-        return $this->render('transaction/transaction.list.html.twig', [
-            'debtAmount' => $debts,
-            'loanAmount' => $loans,
-            'balance' => $loans - $debts,
-            'transactions' => $transactions
+        return $this->render('landing/account_overview.html.twig', [
+            'controller_name' => 'LandingController',
+            'totalBalance' => $totalBalance,
+            'transactions' => $transactions,
+            'totalDebt' => $totalDebts,
+            'totalLoan' => $totalLoans,
+            'openDebts' => $openDebts,
+            'openLoans' => $openLoans,
+            'acceptedDebts' => $acceptedDebts,
+            'acceptedLoans' => $acceptedLoans,
         ]);
     }
 
-    #[Route('/me/debts', name: 'account_debts')]
+    #[Route('/debts', name: 'account_debts')]
     public function listDebtsForUser(Request $request, TransactionService $service): Response
     {
         /** @var User $requester */
@@ -47,7 +65,7 @@ class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/me/loans', name: 'account_loans')]
+    #[Route('/loans', name: 'account_loans')]
     public function listLoansForUser(Request $request, TransactionService $transactionService): Response
     {
         /** @var User $requester */
@@ -61,7 +79,7 @@ class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/me/events', name: 'account_event')]
+    #[Route('/events', name: 'account_event')]
     public function listEvents(TransactionChangeEventService $changeEventService): Response
     {
         /** @var User $requester */

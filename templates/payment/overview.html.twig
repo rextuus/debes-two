@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paypalkonto erstellen{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="page-header-text">
+            Konten
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
+            <img src="{{ asset('assets/img/paypal-account.svg') }}" alt="Tile image">
+        </div>
+
+    </div>
+    <div class="content-body">
+        <div class="empty-list-info font-size-1-2 color-b">
+            Usern, die dir Geld überweisen wollen, werden nur als aktiv markierte Konten angezeigt. Ihnen wird automatisch
+            das als primär markierte Konto als Zahlungsmethode vorgeschlagen.
+        </div>
+
+        <div class="next-state-button body-element">
+            <div class="next-state-button body-element text-s">
+                <a href="{{ path('payment_create_paypal') }}" class="accept-link accept">
+                    <img src="{{ asset('assets/img/paypal-account.svg') }}" alt="Button Image">
+                    <div class="next-state-button-text">Neuer Paypal-Account</div>
+                </a>
+            </div>
+            <div class="next-state-button body-element text-s">
+                <a href="{{ path('payment_create_bank') }}" class="accept-link accept">
+                    <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Button Image">
+                    <div class="next-state-button-text">Neuer Bank-Account</div>
+                </a>
+            </div>
+        </div>
+        {% for account in bankAccounts %}
+                {{ bank_account_content_card(account)|raw }}
+        {% endfor %}
+        {% for account in paypalAccounts %}
+            {{ paypal_account_content_card(account)|raw }}
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,69 @@
+<div class="content-card-payment-option">
+    <div class="card-header-payment-option">
+        <div class="row row-date-payment-option active">
+            <div class="date-payment-option active">
+                <div class="date-since-payment-option">
+                    Bankkonto
+                </div>
+                <div class="date-icon-payment-option">
+                    <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
+                </div>
+            </div>
+            <svg class="collapse-icon-payment-option" viewBox="0 0 24 24">
+                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
+            </svg>
+        </div>
+        <div class="row-payment-option row-label-payment-option ">
+            <div class="label-payment-option transparent-text">
+                {{ bankAccount.description }}
+            </div>
+        </div>
+        <div class="row-payment-option row-info-payment-option">
+            <div class="left-side-icon-payment-option {% if  bankAccount.enabled %}active{% endif %}">Aktiv</div>
+            <div class="left-side-icon-payment-option {% if  bankAccount.isPrioritised %}active{% endif %}">Primär</div>
+            <!--                <div class="right-side-icon">New</div>-->
+        </div>
+    </div>
+    <div class="card-body-payment-option hidden">
+        <div class="account-details-payment-option body--payment-option">
+            <div class="detail-row-payment-option">
+                <div class="details-row-name-payment-option">
+                    Inhaber:
+                </div>
+                <div class="state-date-payment-option active">
+                    {{ bankAccount.accountName }}
+                </div>
+            </div>
+            <div class="detail-row-payment-option">
+                <div class="details-row-name-payment-option">
+                    Iban:
+                </div>
+                <div class="state-date-payment-option active">
+                    {{ bankAccount.iban }}
+                </div>
+            </div>
+            <div class="detail-row-payment-option">
+                <div class="details-row-name-payment-option">
+                    BIC:
+                </div>
+                <div class="state-date-payment-option active">
+                    {{ bankAccount.bic }}
+                </div>
+            </div>
+            <div class="detail-row-payment-option">
+                <div class="details-row-name-payment-option">
+                    Kreditinstitut:
+                </div>
+                <div class="state-date-payment-option active">
+                    {{ bankAccount.bankName }}
+                </div>
+            </div>
+        </div>
+        <div class="next-state-button body-element">
+            <a href="{{ path('payment_edit_bank', {'bankAccount': bankAccount.id}) }}" class="accept-link accept">
+                <img src="{{ asset('assets/img/create.svg') }}" alt="Button Image">
+                <div class="next-state-button-text">Einstellungen</div>
+            </a>
+        </div>
+    </div>
+</div>

@@ -56,7 +56,10 @@ class UserService
      */
     public function findAllOther(User $requester): array
     {
-        return $this->userRepository->findAllUserExcept($requester->getId());
+        $all = $this->userRepository->findAll();
+        $key = array_search($requester, $all);
+        unset($all[$key]);
+        return $all;
     }
 
     /**

@@ -52,7 +52,7 @@ class TransactionController extends AbstractController
 
             $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_CREATED);
 
-            return $this->redirect($this->generateUrl('account_overview', []));
+            return $this->redirect($this->generateUrl('account_loans', ['variant' => 'new']));
         }
 
         return $this->render('transaction/transaction.create.simple.html.twig', [

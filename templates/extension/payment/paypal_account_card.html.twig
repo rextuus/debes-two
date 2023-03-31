@@ -1,0 +1,57 @@
+<div class="content-card-payment-option">
+    <div class="card-header-payment-option">
+        <div class="row row-date-payment-option">
+            <div class="date-payment-option">
+                <div class="date-since-payment-option">
+                    Paypalkonto
+                </div>
+                <div class="date-icon-payment-option">
+                    <img src="{{ asset('assets/img/paypal-account.svg') }}" alt="Tile image">
+                </div>
+            </div>
+            <svg class="collapse-icon-payment-option" viewBox="0 0 24 24">
+                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
+            </svg>
+        </div>
+        <div class="row-payment-option row-label-payment-option ">
+            <div class="label-payment-option transparent-text">
+                {{ paypalAccount.description }}
+            </div>
+        </div>
+        <div class="row-payment-option row-info-payment-option">
+            <div class="left-side-icon-payment-option {% if  paypalAccount.enabled %}active{% endif %}">Aktiv</div>
+            <div class="left-side-icon-payment-option {% if  paypalAccount.isPrioritised %}active{% endif %}">Primär</div>
+            <!--                <div class="right-side-icon">New</div>-->
+        </div>
+    </div>
+    <div class="card-body-payment-option hidden">
+        <div class="account-details-payment-option body--payment-option">
+            <div class="detail-row-payment-option">
+                <div class="details-row-name-payment-option">
+                    Paypal-Email-Adresse:
+                </div>
+                <div class="state-date-payment-option active">
+                    {{ paypalAccount.email }}
+                </div>
+            </div>
+            <div class="detail-row-payment-option">
+                <div class="details-row-name-payment-option">
+                    Paypalme-Link:
+                </div>
+                <div class="state-date-payment-option active">
+                    {% if paypalAccount.paypalMeLink %}
+                    {{ paypalAccount.paypalMeLink }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="next-state-button body-element">
+            <a href="{{ path('payment_edit_paypal', {'paypalAccount': paypalAccount.id}) }}" class="accept-link accept">
+                <img src="{{ asset('assets/img/create.svg') }}" alt="Button Image">
+                <div class="next-state-button-text">Einstellungen</div>
+            </a>
+        </div>
+    </div>
+</div>

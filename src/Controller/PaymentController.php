@@ -23,23 +23,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class PaymentController extends AbstractController
 {
 
-    #[Route('/payment/create/simple', name: 'transaction_create_simple')]
+    #[Route('/payment/overview', name: 'payment_overview')]
     public function index(BankAccountService $bankAccountService, PaypalAccountService $paypalAccountService): Response
     {
         /** @var User $requester */
         $requester = $this->getUser();
         $bankAccounts = $bankAccountService->getBankAccountsOfUser($requester);
         $paypalAccounts = $paypalAccountService->getPaypalAccountsOfUser($requester);
-        $accounts = array_merge($bankAccounts, $paypalAccounts);
 
-        return $this->render('payment/index.html.twig', [
-            'accounts' => $accounts,
+        return $this->render('payment/overview.html.twig', [
+            'bankAccounts' => $bankAccounts,
+            'paypalAccounts' => $paypalAccounts,
         ]);
     }
 
-    /**
-     * @Route("/payment/create/bank", name="payment_create_bank")
-     */
+    #[Route('/payment/create/bank', name: 'payment_create_bank')]
     public function createNewBankAccount(Request $request, BankAccountService $bankAccountService): Response
     {
         /** @var User $requester */
@@ -65,9 +63,7 @@ class PaymentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/payment/edit/bank/{id}", name="payment_update_bank")
-     */
+    #[Route('/payment/edit/bank/{bankAccount}', name: 'payment_edit_bank')]
     public function updateBankAccount(
         BankAccount $bankAccount,
         Request $request,
@@ -109,7 +105,7 @@ class PaymentController extends AbstractController
 
             $paypalAccount = $paypalAccountService->storePaypalAccount($data);
 
-            return $this->redirect($this->generateUrl('payment_update_paypal', ['id' => $paypalAccount->getId()]));
+            return $this->redirect($this->generateUrl('payment_overview', ['id' => $paypalAccount->getId()]));
         }
 
         return $this->render('payment/paypal.create.html.twig', [
@@ -118,9 +114,7 @@ class PaymentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/payment/edit/paypal/{id}", name="payment_update_paypal")
-     */
+    #[Route('/payment/edit/paypal/{paypalAccount}', name: 'payment_edit_paypal')]
     public function updatePaypalAccount(
         PaypalAccount $paypalAccount,
         Request $request,
@@ -136,10 +130,10 @@ class PaymentController extends AbstractController
             $data = $form->getData();
             $paypalAccountService->update($paypalAccount, $data);
 
-            return $this->redirect($this->generateUrl('payment_update_paypal', ['id' => $paypalAccount->getId()]));
+            return $this->redirect($this->generateUrl('payment_overview', ['paypalAccount' => $paypalAccount->getId()]));
         }
 
-        return $this->render('payment/paypal.update.html.twig', [
+        return $this->render('payment/paypal.edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }

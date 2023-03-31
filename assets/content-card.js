@@ -47,6 +47,39 @@ contentCards.forEach(contentCard => {
     }
 });
 
+const paymentContentCards = document.querySelectorAll('.content-card-payment-option');
+paymentContentCards.forEach(contentCard => {
+
+    // const contentCard = document.querySelector('.content-card');
+    const body = contentCard.querySelector('.card-body-payment-option');
+    const label = contentCard.querySelector('.label-payment-option');
+    const collapseIcon = contentCard.querySelector('.collapse-icon-payment-option');
+    const header = contentCard.querySelector('.card-header-payment-option');
+    const description = contentCard.querySelector('.description-payment-option');
+    const transactionDetails = contentCard.querySelector('.account-details-payment-option');
+
+    header.addEventListener('click', () => {
+        body.classList.toggle('hidden');
+        collapseIcon.classList.toggle('rotate');
+        label.classList.toggle('transparent-text');
+    });
+    if (description){
+        description.addEventListener('click', () => {
+            body.classList.toggle('hidden');
+            collapseIcon.classList.toggle('rotate');
+            label.classList.toggle('transparent-text');
+        });
+    }
+
+    if (transactionDetails){
+        transactionDetails.addEventListener('click', () => {
+            body.classList.toggle('hidden');
+            collapseIcon.classList.toggle('rotate');
+            label.classList.toggle('transparent-text');
+        });
+    }
+});
+
 const transactionSummaries = document.querySelectorAll('.transaction-summary');
 
 transactionSummaries.forEach(transactionSummary => {
