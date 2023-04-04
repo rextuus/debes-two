@@ -51,11 +51,13 @@ class ListDebtOrLoanExtension extends AbstractExtension
             $confirmed = $this->transactionService->getAllDebtTransactionsForUserAndState($owner, Transaction::STATE_CONFIRMED);
             $accepted = $this->transactionService->getAllDebtTransactionsForUserAndState($owner, Transaction::STATE_ACCEPTED);
             $cleared = $this->transactionService->getAllDebtTransactionsForUserAndState($owner, Transaction::STATE_CLEARED);
+            $headerClass = 'debt-header';
         } else {
             $ready = $this->transactionService->getAllLoanTransactionsForUserAndState2($owner, Transaction::STATE_READY);
             $confirmed = $this->transactionService->getAllLoanTransactionsForUserAndState2($owner, Transaction::STATE_CONFIRMED);
             $accepted = $this->transactionService->getAllLoanTransactionsForUserAndState2($owner, Transaction::STATE_ACCEPTED);
             $cleared = $this->transactionService->getAllLoanTransactionsForUserAndState2($owner, Transaction::STATE_CLEARED);
+            $headerClass = 'loan-header';
         }
 
         $tabClasses = ['active', '', '', ''];
@@ -80,6 +82,7 @@ class ListDebtOrLoanExtension extends AbstractExtension
                 'accepted' => $accepted,
                 'cleared' => $cleared,
                 'tabClasses' => $tabClasses,
+                'headerClass' => $headerClass,
             ]
         );
     }

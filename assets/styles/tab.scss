@@ -3,41 +3,47 @@
 /* Style the tab navigation */
 .tab-nav {
     display: flex;
-    border-bottom: 1px solid $color-header-purple;
+    //border-bottom: 1px solid $color-header-main;
 }
 
 .tab-button {
     flex: 1;
-    background-color: #ddd;
-    /*border: none;*/
+    background-color: $color-navi-tab-button;
     outline: none;
     cursor: pointer;
     padding: 14px 16px;
     font-size: 16px;
 
-    border-top: none;
+    border-top: 1px;
+    border-bottom: 1px;
     border-left: none;
     border-right: none;
-    border-bottom: 1px solid #000000;
+    //border-bottom: 1px solid #000000;
+
+    &.debt-header{
+        background-color: $color-navi-tab-button-negative;
+    }
+    &.debt-header.active{
+        background-color: $color-balance-negative;
+    }
+
+    &.loan-header{
+        background-color: $color-navi-tab-button-positive;
+    }
+    &.loan-header.active{
+        background-color: $color-balance-positive;
+    }
 }
 
 .tab-button.active {
-    background-color: $color-header-purple;
+    background-color: $color-navi-tab-button-active;
     font-weight: bold;
-    color: #ddd;
+    color: $color-navi-tab-button-active-font;
 
     border-top: none;
     border-left: none;
     border-right: none;
     border-bottom: none;
-}
-
-/* Style the tab content */
-#tab-content {
-    /*border: 1px solid #424243;*/
-    /*border-radius: 8px;*/
-    /*padding: 5px;*/
-    /*background: #424243;*/
 }
 
 .tab {

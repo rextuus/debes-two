@@ -156,6 +156,11 @@ class TransactionDto
         }
     }
 
+    public function getStateTransactionVariant(): string
+    {
+        return $this->state;
+    }
+
     /**
      * @param string $state
      */

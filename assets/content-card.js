@@ -95,3 +95,10 @@ transactionSummaries.forEach(transactionSummary => {
     }
 });
 
+
+let flashMessage = document.getElementById('flash-message-container');
+console.log(flashMessage);
+setTimeout(() => {
+        flashMessage.style.display = 'none';
+    },
+    3000);

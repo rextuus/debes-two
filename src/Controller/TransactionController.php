@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Exchange;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Form\ChoiceType;
@@ -10,7 +9,6 @@ use App\Form\TransactionCreateMultipleType;
 use App\Form\TransactionCreateSimpleType;
 use App\Service\Debt\DebtCreateData;
 use App\Service\Debt\DebtDto;
-use App\Service\Exchange\ExchangeDto;
 use App\Service\Loan\LoanDto;
 use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionCreateData;
@@ -18,12 +16,15 @@ use App\Service\Transaction\TransactionCreateMultipleData;
 use App\Service\Transaction\TransactionData;
 use App\Service\Transaction\TransactionProcessor;
 use App\Service\Transaction\TransactionService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
+#[Route('/transaction')]
 class TransactionController extends AbstractController
 {
     public function __construct(
@@ -33,7 +34,7 @@ class TransactionController extends AbstractController
     {
     }
 
-    #[Route('/transaction/create/simple', name: 'transaction_create_simple')]
+    #[Route('/create/simple', name: 'transaction_create_simple')]
     public function createSimpleTransaction(Request $request): Response
     {
         /** @var User $requester */
@@ -61,7 +62,7 @@ class TransactionController extends AbstractController
     }
 
     // TODO CHECK IF USED
-    #[Route('/transaction', name: 'transaction_list')]
+    #[Route('/', name: 'transaction_list')]
     public function listTransactionsForUser(): Response
     {
         /** @var User $requester */
@@ -76,7 +77,7 @@ class TransactionController extends AbstractController
         ]);
     }
 
-    #[Route('/transaction/accept/{slug}', name: 'transaction_accept')]
+    #[Route('/accept/{slug}', name: 'transaction_accept')]
     public function acceptTransaction(Transaction $transaction, Request $request): Response
     {
         /** @var User $requester */
@@ -130,61 +131,61 @@ class TransactionController extends AbstractController
         ]);
     }
 
-    #[Route('/transaction/process/{slug}', name: 'transaction_process')]
+    #[Route('/process/{slug}', name: 'transaction_process')]
     public function processTransaction(Transaction $transaction, Request $request): Response
     {
-        /** @var User $requester */
-        $requester = $this->getUser();
-
-        $isDebtor = $this->transactionService->checkRequestForVariant(
-            $requester,
-            $transaction,
-            $request->get('variant'),
-            Transaction::STATE_ACCEPTED
-        );
-
-        if ($isDebtor) {
-            $dto = $this->transactionService->createDtoFromTransaction($transaction, true);
-            $labels = ['label' => ['submit' => 'Überweisen', 'decline' => 'Verrechnen']];
-        } else {
-            $dto = $this->transactionService->createDtoFromTransaction($transaction, false);
-            $labels = ['label' => ['submit' => 'Mahn-Mail senden', 'decline' => 'Mahn-Mail senden']];
-        }
-        $dto = $this->transactionService->createDtoFromTransaction($transaction, $isDebtor);
-
-        $form = $this->createForm(ChoiceType::class, null, $labels);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $useTransaction = (bool)$form->get('submit')->isClicked();
-            $useChange = (bool)$form->get('decline')->isClicked();
-
-            if ($isDebtor) {
-                if ($useTransaction) {
-                    return $this->redirect($this->generateUrl('transfer_prepare',
-                        ['slug' => $transaction->getSlug()]));
-                }
-                if ($useChange) {
-                    return $this->redirect($this->generateUrl('exchange_prepare',
-                        ['slug' => $transaction->getSlug()]));
-                }
-                return $this->redirectToRoute('account_debts', []);
-            } else {
-                if ($useTransaction) {
-                    // TODO remove Transaction and send loaner notification
-                }
-                return $this->redirectToRoute('account_loans', []);
-            }
-        }
-
-        return $this->render('transaction/transaction.process.html.twig', [
-            'debtVariant' => $isDebtor,
-            'dto' => $dto,
-            'form' => $form->createView(),
-        ]);
+//        /** @var User $requester */
+//        $requester = $this->getUser();
+//
+//        $isDebtor = $this->transactionService->checkRequestForVariant(
+//            $requester,
+//            $transaction,
+//            $request->get('variant'),
+//            Transaction::STATE_ACCEPTED
+//        );
+//
+//        if ($isDebtor) {
+//            $dto = $this->transactionService->createDtoFromTransaction($transaction, true);
+//            $labels = ['label' => ['submit' => 'Überweisen', 'decline' => 'Verrechnen']];
+//        } else {
+//            $dto = $this->transactionService->createDtoFromTransaction($transaction, false);
+//            $labels = ['label' => ['submit' => 'Mahn-Mail senden', 'decline' => 'Mahn-Mail senden']];
+//        }
+//        $dto = $this->transactionService->createDtoFromTransaction($transaction, $isDebtor);
+//
+//        $form = $this->createForm(ChoiceType::class, null, $labels);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $useTransaction = (bool)$form->get('submit')->isClicked();
+//            $useChange = (bool)$form->get('decline')->isClicked();
+//
+//            if ($isDebtor) {
+//                if ($useTransaction) {
+//                    return $this->redirect($this->generateUrl('transfer_prepare',
+//                        ['slug' => $transaction->getSlug()]));
+//                }
+//                if ($useChange) {
+//                    return $this->redirect($this->generateUrl('exchange_prepare',
+//                        ['slug' => $transaction->getSlug()]));
+//                }
+//                return $this->redirectToRoute('account_debts', []);
+//            } else {
+//                if ($useTransaction) {
+//                    // TODO remove Transaction and send loaner notification
+//                }
+//                return $this->redirectToRoute('account_loans', []);
+//            }
+//        }
+//
+//        return $this->render('transaction/transaction.process.html.twig', [
+//            'debtVariant' => $isDebtor,
+//            'dto' => $dto,
+//            'form' => $form->createView(),
+//        ]);
     }
 
-    #[Route('/transaction/confirm/{slug}', name: 'transaction_confirm')]
+    #[Route('/confirm/{slug}', name: 'transaction_confirm')]
     public function confirmTransaction(Transaction $transaction, Request $request): Response
     {
         /** @var User $requester */
@@ -235,7 +236,7 @@ class TransactionController extends AbstractController
     }
 
     // TODO edit is only needed for admin area. Transaction with multiple users will be a new feature in future
-    #[Route('/transaction/edit', name: 'transaction_edit')]
+    #[Route('/edit', name: 'transaction_edit')]
     public function editTransaction(): Response
     {
         return $this->render('transaction/transaction.create.html.twig', [
@@ -243,7 +244,7 @@ class TransactionController extends AbstractController
         ]);
     }
 
-    #[Route('/transaction/create', name: 'transaction_create')]
+    #[Route('/create', name: 'transaction_create')]
     public function createTransaction(
         Request $request
     ): Response
@@ -273,4 +274,43 @@ class TransactionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/notify/{slug}', name: 'transaction_notify')]
+    public function createTransactionNotification(
+        Request $request,
+        Transaction $transaction,
+        MailService $mailService
+    ): Response
+    {
+        /** @var User $requester */
+        $requester = $this->getUser();
+
+        $allowedStates = [Transaction::STATE_READY];
+        $currentStat = $transaction->getState();
+
+        if (!in_array($currentStat, $allowedStates)){
+            if ($request->get('variant') === 'debtor'){
+                return $this->redirectToRoute('account_debts', []);
+            }
+            return $this->redirectToRoute('account_loans', []);
+        }
+//        dd($currentStat);
+        $isDebtor = $this->transactionService->checkRequestForVariant(
+            $requester,
+            $transaction,
+            $request->get('variant'),
+            $transaction->getState()
+        );
+
+        if (!$isDebtor){
+            $mailService->sendNotificationMail($transaction,MailService::MAIL_DEBT_REMINDER);
+        }
+
+        $this->addFlash(
+            'success',
+            'Your changes were saved!'
+        );
+        return $this->redirectToRoute('account_loans', []);
+    }
+
 }

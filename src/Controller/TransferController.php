@@ -30,7 +30,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
+#[Route('/transfer')]
 class TransferController extends AbstractController
 {
     /**
@@ -46,7 +49,7 @@ class TransferController extends AbstractController
     {
     }
 
-    #[Route('/transfer/prepare/{slug}', name: 'transfer_prepare')]
+    #[Route('/prepare/{slug}', name: 'transfer_prepare')]
     public function prepareTransfer(
         Transaction     $transaction,
         Request         $request,
@@ -108,7 +111,7 @@ class TransferController extends AbstractController
         ]);
     }
 
-    #[Route('/transfer/bank/{slug}/{senderBankAccount}', name: 'transfer_send_bank')]
+    #[Route('/bank/{slug}/{senderBankAccount}', name: 'transfer_send_bank')]
     public function sendTransferBank(
         Transaction $transaction,
         BankAccount $senderBankAccount,
@@ -167,7 +170,7 @@ class TransferController extends AbstractController
         ]);
     }
 
-    #[Route('transfer/paypal/{slug}/{senderPaypalAccount}', name: 'transfer_send_paypal')]
+    #[Route('/paypal/{slug}/{senderPaypalAccount}', name: 'transfer_send_paypal')]
     public function sendTransferPaypal(
         Transaction          $transaction,
         PaypalAccount        $senderPaypalAccount,
@@ -224,7 +227,7 @@ class TransferController extends AbstractController
         ]);
     }
 
-    #[Route('transfer/prepare/exchange/{slug}', name: 'exchange_prepare')]
+    #[Route('/prepare/exchange/{slug}', name: 'exchange_prepare')]
     public function prepareExchange(
         Transaction       $transaction,
         Request           $request,
@@ -332,7 +335,7 @@ class TransferController extends AbstractController
         ]);
     }
 
-    #[Route('/transfer/overview/{slug}', name: 'transfer_overview')]
+    #[Route('/overview/{slug}', name: 'transfer_overview')]
     public function equalizeDebt(
         Transaction       $transaction,
         Request           $request,

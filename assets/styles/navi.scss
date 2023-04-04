@@ -11,13 +11,13 @@
     bottom: 0;
     left: 0;
     right: -15px;
-    background: $color-header-main;
+    background: $color-navi-main;
     transform-origin: 0 0;
     transition: all .275s .1s;
     /*background: linear-gradient(to bottom right, #89bbbe 0%, #89bbbe calc(50% - 11%), #02516c calc(50% - 10%), #02516c 100%);*/
 /*    02516c*/
 /*    02516c*/
-    border-bottom: #5A3B5D solid 4px;
+    border-bottom: $color-navi-secondary solid 4px;
 }
 
 .top-navi-with-tabs{
@@ -31,7 +31,7 @@
     left: 0;
     bottom: 0;
     text-align: center;
-    background: #688059;
+    background: $color-balance-positive;
     opacity: 0;
     z-index: -1;
     visibility: hidden;
@@ -115,7 +115,7 @@
 .main-nav a {
     display: block;
     padding: 12px 0;
-    color: #5A3B5D;
+    color: $color-navi-secondary;
     font-size: 1.4em;
     text-decoration: none;
     font-weight: bold;
@@ -141,7 +141,7 @@
     width: 28px;
     height: 4px;
     margin: 0 auto;
-    background: #5A3B5D;
+    background: $color-navi-secondary;
     transform: skew(5deg);
     transition: all .275s;
     margin-bottom: 20px;
@@ -152,7 +152,7 @@
     content: '';
     display: block;
     height: 100%;
-    background: #5A3B5D;
+    background: $color-navi-secondary;
     transition: all .275s;
 }
 
@@ -188,7 +188,7 @@
     text-transform: uppercase;
     font-weight: 500;
     text-align: center;
-    color: #5A3B5D;
+    color: $color-navi-secondary;
 }
 .home-button-container{
     display: inline-block;

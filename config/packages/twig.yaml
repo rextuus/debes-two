@@ -2,6 +2,7 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     paths:
         'public/assets/img/mail': images
+        'public/assets/img': icons
 
 when@test:
     twig:

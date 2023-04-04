@@ -1,7 +1,4 @@
-<tr style="background-color: rgb(45,52,22)">
-    <td valign="top" class="counter"
-        style="background-image: url({{ absolute_url(asset('img/mailTop.png')) }}); background-size: cover; padding: 4em 0;">
-        <div class="overlay"></div>
+
         <table>
             <tr>
                 <td valign="middle" width="33.333%">
@@ -20,7 +17,9 @@
                            width="100%">
                         <tr>
                             <td class="counter-text">
-                                <span class="num">{{ transactions }}</span>
+                                <span class="num">
+                                <span class="red">{{ transactionsFrom }}</span> / <span class="green">{{ transactionsTo }}</span>
+                                    </span>
                                 <span class="name">Bisherige Transaktionen mit diesem Nutzer</span>
                             </td>
                         </tr>
@@ -39,5 +38,3 @@
                 </td>
             </tr>
         </table>
-    </td>
-</tr><!-- end tr -->

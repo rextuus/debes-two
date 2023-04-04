@@ -12,6 +12,16 @@ import './styles/flash_message.scss';
 // Get all the buttons with class bank-transfer-row-copy-button
 const copyButtons = document.querySelectorAll('.bank-transfer-row-copy-button');
 
+function addFlashMessage(value) {
+    const flashMessage = document.createElement('div');
+    flashMessage.classList.add('flash-message');
+    flashMessage.textContent = value;
+    document.body.insertBefore(flashMessage, document.querySelector('.content-body'));
+    setTimeout(() => {
+        flashMessage.remove();
+    }, 3000);
+}
+
 // Add a click event listener to each button
 copyButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -22,13 +32,7 @@ copyButtons.forEach(button => {
         // Copy the value to the clipboard
         navigator.clipboard.writeText(value).then(() => {
             // Show a flash message to the user indicating that the value has been copied
-            const flashMessage = document.createElement('div');
-            flashMessage.classList.add('flash-message');
-            flashMessage.textContent = `In die Zwischenablage kopiert: ${value}`;
-            document.body.insertBefore(flashMessage, document.querySelector('.content-body'));
-            setTimeout(() => {
-                flashMessage.remove();
-            }, 3000);
+            addFlashMessage(`In die Zwischenablage kopiert: ${value}`);
             // Set the parent element's color to black
             const parentElement = button.parentNode.parentNode;
             if (parentElement) {

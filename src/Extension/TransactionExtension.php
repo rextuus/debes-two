@@ -7,8 +7,10 @@ namespace App\Extension;
 use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
 use App\Entity\TransactionStateChangeEvent;
+use App\Extension\NextStateProvider\NextStateProvider;
 use App\Service\Transaction\TransactionDtos\TransactionDto;
 use App\Service\Util\TimeConverter;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -19,7 +21,12 @@ use Twig\TwigFunction;
  */
 class TransactionExtension extends AbstractExtension
 {
-    public function __construct(private Environment $environment, private TimeConverter $timeConverter)
+    public function __construct(
+        private Environment           $environment,
+        private TimeConverter         $timeConverter,
+        private UrlGeneratorInterface $router,
+        private NextStateProvider $nextStateProvider,
+    )
     {
     }
 
@@ -42,65 +49,96 @@ class TransactionExtension extends AbstractExtension
         $declineIcon = 'assets/img/warning.svg';
 
         $cardIcon = 'assets/img/create.svg';
+//        $handlerName = '';
+//        switch ($part->getState()) {
+//            case 1:
+//                if ($part->isDebtVariant()) {
+//                    $handlerName = 'debt_accept';
+//                } else {
+//                    $handlerName = 'loan_accept';
+//                }
+//                break;
+//        }
+        $contentCardParams = ($this->nextStateProvider->getHandlerForState($part)->getTwigParameters($part));
 
-        switch ($part->getState()) {
-            case 2:
-                // accepted => pay/break | remember
-                $cardIcon = 'assets/img/accept.svg';
-                if ($part->isDebtVariant()){
-                    $acceptLink = 'transfer_overview';
-                    $acceptButton = 'Bezahlen';
-                    $acceptIcon = 'assets/img/paid.svg';
-
-                    $declineLink = 'transaction_process';
-                    $declineButton = 'Reklamieren';
-                    $declineIcon = 'assets/img/warning.svg';
-                }else{
-                    $acceptLink = 'transfer_overview';
-                    $acceptButton = 'Erinnern';
-                    $acceptIcon = 'assets/img/email.svg';
-
-                    $declineLink = '';
-                }
-
-                break;
-            case 3:
-                // paid => remember | confirm
-                if ($part->isDebtVariant()) {
-                    $acceptLink = '';
-
-                    $declineLink = 'transaction_process';
-                    $declineButton = 'Hinweis senden';
-                    $declineIcon = 'assets/img/warning.svg';
-                }else{
-                    $acceptLink = 'transaction_process';
-                    $acceptButton = 'Bestätigen';
-                    $acceptIcon = 'assets/img/party.svg';
-
-                    $declineLink = 'transaction_process';
-                    $declineButton = 'Bemängeln';
-                    $declineIcon = 'assets/img/warning.svg';
-                }
-
-                $cardIcon = 'assets/img/paid.svg';
-                break;
-        }
+//        switch ($part->getState()) {
+//            case 1:
+//                // accepted => pay/break | remember
+//                $cardIcon = 'assets/img/create.svg';
+//                if ($part->isDebtVariant()) {
+//                    $params = ['slug' => $part->getTransactionSlug(),'variant' => 'debtor'];
+//                    $acceptLink = $this->router->generate('transaction_accept', $params);
+//
+//                    $acceptButton = 'Akzeptieren';
+//                    $acceptIcon = 'assets/img/paid.svg';
+//
+//                    $params = ['slug' => $part->getTransactionSlug(), 'variant' => 'loaner'];
+//                    $declineLink = $this->router->generate('transaction_accept', $params);
+//                    $declineButton = 'Ablehnen';
+//                    $declineIcon = 'assets/img/warning.svg';
+//                } else {
+//                    $acceptLink = 'transfer_overview';
+//                    $acceptButton = 'Erinnern';
+//                    $acceptIcon = 'assets/img/email.svg';
+//
+//                    $declineLink = '';
+//                }
+//
+//                break;
+//            case 2:
+//                // accepted => pay/break | remember
+//                $cardIcon = 'assets/img/accept.svg';
+//                if ($part->isDebtVariant()) {
+//                    $acceptLink = 'transfer_overview';
+//                    $acceptButton = 'Bezahlen';
+//                    $acceptIcon = 'assets/img/paid.svg';
+//
+//                    $declineLink = 'transaction_process';
+//                    $declineButton = 'Reklamieren';
+//                    $declineIcon = 'assets/img/warning.svg';
+//                } else {
+//                    $acceptLink = 'transfer_overview';
+//                    $acceptButton = 'Erinnern';
+//                    $acceptIcon = 'assets/img/email.svg';
+//
+//                    $declineLink = '';
+//                }
+//
+//                break;
+//            case 3:
+//                // paid => remember | confirm
+//                if ($part->isDebtVariant()) {
+//                    $acceptLink = '';
+//
+//                    $declineLink = 'transaction_process';
+//                    $declineButton = 'Hinweis senden';
+//                    $declineIcon = 'assets/img/warning.svg';
+//                } else {
+//                    $acceptLink = 'transaction_process';
+//                    $acceptButton = 'Bestätigen';
+//                    $acceptIcon = 'assets/img/party.svg';
+//
+//                    $declineLink = 'transaction_process';
+//                    $declineButton = 'Bemängeln';
+//                    $declineIcon = 'assets/img/warning.svg';
+//                }
+//
+//                $cardIcon = 'assets/img/paid.svg';
+//                break;
+//        }
 
         return $this->environment->render(
             'extension/transaction_part_card.html.twig',
-            [
-                'part' => $part,
-                'ago' => $this->timeConverter->getUserFriendlyDateTime($part->getEdited()),
-                'acceptButton' => $acceptButton,
-                'acceptLink' => $acceptLink,
-                'slug' => $part->getTransactionSlug(),
-                'declineButton' => $declineButton,
-                'declineLink' => $declineLink,
-                'acceptIcon' => $acceptIcon,
-                'declineIcon' => $declineIcon,
-                'cardIcon' => $cardIcon,
-                'infoText' => $this->buildInfoText($part)
-            ]
+            array_merge(
+                [
+                    'part' => $part,
+                    'ago' => $this->timeConverter->getUserFriendlyDateTime($part->getEdited()),
+                    'slug' => $part->getTransactionSlug(),
+                    'cardIcon' => $cardIcon,
+                    'infoText' => $this->buildInfoText($part)
+                ],
+                $contentCardParams
+            )
         );
     }
 
@@ -170,15 +208,15 @@ class TransactionExtension extends AbstractExtension
 
     private function buildInfoText(TransactionDto $part): string
     {
-        if ($part->getState() === Transaction::DTO_MAPPING[Transaction::STATE_CLEARED]){
-            if ($part->isDebtVariant()){
+        if ($part->getState() === Transaction::DTO_MAPPING[Transaction::STATE_CLEARED]) {
+            if ($part->isDebtVariant()) {
                 return 'Du hast diese Schuld bereits bezahlt und die Gegenpartei muss das nur noch bestätigen';
             }
             return 'Die wurde das Geld für diese Transaktion bereits überwiesen. Bestätige bitte den Eingang!';
         }
 
         $template = 'Du bekommst von %s noch %.2f € für %s';
-        if ($part->isDebtVariant()){
+        if ($part->isDebtVariant()) {
             $template = 'Du schuldest %s noch %.2f € für %s';
         }
         return sprintf(

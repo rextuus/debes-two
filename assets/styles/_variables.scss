@@ -2,9 +2,19 @@
 $color-body-main: #292f24;
 $color-body-diff: #424243;
 $color-body-diff-2: #5d5d5d;
-$color-footer: #3d443d;
-$color-header-purple: #80596f;
-$color-header-main: #688059;
+
+$color-footer: #5d5d5d;
+
+//$color-header-purple: #80596f;
+$color-header-main: #5d5d5d;
+$color-navi-secondary: #1a1c17;
+$color-navi-main: #688059;
+$color-navi-tab-button: #ddd;
+$color-navi-tab-button-active: #5d5d5d;
+$color-navi-tab-button-active-font: #ddd;
+$color-navi-tab-button-negative: #a86464;
+$color-navi-tab-button-positive: #8bb976;
+
 $color-balance-negative: #a93939;
 $color-balance-positive: #6c915b;
 $color-form-button: #688059;
@@ -25,3 +35,4 @@ $text-vs: 0.6em;
 
 // images sizes
 $home-button-img-size: 35px;
+$loan-debt-switch-img-size: 25px;

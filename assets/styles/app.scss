@@ -11,7 +11,7 @@ body{
 }
 
 .page-header{
-    background: $color-header-purple;
+    background: $color-header-main;
     font-weight: bold;
     font-size: 1.9em;
 
@@ -47,6 +47,45 @@ body{
     margin-bottom: 0px;
 }
 
+.extra-page-header-image{
+    margin-left: auto;
+    display: inline-block;
+    fill: #ffffff;
+    margin-right: 20px;
+
+    img{
+        width: $loan-debt-switch-img-size;
+        height: $loan-debt-switch-img-size;
+        transition: transform 0.3s ease-in-out;
+        border-radius: 50%;
+        &.debt-header {
+            background-color: $color-balance-positive;
+
+        }
+
+        &.loan-header {
+            background-color: $color-balance-negative;
+
+        }
+    }
+    img:hover {
+        transform: rotateY(180deg);
+    }
+}
+
+.extra-page-header-image img {
+}
+
+
+
+.loan-header{
+    background-color: $color-balance-positive;
+}
+
+.debt-header{
+    background-color: $color-balance-negative;
+}
+
 .content-body{
     height: 100%;
     margin-right: $default-m-lr-m;
@@ -63,6 +102,9 @@ body{
     border: 1px solid $color-body-diff;
     background-color: $color-body-diff;
     border-radius: 8px;
+    &.is-warning{
+        background-color: $color-balance-negative;
+    }
 }
 
 .font-size-1-2{

@@ -264,8 +264,6 @@ class TransactionService
                 throw new Exception('User is not a loaner of this transaction');
             }
             if ($loan->getState() !== $state) {
-                dump($state);
-                dump($loan->getState());
                 throw new Exception('TransactionPart is not in correct sate');
             }
             return false;
@@ -348,5 +346,19 @@ class TransactionService
     public function getAll(): array
     {
         return $this->transactionRepository->findAll();
+    }
+
+    public function getTransactionCountBetweenUsers(User $debtor, User $loaner): int
+    {
+        return $this->transactionRepository->getTransactionCountBetweenUsers($debtor, $loaner);
+    }
+
+    public function getTotalDebtsBetweenUsers(User $debtor, User $loaner): int
+    {
+        $amount = $this->transactionRepository->getTotalDebtsBetweenUsers($debtor, $loaner);
+        if (!$amount){
+            return 0;
+        }
+        return $amount;
     }
 }

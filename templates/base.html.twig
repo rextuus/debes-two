@@ -28,6 +28,16 @@
 </head>
 <body>
 {% include 'navi.html.twig' %}
+{# read and display several types of flash messages #}
+<div id="flash-message-container">
+{% for label, messages in app.flashes(['success', 'warning']) %}
+    {% for message in messages %}
+        <div class="flash-{{ label }} flash-message">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+</div>
 {% block body %}{% endblock %}
 {% include 'footer.html.twig' %}
 </body>

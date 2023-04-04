@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Debt;
+use App\Entity\Loan;
 use App\Entity\Transaction;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -35,6 +38,18 @@ class TransactionRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
+    public function getTransactionCountBetweenUsers(User $debtor, User $loaner) {
+        $qb=  $this->createQueryBuilder('t');
+        $qb->select('count (t) as count')
+            ->leftJoin(Debt::class, 'd', 'WITH', 'd.transaction = t.id')
+            ->leftJoin(Loan::class, 'l', 'WITH', 'l.transaction = t.id')
+            ->where('d.owner = :debtor')
+            ->andWhere('l.owner = :loaner')
+            ->setParameter('debtor', $debtor)
+            ->setParameter('loaner', $loaner);
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
     // /**
     //  * @return Transaction[] Returns an array of Transaction objects
     //  */
@@ -63,4 +78,16 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getTotalDebtsBetweenUsers(User $debtor, User $loaner)
+    {
+        $qb=  $this->createQueryBuilder('t');
+        $qb->select('sum(d.amount) as total')
+            ->leftJoin(Debt::class, 'd', 'WITH', 'd.transaction = t.id')
+            ->leftJoin(Loan::class, 'l', 'WITH', 'l.transaction = t.id')
+            ->where('d.owner = :debtor')
+            ->andWhere('l.owner = :loaner')
+            ->setParameter('debtor', $debtor)
+            ->setParameter('loaner', $loaner);
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

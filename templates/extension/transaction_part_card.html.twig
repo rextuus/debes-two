@@ -32,13 +32,13 @@
 
         <div class="next-state-button body-element">
             {% if acceptLink != '' %}
-            <a href="{{ path(acceptLink, {'slug': slug}) }}?variant=1" class="accept-link accept">
+            <a href="{{ acceptLink }}" class="accept-link accept">
                 <img src="{{ asset(acceptIcon) }}" alt="Button Image">
                 <div class="next-state-button-text">{{ acceptButton }}</div>
             </a>
             {% endif %}
             {% if declineLink != '' %}
-            <a href="{{ path(declineLink, {'slug': slug}) }}?variant=debtor" class="accept-link decline">
+            <a href="{{ declineLink }}" class="accept-link decline">
                 <img class="" src="{{ asset(declineIcon) }}" alt="Button Image">
                 <div class="next-state-button-text">{{ declineButton }}</div>
             </a>

@@ -4,6 +4,7 @@ namespace App\Service\Mailer;
 
 use App\Entity\PaymentAction;
 use App\Entity\Transaction;
+use App\Service\Transaction\TransactionService;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Bridge\Twig\Mime\BodyRenderer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -33,8 +34,9 @@ class MailService
     public const MAIL_DEBT_PAYED_ACCOUNT = 'debt_payed_account';
     public const MAIL_DEBT_TRANSFERRED = 'debt_transferred';
     public const MAIL_DEBT_CONFIRMED = 'debt_confirmed';
+    public const MAIL_DEBT_REMINDER = 'debt_reminder';
 
-    public function __construct(private CustomMailer $mailer)
+    public function __construct(private CustomMailer $mailer, private TransactionService $transactionService)
     {
 //        $mailDsn = $_ENV['MAILER_DSN_REAL'];
 //        $transport = Transport::fromDsn($mailDsn);
@@ -64,56 +66,77 @@ class MailService
                 $text = 'Es gibt leider schlechte Nachrichten. Jemand hat eine neue Schuldlast für deinen Debes-Account hinterlegt';
                 $subject = 'Neue Schulden';
                 $template = 'mailer/mail.created.html.twig';
-                $receiver = $transaction->getDebts()[0]->getOwner();
+                $receiver = $transaction->getDebtor();
+                $sender = $transaction->getLoaner();
                 break;
             case self::MAIL_DEBT_CANCELED:
                 $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuldlast für deinen Debes-Account zurückgezogen';
                 $subject = 'Schuld zurückgezogen';
                 $template = 'mailer/mail.canceled.html.twig';
-                $receiver = $transaction->getDebts()[0]->getOwner();
+                $receiver = $transaction->getDebtor();
+                $sender = $transaction->getLoaner();
                 break;
             case self::MAIL_DEBT_ACCEPTED:
                 $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuldenforderung von dir akzeptiert';
                 $subject = 'Schuldlast akzeptiert ';
                 $template = 'mailer/mail.accepted.html.twig';
-                $receiver = $transaction->getLoans()[0]->getOwner();
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
                 break;
             case
             self::MAIL_DEBT_DECLINED:
                 $text = 'Es gibt schlechte Nachrichten. Jemand hat eine Schuldenforderung von dir abgewiesen';
                 $subject = 'Schuldlast abgelehnt ';
                 $template = 'mailer/mail.declined.html.twig';
-                $receiver = $transaction->getLoans()[0]->getOwner();
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
                 break;
             case self::MAIL_DEBT_TRANSFERRED:
                 $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuld beglichen und dir Geld überwiesen';
                 $subject = 'Schulden zurück erhalten';
                 $template = 'mailer/mail.transferred.html.twig';
-                $receiver = $transaction->getLoans()[0]->getOwner();
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
                 break;
             case self::MAIL_DEBT_PAYED_ACCOUNT:
                 $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuld beglichen und dir Geld auf dein Bank-Konto überwiesen';
                 $subject = 'Schulden zurück erhalten';
                 $template = 'mailer/mail.transferred.html.twig';
-                $receiver = $transaction->getLoans()[0]->getOwner();
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
                 break;
             case self::MAIL_DEBT_PAYED_PAYPAL:
                 $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuld beglichen und dir Geld auf dein Paypal-Konto überwiesen';
                 $subject = 'Schulden zurück erhalten';
                 $template = 'mailer/mail.transferred.html.twig';
-                $receiver = $transaction->getLoans()[0]->getOwner();
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
                 break;
             case self::MAIL_DEBT_CONFIRMED:
                 $text = 'Es gibt gute Nachrichten. Jemand hat den Eingang deiner Schuldrückzahlung bestätigt';
                 $subject = 'Geldeingang bestätigt';
                 $template = 'mailer/mail.confirmed.html.twig';
-                $receiver = $transaction->getLoans()[0]->getOwner();
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
+                break;
+            case self::MAIL_DEBT_REMINDER:
+                $text = sprintf(
+                    "Ein freundlicher Hinweis von <b>%s</b>!\n Es wäre toll, wenn du diesen Schuldeintrag nicht vergisst",
+                    $transaction->getLoans()[0]->getOwner()->getFullName()
+                );
+                $header = 'Kleiner Reminder';
+                $headerImage = '@images/reminder.jpg';
+                $subject = 'Erinnerung nicht akzeptierte Schuld';
+                $template = 'mailer/mail.base.html.twig';
+                $receiver = $transaction->getDebtor();
+                $sender = $transaction->getLoaner();
                 break;
         }
 
+        $transactionsFromMailReceiverToOther = $this->transactionService->getTransactionCountBetweenUsers($receiver, $sender);
+        $transactionsToMailReceiverFromOther = $this->transactionService->getTransactionCountBetweenUsers($sender, $receiver);
         $problems = 0;
-        $transactions = 0;
-        $debts = 0;
+        $debts = $this->transactionService->getTotalDebtsBetweenUsers($sender, $receiver);
 
 //        $renderedHtml = $this->renderer->render(
 //            $template,
@@ -139,11 +162,15 @@ class MailService
             ->context([
                 'userName' => $receiver->getFirstName(),
                 'text' => $text,
+                'header' => $header,
+                'headerImage' => $headerImage,
                 'interacter' => $transaction->getLoans()[0]->getOwner()->getFirstName(),
+                'interacterVariant' => 'Schuldner',
                 'reason' => $transaction->getReason(),
                 'amount' => $transaction->getAmount(),
                 'problems' => $problems,
-                'transactions' => $transactions,
+                'transactionsFrom' => $transactionsFromMailReceiverToOther,
+                'transactionsTo' => $transactionsToMailReceiverFromOther,
                 'debts' => $debts,
                 'slug' => $slug,
                 'paymentAction' => $paymentAction,

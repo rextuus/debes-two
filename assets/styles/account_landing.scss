@@ -2,7 +2,7 @@
 
 .statistics {
     background: #424243;
-    border: 2px solid $color-header-purple;
+    border: 2px solid $color-header-main;
     border-radius: 8px;
     margin-right: 3px;
     max-width: 100%;
@@ -38,7 +38,7 @@
     justify-content: center;
     cursor: pointer;
 
-    border: 2px solid $color-header-purple;
+    border: 2px solid $color-header-main;
     border-radius: 8px;
 
     position: relative; /* add a positioning context for the hover effect */
@@ -110,7 +110,7 @@
 }
 
 .balance {
-    border: 1px solid $color-header-purple;
+    border: 1px solid $color-header-main;
     border-radius: 3px;
 }
 
@@ -142,8 +142,8 @@
 }
 
 .balance-text {
-    background: $color-header-purple;
-    border: 1px solid $color-header-purple;
+    background: $color-header-main;
+    border: 1px solid $color-header-main;
     border-radius: 3px;
 }
 

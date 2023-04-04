@@ -11,7 +11,7 @@
     font-size: 1.5rem;
     font-weight: bold;
 
-    border-bottom: 4px solid $color-header-purple;
+    border-bottom: 4px solid $color-header-main;
     margin-right: 10px;
     margin-bottom: 15px;
 }
@@ -23,6 +23,6 @@
 .account-overview-area-empty {
     padding: 8px;
     background: #424243;
-    border: 3px solid $color-header-purple;
+    border: 3px solid $color-header-main;
     border-radius: 8px;
 }
