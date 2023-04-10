@@ -1,69 +1,101 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PaymentController!{% endblock %}
+{% block title %}DEBES - Geldeingang bestätigen!{% endblock %}
 
 {% block body %}
-    <section class="hero-section">
 
-        <div class="hero-slider owl-carousel">
-            <div class="hs-item-own">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="hs-text">
-                                {% if debtVariant %}
-                                    <h2><span>Schuld vom</span></h2><h2> {{ dto.created }}</h2>
-                                {% else %}
-                                    <h2><span>Darlehen vom</span></h2><h2> {{ dto.created }}</h2>
-                                {% endif %}
+<div class="page-header">
+    <div class="page-header-text">
+        Geldeingang bestätigen!
+    </div>
+    <div class="page-header-image">
+        <img src="{{ asset('assets/img/claim.svg') }}" alt="Tile image">
+    </div>
 
-                                <table class="table table-hover table-dark">
-                                    <tr>
-                                        {% if debtVariant %}
-                                            <th scope="col">Darlehensgeber</th>
-                                        {% else %}
-                                            <th scope="col">Gläubiger</th>
-                                        {% endif %}
-                                        <td>{{ dto.transactionPartners }}</td>
-                                    </tr>
+</div>
+<div class="content-body">
+    <div class="empty-list-info is-warning font-size-1-2">
+        User hat dir das Geld am datum via Variante überwiesen.
+    </div>
+    {{ transaction_part_summary(dto) | raw }}
 
-                                    <tr>
-                                        <th scope="col">Betrag</th>
-                                        <td>{{ dto.amount }} €</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th scope="col">Grund</th>
-                                        <td>{{ dto.reason }}</td>
-                                    </tr>
-
-
-                                </table>
-
-                                {% if debtVariant %}
-                                    <p>Du hast das Geld bereits überwiesen</p>
-                                {% else %}
-                                    <p>Ist das Geld korrekt und vollständig bei dir eingegangen?</p>
-                                {% endif %}
-
-
-                                {% if debtVariant %}
-                                    {{ form_start(form, {'method': 'POST'}) }}
-                                    {{ form_row(form._token) }}
-                                    {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }}
-                                    {{ form_widget(form.decline, {'attr': {'class': 'site-btn debt'}}) }}
-                                {% else %}
-                                    {{ form_start(form, {'method': 'POST'}) }}
-                                    {{ form_row(form._token) }}
-                                    {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }}
-                                    {{ form_widget(form.decline, {'attr': {'class': 'site-btn debt'}}) }}
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="form-area has-mb-m">
+        {{ form_start(form, {'method': 'POST'}) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form) }}
         </div>
+        <div class="form-submit-field">
+            {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+        </div>
+        {{ form_row(form._token) }}
+        <div class="form-submit-field">
+            {{ form_widget(form.decline, {'attr': {'class': 'btn'}}) }}
+        </div>
+    </div>
+</div>
 
-    </section>
-{% endblock %}
+
+    {#    <section class="hero-section"> #}
+
+    {#        <div class="hero-slider owl-carousel"> #}
+    {#            <div class="hs-item-own"> #}
+    {#                <div class="container"> #}
+    {#                    <div class="row"> #}
+    {#                        <div class="col-lg-6"> #}
+    {#                            <div class="hs-text"> #}
+    {#                                {% if debtVariant %} #}
+    {#                                    <h2><span>Schuld vom</span></h2><h2> {{ dto.created }}</h2> #}
+    {#                                {% else %} #}
+    {#                                    <h2><span>Darlehen vom</span></h2><h2> {{ dto.created }}</h2> #}
+    {#                                {% endif %} #}
+
+    {#                                <table class="table table-hover table-dark"> #}
+    {#                                    <tr> #}
+    {#                                        {% if debtVariant %} #}
+    {#                                            <th scope="col">Darlehensgeber</th> #}
+    {#                                        {% else %} #}
+    {#                                            <th scope="col">Gläubiger</th> #}
+    {#                                        {% endif %} #}
+    {#                                        <td>{{ dto.transactionPartners }}</td> #}
+    {#                                    </tr> #}
+
+    {#                                    <tr> #}
+    {#                                        <th scope="col">Betrag</th> #}
+    {#                                        <td>{{ dto.amount }} €</td> #}
+    {#                                    </tr> #}
+
+    {#                                    <tr> #}
+    {#                                        <th scope="col">Grund</th> #}
+    {#                                        <td>{{ dto.reason }}</td> #}
+    {#                                    </tr> #}
+
+
+    {#                                </table> #}
+
+    {#                                {% if debtVariant %} #}
+    {#                                    <p>Du hast das Geld bereits überwiesen</p> #}
+    {#                                {% else %} #}
+    {#                                    <p>Ist das Geld korrekt und vollständig bei dir eingegangen?</p> #}
+    {#                                {% endif %} #}
+
+
+    {#                                {% if debtVariant %} #}
+    {#                                    {{ form_start(form, {'method': 'POST'}) }} #}
+    {#                                    {{ form_row(form._token) }} #}
+    {#                                    {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }} #}
+    {#                                    {{ form_widget(form.decline, {'attr': {'class': 'site-btn debt'}}) }} #}
+    {#                                {% else %} #}
+    {#                                    {{ form_start(form, {'method': 'POST'}) }} #}
+    {#                                    {{ form_row(form._token) }} #}
+    {#                                    {{ form_widget(form.submit, {'attr': {'class': 'site-btn loan'}}) }} #}
+    {#                                    {{ form_widget(form.decline, {'attr': {'class': 'site-btn debt'}}) }} #}
+    {#                                {% endif %} #}
+    {#                            </div> #}
+    {#                        </div> #}
+    {#                    </div> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#        </div> #}
+
+    {#    </section> #}
+    {% endblock %}

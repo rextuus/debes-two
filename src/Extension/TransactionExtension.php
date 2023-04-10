@@ -10,6 +10,7 @@ use App\Entity\TransactionStateChangeEvent;
 use App\Extension\NextStateProvider\NextStateProvider;
 use App\Service\Transaction\TransactionDtos\TransactionDto;
 use App\Service\Util\TimeConverter;
+use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -41,91 +42,18 @@ class TransactionExtension extends AbstractExtension
 
     public function renderTransactionPartContentCard(TransactionDto $part): string
     {
-        $acceptButton = 'Ja';
-        $declineButton = 'Nein';
-        $acceptLink = 'transfer_overview';
-        $declineLink = 'transaction_process';
-        $acceptIcon = 'assets/img/accept.svg';
-        $declineIcon = 'assets/img/warning.svg';
-
         $cardIcon = 'assets/img/create.svg';
-//        $handlerName = '';
-//        switch ($part->getState()) {
-//            case 1:
-//                if ($part->isDebtVariant()) {
-//                    $handlerName = 'debt_accept';
-//                } else {
-//                    $handlerName = 'loan_accept';
-//                }
-//                break;
-//        }
-        $contentCardParams = ($this->nextStateProvider->getHandlerForState($part)->getTwigParameters($part));
 
-//        switch ($part->getState()) {
-//            case 1:
-//                // accepted => pay/break | remember
-//                $cardIcon = 'assets/img/create.svg';
-//                if ($part->isDebtVariant()) {
-//                    $params = ['slug' => $part->getTransactionSlug(),'variant' => 'debtor'];
-//                    $acceptLink = $this->router->generate('transaction_accept', $params);
-//
-//                    $acceptButton = 'Akzeptieren';
-//                    $acceptIcon = 'assets/img/paid.svg';
-//
-//                    $params = ['slug' => $part->getTransactionSlug(), 'variant' => 'loaner'];
-//                    $declineLink = $this->router->generate('transaction_accept', $params);
-//                    $declineButton = 'Ablehnen';
-//                    $declineIcon = 'assets/img/warning.svg';
-//                } else {
-//                    $acceptLink = 'transfer_overview';
-//                    $acceptButton = 'Erinnern';
-//                    $acceptIcon = 'assets/img/email.svg';
-//
-//                    $declineLink = '';
-//                }
-//
-//                break;
-//            case 2:
-//                // accepted => pay/break | remember
-//                $cardIcon = 'assets/img/accept.svg';
-//                if ($part->isDebtVariant()) {
-//                    $acceptLink = 'transfer_overview';
-//                    $acceptButton = 'Bezahlen';
-//                    $acceptIcon = 'assets/img/paid.svg';
-//
-//                    $declineLink = 'transaction_process';
-//                    $declineButton = 'Reklamieren';
-//                    $declineIcon = 'assets/img/warning.svg';
-//                } else {
-//                    $acceptLink = 'transfer_overview';
-//                    $acceptButton = 'Erinnern';
-//                    $acceptIcon = 'assets/img/email.svg';
-//
-//                    $declineLink = '';
-//                }
-//
-//                break;
-//            case 3:
-//                // paid => remember | confirm
-//                if ($part->isDebtVariant()) {
-//                    $acceptLink = '';
-//
-//                    $declineLink = 'transaction_process';
-//                    $declineButton = 'Hinweis senden';
-//                    $declineIcon = 'assets/img/warning.svg';
-//                } else {
-//                    $acceptLink = 'transaction_process';
-//                    $acceptButton = 'Bestätigen';
-//                    $acceptIcon = 'assets/img/party.svg';
-//
-//                    $declineLink = 'transaction_process';
-//                    $declineButton = 'Bemängeln';
-//                    $declineIcon = 'assets/img/warning.svg';
-//                }
-//
-//                $cardIcon = 'assets/img/paid.svg';
-//                break;
-//        }
+        $stateProvider = $this->nextStateProvider->getHandlerForState($part);
+        if (!$stateProvider){
+            $message = sprintf(
+                'No provider found for transaction in state: %s_%s',
+                $part->getState(),
+                $part->isDebtVariant() ? 'debt' : 'loan'
+            );
+            throw new Exception($message);
+        }
+        $contentCardParams = $stateProvider->getTwigParameters($part);
 
         return $this->environment->render(
             'extension/transaction_part_card.html.twig',

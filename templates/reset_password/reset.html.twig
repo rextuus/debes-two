@@ -1,12 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}DEBES - Passwort zurücksetzen{% endblock %}
 
 {% block body %}
-    <h1>Reset your password</h1>
+    <div class="page-header">
+        <div class="page-header-text">
+            Passwort zurücksetzen
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/reset-password.svg') }}" alt="Tile image">
+        </div>
 
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
-    {{ form_end(resetForm) }}
+    </div>
+
+
+    <div class="content-body">
+        <div class="form-area">
+            {{ form_start(resetForm) }}
+
+            <div class="form-input-field">
+                <label class="hidden" for="change_password_form_plainPassword_first">Password</label>
+                <div class="image-form-row">
+{#                    <div class="image-form-row-image">#}
+{#                        <img src="{{ asset('assets/img/password.svg') }}" alt="Tile image">#}
+{#                    </div>#}
+                    {{ form_widget(resetForm.plainPassword, {'attr': {'class': '', 'placeholder': 'Passwort', 'id': 'first' }}) }}
+                </div>
+            </div>
+            <div class="form-submit-field">
+            <button class="btn btn-primary">Passwort setzen</button>
+            </div>
+            {{ form_end(resetForm) }}
+        </div>
+    </div>
+
+
 {% endblock %}

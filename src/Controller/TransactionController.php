@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Exception\UserNotCorrectParticipantOfTransaction;
 use App\Form\ChoiceType;
 use App\Form\TransactionCreateMultipleType;
 use App\Form\TransactionCreateSimpleType;
@@ -11,11 +12,13 @@ use App\Service\Debt\DebtCreateData;
 use App\Service\Debt\DebtDto;
 use App\Service\Loan\LoanDto;
 use App\Service\Mailer\MailService;
+use App\Service\Transaction\DtoProvider;
 use App\Service\Transaction\TransactionCreateData;
 use App\Service\Transaction\TransactionCreateMultipleData;
 use App\Service\Transaction\TransactionData;
 use App\Service\Transaction\TransactionProcessor;
 use App\Service\Transaction\TransactionService;
+use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,9 +30,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/transaction')]
 class TransactionController extends AbstractController
 {
+    public const REQUESTER_VARIANT_LOANER = 'loaner';
+    public const REQUESTER_VARIANT_DEBTOR = 'debtor';
+
     public function __construct(
-        private TransactionService $transactionService,
-        private MailService $mailService,
+        private TransactionService   $transactionService,
+        private MailService          $mailService,
         private TransactionProcessor $transactionProcessor)
     {
     }
@@ -83,12 +89,13 @@ class TransactionController extends AbstractController
         /** @var User $requester */
         $requester = $this->getUser();
 
-        $isDebtor = $this->transactionService->checkRequestForVariant(
+        $this->transactionService->checkRequestForVariant(
             $requester,
             $transaction,
             $request->get('variant'),
             Transaction::STATE_READY
         );
+        $isDebtor = $request->get('variant') === self::REQUESTER_VARIANT_DEBTOR;
 
         if ($isDebtor) {
             $debt = $this->transactionService->getDebtPartOfUserForTransaction($transaction, $requester);
@@ -186,7 +193,7 @@ class TransactionController extends AbstractController
     }
 
     #[Route('/confirm/{slug}', name: 'transaction_confirm')]
-    public function confirmTransaction(Transaction $transaction, Request $request): Response
+    public function confirmTransaction(Transaction $transaction, Request $request, DtoProvider $dtoProvider): Response
     {
         /** @var User $requester */
         $requester = $this->getUser();
@@ -199,12 +206,17 @@ class TransactionController extends AbstractController
         );
 
         if ($isDebtor) {
-            $dto = DebtDto::create($this->transactionService->getDebtPartOfUserForTransaction($transaction, $requester));
+//            $dto = DebtDto::create($this->transactionService->getDebtPartOfUserForTransaction($transaction, $requester));
+//            $dto = $dtoProvider->createLoanDto($transaction->getDebts()[0]);
+
             $labels = ['label' => ['submit' => 'Bestätigen', 'decline' => 'Bestätigen']];
         } else {
-            $dto = LoanDto::create($transaction);
+//            $dto = LoanDto::create($transaction);
+//            $dto = $dtoProvider->createLoanDto($transaction->getLoans()[0]);
             $labels = ['label' => ['submit' => 'Bestätigen', 'decline' => 'Bemängeln']];
         }
+        $dto = $this->transactionService->createDtoFromTransaction($transaction, $isDebtor);
+
 
         $form = $this->createForm(ChoiceType::class, null, $labels);
         $form->handleRequest($request);
@@ -277,7 +289,7 @@ class TransactionController extends AbstractController
 
     #[Route('/notify/{slug}', name: 'transaction_notify')]
     public function createTransactionNotification(
-        Request $request,
+        Request     $request,
         Transaction $transaction,
         MailService $mailService
     ): Response
@@ -285,31 +297,80 @@ class TransactionController extends AbstractController
         /** @var User $requester */
         $requester = $this->getUser();
 
-        $allowedStates = [Transaction::STATE_READY];
-        $currentStat = $transaction->getState();
+        $allowedLoanerStates = [Transaction::STATE_READY, Transaction::STATE_ACCEPTED];
+        $allowedDebtorStates = [Transaction::STATE_CLEARED];
+        $transactionState = $transaction->getState();
+        $requesterVariant = $request->get('variant');
 
-        if (!in_array($currentStat, $allowedStates)){
-            if ($request->get('variant') === 'debtor'){
-                return $this->redirectToRoute('account_debts', []);
+        if ($requesterVariant === self::REQUESTER_VARIANT_DEBTOR) {
+            if (in_array($transactionState, $allowedDebtorStates)) {
+                // check if user is really the debtor of this transaction
+                $currentUserIsDebtor = $this->transactionService->checkRequestForVariant(
+                    $requester,
+                    $transaction,
+                    self::REQUESTER_VARIANT_DEBTOR,
+                    $transaction->getState()
+                );
+                if ($currentUserIsDebtor) {
+                    // send Mail => we need a nice way to choose which message should be send
+
+                }
             }
-            return $this->redirectToRoute('account_loans', []);
-        }
-//        dd($currentStat);
-        $isDebtor = $this->transactionService->checkRequestForVariant(
-            $requester,
-            $transaction,
-            $request->get('variant'),
-            $transaction->getState()
-        );
-
-        if (!$isDebtor){
-            $mailService->sendNotificationMail($transaction,MailService::MAIL_DEBT_REMINDER);
+            return $this->redirectToRoute('account_debts', []);
         }
 
-        $this->addFlash(
-            'success',
-            'Your changes were saved!'
-        );
+        if ($requesterVariant === self::REQUESTER_VARIANT_LOANER) {
+            if (in_array($transactionState, $allowedLoanerStates)) {
+                // check if user is really the laoner of this transaction
+                try {
+                    $currentUserIsLoaner = $this->transactionService->checkRequestForVariant(
+                        $requester,
+                        $transaction,
+                        self::REQUESTER_VARIANT_LOANER,
+                        $transaction->getState()
+                    );
+                } catch (UserNotCorrectParticipantOfTransaction $e) {
+                    // TODO SENTRY FORWARDING
+                    return $this->redirectToRoute('account_loans', []);
+                }
+
+                if ($currentUserIsLoaner) {
+                    // send Mail => we need a nice way to choose which message should be send
+                    if ($transactionState === Transaction::STATE_READY) {
+                        $returnTab = 1;
+                    }
+                    if ($transactionState === Transaction::STATE_ACCEPTED) {
+                        $returnTab = 2;
+                    }
+
+                    $mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_REMINDER);
+                    $messageReceiver = $transaction->getLoaner()->getFullName();
+
+                    $this->addFlash(
+                        'success',
+                        "Wir haben einen Reminder an $messageReceiver geschickt"
+                    );
+                }
+            }
+            return $this->redirectToRoute('account_loans', ['variant' => $returnTab]);
+        }
+
+
+//        if (!in_array($transactionState, $allowedLoanerStates)){
+//            if ($request->get('variant') === 'debtor'){
+//                return $this->redirectToRoute('account_debts', []);
+//            }
+//            return $this->redirectToRoute('account_loans', []);
+//        }
+//
+//        $currentUserIsDebtor = $this->transactionService->checkRequestForVariant(
+//            $requester,
+//            $transaction,
+//            $request->get('variant'),
+//            $transaction->getState()
+//        );
+
+
         return $this->redirectToRoute('account_loans', []);
     }
 

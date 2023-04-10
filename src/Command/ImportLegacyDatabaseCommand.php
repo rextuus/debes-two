@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * ImportLegacyDatabaseCommand
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
+ *
  */
 class ImportLegacyDatabaseCommand extends Command
 {
@@ -63,12 +63,16 @@ class ImportLegacyDatabaseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $inputFile = '/var/www/html/debes/schulden.sql';
+        $projectDir = $this->getApplication()->getKernel()->getProjectDir();
+
+        $inputFile = $projectDir . '/schulden.sql';
         $rawContent = file_get_contents($inputFile);
         $lines = explode("\n", $rawContent);
 
         $userDatas = $this->getUserDataAndBankData($lines);
+
         $userDatas = $this->getTransferData($lines);
+
         return 0;
     }
 
@@ -91,10 +95,27 @@ class ImportLegacyDatabaseCommand extends Command
                     continue;
                 }
                 $data = explode(',', $line);
+
+                array_walk(
+                    $data,
+                    function (&$value) {
+                        // Remove all whitespace from the value
+                        $value = preg_replace('/\s+/', '', $value);
+
+                        // Remove all single and double quotes from the value
+                        $value = str_replace(array("'", "\""), '', $value);
+                    }
+                );
+
                 $userData = new UserData();
                 $userData->setEmail($data[1]);
                 $userData->setUserName($data[1]);
                 $userData->setPassword($data[2]);
+                $userData->setPassword($this->generateInitialPassword());
+
+                if ($data[3] === 'Carolin') {
+                    $userData->setPassword('Journey:08');
+                }
                 $userData->setFirstName($data[3]);
                 $userData->setLastName($data[4]);
                 $userDatas[$data[5]] = $userData;
@@ -122,11 +143,25 @@ class ImportLegacyDatabaseCommand extends Command
                     continue;
                 }
                 $data = explode(',', $line);
+
+                array_walk(
+                    $data,
+                    function (&$value) {
+                        // Remove all whitespace from the value
+//                        $value = preg_replace('/\s+/', '', $value);
+
+                        // Remove all single and double quotes from the value
+                        $value = str_replace(array("'", "\""), '', $value);
+                        $value = trim($value);
+                    }
+                );
+                dump($data);
+
                 $transactionData = new TransactionCreateData();
                 $transactionData->setDebtors($data[1]);
                 $transactionData->setLoaners($data[2]);
                 $transactionData->setAmount($data[3]);
-                $transactionData->setReason($data[7]);
+                $transactionData->setReason($data[5]);
 
                 switch (trim($data[4])) {
                     case '1':
@@ -144,11 +179,21 @@ class ImportLegacyDatabaseCommand extends Command
                 }
 
                 $userDatas[] = $transactionData;
-                dump($data);
                 // TODO WAIT FOR HISTORY IS IMPLEMENTED
             }
         }
         return $userDatas;
+    }
+
+    private function generateInitialPassword(): string
+    {
+        $length = 10;
+
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!$%&*_-=+:?';
+
+        $password = substr(str_shuffle($chars), 0, $length);
+        $password = '123Katzen';
+        return $password;
     }
 }
 //TODO Es wäre schön wenn wir die exchanges auf den seiten farblich markiert darstellen könnten rot für eine Verrechnung von uns und grün für eine von jemand anderem

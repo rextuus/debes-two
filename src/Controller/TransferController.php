@@ -323,9 +323,10 @@ class TransferController extends AbstractController
 
             if ($isAccepted) {
                 $exchangeService->exchangeTransactionParts($debt, $loan);
+                $this->mailService->sendNotificationMail($loan->getTransaction(), MailService::MAIL_DEBT_EXCHANGED);
                 return $this->redirectToRoute('account_debts', []);
             } else {
-                return $this->redirectToRoute('transfer_overview', ['slug' => $debt->getTransaction()->getSlug(), 'tabId' => 3]);
+                return $this->redirectToRoute('transfer_overview', ['slug' => $debt->getTransaction()->getSlug(), 'variant' => 3]);
             }
         }
 
@@ -493,7 +494,7 @@ class TransferController extends AbstractController
     private function prepareTabReferences(int $tabId): array
     {
         $tabs = ['active', '', ''];
-        $icon = 'assets/img/bank-account.svg';
+        $icon = 'assets/img/icons/transfer/bank-account.svg';
         $tabName = 'Bank';
         switch ($tabId) {
             case 2:

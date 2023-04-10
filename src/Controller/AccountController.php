@@ -33,9 +33,9 @@ class AccountController extends AbstractController
         $totalDebts = $transactionService->getTotalDebtsForUser($user);
         $totalLoans = $transactionService->getTotalLoansForUser($user);
         $totalBalance = $totalLoans - $totalDebts;
-        $openDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_CREATED);
+        $openDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_READY);
         $acceptedDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_ACCEPTED);
-        $openLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_CREATED);
+        $openLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_READY);
         $acceptedLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_ACCEPTED);
 
         return $this->render('landing/account_overview.html.twig', [

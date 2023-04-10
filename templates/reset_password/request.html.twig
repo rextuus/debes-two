@@ -1,22 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}DEBES - Passwort vergessen{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
-        <div>
-            <small>
-                Enter your email address and we will send you a
-                link to reset your password.
-            </small>
+    <div class="page-header">
+        <div class="page-header-text">
+            Passwort zurücksetzen
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/reset-password.svg') }}" alt="Tile image">
         </div>
 
-        <button class="btn btn-primary">Send password reset email</button>
-    {{ form_end(requestForm) }}
+    </div>
+
+
+    <div class="content-body">
+
+        {% for flash_error in app.flashes('reset_password_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+        <div class="empty-list-info text-10">
+            Gib deine Mailadresse an. Wenn wir einen registrierten Nutzer mit dieser Mailadresse im System haben, schicken wir dir eine Email mit
+            Link zum Zurücksetzen des Passworts.
+        </div>
+
+        <div class="form-area">
+
+            {{ form_start(requestForm) }}
+            <div class="form-input-field">
+                <label class="hidden" for="reset_password_request_form_email">Email</label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/email.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(requestForm.email, {'attr': {'class': 'form-style', 'placeholder': 'Email', 'id': 'email' }}) }}
+                </div>
+            </div>
+
+            <div class="form-submit-field">
+                <button class="btn btn-primary">Passwort zurücksetzen</button>
+            </div>
+            {{ form_end(requestForm) }}
+
+        </div>
+    </div>
 {% endblock %}

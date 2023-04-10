@@ -22,43 +22,21 @@ use Exception;
  * LegacyImportService
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
+ *
  */
 class LegacyImportService
 {
-    private $userService;
-
-    private $bankAccountService;
-
-    private $transactionService;
-
     /**
      * LoadFixtureFilesToDatabase constructor.
      */
     public function __construct(
-        UserService        $userService,
-        BankAccountService $bankAccountService,
-        TransactionService $transactionService
+        private UserService        $userService,
+        private BankAccountService $bankAccountService,
+        private TransactionService $transactionService
     )
     {
-        $this->userService = $userService;
-        $this->bankAccountService = $bankAccountService;
-        $this->transactionService = $transactionService;
     }
 
-    /**
-     * createUserByData
-     *
-     * @param string $email
-     * @param string $password
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $userName
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function createUserByData(
         string $email,
         string $password,
@@ -76,21 +54,6 @@ class LegacyImportService
         $this->userService->storeUser($userData);
     }
 
-    /**
-     * creatBankAccountByData
-     *
-     * @param bool $enabled
-     * @param string $bankName
-     * @param string $bic
-     * @param string $iban
-     * @param string $description
-     * @param string $preferred
-     * @param User $owner
-     * @param string $accountName
-     *
-     * @return void
-     * @throws Exception
-     */
     public function creatBankAccountByData(
         bool   $enabled,
         string $bankName,
@@ -114,19 +77,6 @@ class LegacyImportService
         $this->bankAccountService->storeBankAccount($bankAccountData);
     }
 
-    /**
-     * createTransaction
-     *
-     * @param string $reason
-     * @param float $amount
-     * @param User $debtor
-     * @param User $loaner
-     * @param string|null $state
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function createTransaction(
         string  $reason,
         float   $amount,
@@ -201,7 +151,6 @@ class LegacyImportService
 
     public function setAllTransactionsToAccepted()
     {
-
         foreach ($this->transactionService->getAll() as $transaction) {
             $transaction = $this->transactionService->getTransactionById($transaction->getId());
             $transactionData = new TransactionUpdateData();

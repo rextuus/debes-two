@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Extension\NextStateProvider\Confirm;
+namespace App\Extension\NextStateProvider\Accepted;
 
+use App\Controller\TransactionController;
 use App\Entity\Transaction;
 use App\Extension\NextStateProvider\AbstractNextState;
 use App\Extension\NextStateProvider\NextStateInterface;
@@ -12,9 +13,9 @@ use App\Service\Transaction\TransactionDtos\TransactionDto;
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
  * @license 2023 DocCheck Community GmbH
  */
-class NextStateLoanConfirm extends AbstractNextState implements NextStateInterface
+class NextStateLoanAccepted extends AbstractNextState implements NextStateInterface
 {
-    public const NEXT_STATE_SHORTCUT = Transaction::STATE_CLEARED . AbstractNextState::LOAN_POSTFIX;
+    public const NEXT_STATE_SHORTCUT = Transaction::STATE_ACCEPTED . AbstractNextState::LOAN_POSTFIX;
 
     public function getName(): string
     {
@@ -23,10 +24,10 @@ class NextStateLoanConfirm extends AbstractNextState implements NextStateInterfa
 
     public function getTwigParameters(TransactionDto $part): array
     {
-        $params = ['slug' => $part->getTransactionSlug(),'variant' => 1];
-        $acceptLink = $this->router->generate('transfer_overview', $params);
-        $acceptButton = 'Geldeingang bestätigen';
-        $acceptIcon = 'assets/img/warning.svg';
+        $params = ['slug' => $part->getTransactionSlug(),'variant' => TransactionController::REQUESTER_VARIANT_LOANER];
+        $acceptLink = $this->router->generate('transaction_notify', $params);
+        $acceptButton = 'Erinnern';
+        $acceptIcon = 'assets/img/email.svg';
 
         return [
             'acceptLink' => $acceptLink,
@@ -35,6 +36,7 @@ class NextStateLoanConfirm extends AbstractNextState implements NextStateInterfa
             'declineLink' => '',
             'declineButton' => '',
             'declineIcon' => '',
+            'cardIcon' => 'assets/img/icons/transaction/accept.svg',
         ];
     }
 }

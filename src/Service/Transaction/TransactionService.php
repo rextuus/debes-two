@@ -7,6 +7,7 @@ use App\Entity\Loan;
 use App\Entity\Transaction;
 use App\Entity\TransactionStateChangeEvent;
 use App\Entity\User;
+use App\Exception\UserNotCorrectParticipantOfTransaction;
 use App\Repository\TransactionRepository;
 use App\Service\Debt\DebtCreateData;
 use App\Service\Debt\DebtService;
@@ -232,7 +233,7 @@ class TransactionService
     {
         $transactionData = (new TransactionUpdateData())->initFrom($transaction);
         $transactionData->setState(Transaction::STATE_CONFIRMED);
-        $this->update($transaction, $transactionData);
+        $this->updateInclusive($transaction, $transactionData);
     }
 
     public function declineDebt(Debt $debt): void
@@ -242,6 +243,10 @@ class TransactionService
         $this->debtService->update($debt, $debtData);
     }
 
+    /**
+     * @throws UserNotCorrectParticipantOfTransaction
+     * @throws Exception
+     */
     public function checkRequestForVariant(
         User        $requester,
         Transaction $transaction,
@@ -252,7 +257,7 @@ class TransactionService
         if ($variant === self::DEBTOR_VIEW) {
             $debt = $this->getDebtPartOfUserForTransaction($transaction, $requester);
             if (is_null($debt)) {
-                throw new Exception('User is not a loaner of this transaction');
+                throw new UserNotCorrectParticipantOfTransaction('User is not a loaner of this transaction');
             }
             if ($debt->getState() !== $state) {
                 throw new Exception('TransactionPart is not in correct sate');
@@ -261,12 +266,12 @@ class TransactionService
         } elseif ($variant === self::LOANER_VIEW) {
             $loan = $this->getLoanPartOfUserForTransaction($transaction, $requester);
             if (is_null($loan)) {
-                throw new Exception('User is not a loaner of this transaction');
+                throw new UserNotCorrectParticipantOfTransaction('User is not a loaner of this transaction');
             }
             if ($loan->getState() !== $state) {
                 throw new Exception('TransactionPart is not in correct sate');
             }
-            return false;
+            return true;
         } else {
             throw new Exception('User is not involved in this transaction');
         }

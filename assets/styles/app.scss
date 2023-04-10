@@ -129,11 +129,20 @@ body{
     border: 1px solid #424243;
     border-radius: $default-border-radius;
 }
-.text-s{
-    font-size: $smaller-text;
+.text-10{
+    font-size: $text-10;
 }
-.text-vs{
-    font-size: $text-vs;
+.text-9{
+    font-size: $text-9;
+}
+.text-8{
+    font-size: $text-8;
+}
+.text-7{
+    font-size: $text-7;
+}
+.text-6{
+    font-size: $text-6;
 }
 .rotate {
     transform: rotate(180deg);

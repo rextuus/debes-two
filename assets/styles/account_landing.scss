@@ -28,8 +28,9 @@
 }
 
 .tile {
-    width: calc(25% - 20px); /* calculate the width to be half of the screen width and subtract some padding */
-    height: calc(25% - 20px); /* set the height to be equal to the width */
+    $width: calc(12.5% - 20px);
+    width: $shortcut-img-size; /* calculate the width to be half of the screen width and subtract some padding */
+    height: $shortcut-img-size; /* set the height to be equal to the width */
     background-color: $color-balance-positive; /* add a background color for styling purposes */
     margin: 5px; /* add some padding between the tiles */
     display: flex;
@@ -41,7 +42,15 @@
     border: 2px solid $color-header-main;
     border-radius: 8px;
 
-    position: relative; /* add a positioning context for the hover effect */
+    //position: relative; /* add a positioning context for the hover effect */
+}
+
+@media (max-width: 768px) {
+    .tile {
+        $shortcut-img-size: calc(25% - 20px);
+        width: $shortcut-img-size; /* calculate the width to be half of the screen width and subtract some padding */
+        height: $shortcut-img-size; /* set the height to be equal to the width */
+    }
 }
 
 .tile img {

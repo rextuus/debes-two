@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Extension\NextStateProvider\Accept;
+namespace App\Extension\NextStateProvider\Ready;
 
 use App\Entity\Transaction;
 use App\Extension\NextStateProvider\AbstractNextState;
@@ -12,7 +12,7 @@ use App\Service\Transaction\TransactionDtos\TransactionDto;
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
  * @license 2023 DocCheck Community GmbH
  */
-class NextStateDebtAccept extends AbstractNextState implements NextStateInterface
+class NextStateDebtReady extends AbstractNextState implements NextStateInterface
 {
     public const NEXT_STATE_SHORTCUT = Transaction::STATE_READY . AbstractNextState::DEBT_POSTFIX;
 
@@ -28,7 +28,6 @@ class NextStateDebtAccept extends AbstractNextState implements NextStateInterfac
         $acceptButton = 'Akzeptieren';
         $acceptIcon = 'assets/img/accept2.svg';
 
-        $params = ['slug' => $part->getTransactionSlug(), 'variant' => 'loaner'];
         $declineLink = $this->router->generate('transaction_accept', $params);
         $declineButton = 'Ablehnen';
         $declineIcon = 'assets/img/warning.svg';
@@ -40,6 +39,7 @@ class NextStateDebtAccept extends AbstractNextState implements NextStateInterfac
             'declineLink' => $declineLink,
             'declineButton' => $declineButton,
             'declineIcon' => $declineIcon,
+            'cardIcon' => 'assets/img/create.svg',
         ];
     }
 }

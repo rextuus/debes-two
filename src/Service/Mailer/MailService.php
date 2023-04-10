@@ -32,7 +32,7 @@ class MailService
     public const MAIL_DEBT_DECLINED = 'debt_declined';
     public const MAIL_DEBT_PAYED_PAYPAL = 'debt_payed_paypal';
     public const MAIL_DEBT_PAYED_ACCOUNT = 'debt_payed_account';
-    public const MAIL_DEBT_TRANSFERRED = 'debt_transferred';
+    public const MAIL_DEBT_EXCHANGED = 'debt_exchanged';
     public const MAIL_DEBT_CONFIRMED = 'debt_confirmed';
     public const MAIL_DEBT_REMINDER = 'debt_reminder';
 
@@ -63,73 +63,131 @@ class MailService
 
         switch ($mailVariant) {
             case self::MAIL_DEBT_CREATED:
-                $text = 'Es gibt leider schlechte Nachrichten. Jemand hat eine neue Schuldlast für deinen Debes-Account hinterlegt';
+                $receiver = $transaction->getDebtor();
+                $sender = $transaction->getLoaner();;
+                $text = sprintf(
+                    'Es gibt leider schlechte Nachrichten. <b>%s</b> hat eine neue Schuldlast für deinen Debes-Account hinterlegt',
+                    $sender->getFullName()
+                );
+                $header = 'Du lebst wohl auf großem Fuße!';
+                $headerImage = '@images/debt.png';
+
                 $subject = 'Neue Schulden';
                 $template = 'mailer/mail.created.html.twig';
-                $receiver = $transaction->getDebtor();
-                $sender = $transaction->getLoaner();
+
                 break;
             case self::MAIL_DEBT_CANCELED:
-                $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuldlast für deinen Debes-Account zurückgezogen';
-                $subject = 'Schuld zurückgezogen';
-                $template = 'mailer/mail.canceled.html.twig';
                 $receiver = $transaction->getDebtor();
                 $sender = $transaction->getLoaner();
+                $text = sprintf(
+                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuldlast für deinen Debes-Account zurückgezogen',
+                    $sender->getFullName()
+                );
+                $header = 'Dein Einfluss zahlt sich aus!';
+                $headerImage = '@images/decline.png';
+
+                $subject = 'Schuld zurückgezogen';
+                $template = 'mailer/mail.canceled.html.twig';
+
                 break;
             case self::MAIL_DEBT_ACCEPTED:
-                $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuldenforderung von dir akzeptiert';
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();;
+
+                $text = sprintf(
+                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuldenforderung von dir akzeptiert',
+                    $sender->getFullName()
+                );
+                $header = 'Dein Einfluss zahlt sich aus!';
+                $headerImage = '@images/handshake.png';
+
                 $subject = 'Schuldlast akzeptiert ';
                 $template = 'mailer/mail.accepted.html.twig';
-                $receiver = $transaction->getLoaner();
-                $sender = $transaction->getDebtor();
+
                 break;
             case
             self::MAIL_DEBT_DECLINED:
-                $text = 'Es gibt schlechte Nachrichten. Jemand hat eine Schuldenforderung von dir abgewiesen';
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
+
+                $text = sprintf(
+                    'Es gibt schlechte Nachrichten. <b>%s</b> hat eine Schuldenforderung von dir abgewiesen',
+                    $sender->getFullName()
+                );
+                $header = 'Da stimmt was nicht';
+                $headerImage = '@images/declined.jpg';
+
                 $subject = 'Schuldlast abgelehnt ';
                 $template = 'mailer/mail.declined.html.twig';
-                $receiver = $transaction->getLoaner();
-                $sender = $transaction->getDebtor();
                 break;
-            case self::MAIL_DEBT_TRANSFERRED:
-                $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuld beglichen und dir Geld überwiesen';
-                $subject = 'Schulden zurück erhalten';
-                $template = 'mailer/mail.transferred.html.twig';
+            case self::MAIL_DEBT_EXCHANGED:
                 $receiver = $transaction->getLoaner();
                 $sender = $transaction->getDebtor();
+                $text = sprintf(
+                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuld beglichen in dem er sie mit einer anderen verrechnet hat',
+                    $sender->getFullName()
+                );
+                $header = 'Ein fairer Austausch!';
+                $headerImage = '@images/transferred.png';
+
+                $subject = 'Schulden verrechnet';
+                $template = 'mailer/mail.transferred.html.twig';
                 break;
             case self::MAIL_DEBT_PAYED_ACCOUNT:
-                $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuld beglichen und dir Geld auf dein Bank-Konto überwiesen';
-                $subject = 'Schulden zurück erhalten';
-                $template = 'mailer/mail.transferred.html.twig';
                 $receiver = $transaction->getLoaner();
                 $sender = $transaction->getDebtor();
+                $text = sprintf(
+                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuld beglichen und dir Geld auf dein Bank-Konto überwiesen',
+                    $sender->getFullName()
+                );
+                $header = 'Zahltag!';
+                $headerImage = '@images/transferred.png';
+
+                $subject = 'Schulden zurück erhalten';
+                $template = 'mailer/mail.transferred.html.twig';
+
                 break;
             case self::MAIL_DEBT_PAYED_PAYPAL:
-                $text = 'Es gibt gute Nachrichten. Jemand hat eine Schuld beglichen und dir Geld auf dein Paypal-Konto überwiesen';
+                $receiver = $transaction->getLoaner();
+                $sender = $transaction->getDebtor();
+                $text = sprintf(
+                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuld beglichen und dir Geld auf dein Paypal-Konto überwiesen',
+                    $sender->getFullName()
+                );
+                $header = 'Zahltag!';
+                $headerImage = '@images/transferred.png';
+
                 $subject = 'Schulden zurück erhalten';
                 $template = 'mailer/mail.transferred.html.twig';
-                $receiver = $transaction->getLoaner();
-                $sender = $transaction->getDebtor();
+
                 break;
             case self::MAIL_DEBT_CONFIRMED:
-                $text = 'Es gibt gute Nachrichten. Jemand hat den Eingang deiner Schuldrückzahlung bestätigt';
-                $subject = 'Geldeingang bestätigt';
-                $template = 'mailer/mail.confirmed.html.twig';
                 $receiver = $transaction->getLoaner();
                 $sender = $transaction->getDebtor();
+                $text = sprintf(
+                    "Es gibt gute Nachrichten. <b>%s</b> hat den Eingang deiner Schuldrückzahlung bestätigt",
+                    $sender->getFullName()
+                );
+                $header = 'Zahltag!';
+                $headerImage = '@images/handshake.png';
+
+                $subject = 'Geldeingang bestätigt';
+                $template = 'mailer/mail.confirmed.html.twig';
+
                 break;
             case self::MAIL_DEBT_REMINDER:
+                $receiver = $transaction->getDebtor();
+                $sender = $transaction->getLoaner();
+
                 $text = sprintf(
                     "Ein freundlicher Hinweis von <b>%s</b>!\n Es wäre toll, wenn du diesen Schuldeintrag nicht vergisst",
-                    $transaction->getLoans()[0]->getOwner()->getFullName()
+                    $sender->getFullName()
                 );
                 $header = 'Kleiner Reminder';
                 $headerImage = '@images/reminder.jpg';
                 $subject = 'Erinnerung nicht akzeptierte Schuld';
                 $template = 'mailer/mail.base.html.twig';
-                $receiver = $transaction->getDebtor();
-                $sender = $transaction->getLoaner();
+
                 break;
         }
 
@@ -158,7 +216,7 @@ class MailService
             ->from(self::DEBES_MAIL_ADDRESS)
             ->to($receiver->getEmail())
             ->subject($subject)
-            ->htmlTemplate($template)
+            ->htmlTemplate('mailer/mail.base.html.twig')
             ->context([
                 'userName' => $receiver->getFirstName(),
                 'text' => $text,

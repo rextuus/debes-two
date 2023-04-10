@@ -26,11 +26,11 @@
                 {{ form_errors(form) }}
             </div>
             <div class="form-submit-field">
-                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+                {{ form_widget(form.submit, {'attr': {'class': 'btn '}}) }}
             </div>
             {{ form_row(form._token) }}
             <div class="form-submit-field">
-                {{ form_widget(form.decline, {'attr': {'class': 'btn'}}) }}
+                {{ form_widget(form.decline, {'attr': {'class': 'btn decline'}}) }}
             </div>
         </div>
         {% if debtVariant %}

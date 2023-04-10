@@ -30,9 +30,14 @@ $default-m-b-m: 20px;
 $default-border-radius: 8px;
 
 //text
-$smaller-text: 0.8em;
-$text-vs: 0.6em;
+$text-10: 1.0em;
+$text-9: 0.9em;
+$text-8: 0.8em;
+$text-7: 0.7em;
+$text-6: 0.6em;
 
 // images sizes
 $home-button-img-size: 35px;
 $loan-debt-switch-img-size: 25px;
+
+$shortcut-img-size: calc(12.5% - 20px);

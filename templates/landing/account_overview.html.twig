@@ -14,14 +14,41 @@
 
     <div class="tile-container">
         <a href="{{ path('transaction_create_simple') }}" class="tile" data-url="{{ path('transaction_create_simple') }}" data-caption="">
-            <img src="{{ asset('assets/img/claim.svg') }}" alt="Tile image">
+            <img src="{{ asset('assets/img/claim2.svg') }}" alt="Tile image">
         </a>
         <a href="{{ path('payment_overview') }}" class="tile" data-url="{{ path('payment_overview') }}" data-caption="">
-            <img src="{{ asset('assets/img/bank-account.svg') }}" alt="Tile image">
+            <img src="{{ asset('assets/img/icons/transfer/bank-account.svg') }}" alt="Tile image">
         </a>
     </div>
 
     <div class="content-body">
+        <div>
+            <h1>Todos</h1>
+            <h2>Vor Release: </h2>
+            <ul>
+                <li>Landing Page nicht eingeloggte User</li>
+                <li>Einlesen legacy DB</li>
+                <li>Error-Page/Handling für Transaction im falschen state</li>
+                <li>Detail-Seite für jede Transaction</li>
+                <li>Username oben links anzeigen</li>
+                <li>Icon mit DEBES Logo</li>
+                <li>Menü Links anpassen</li>
+                <li>Test-Lauf</li>
+            </ul>
+
+            <h2>Future: </h2>
+            <ul>
+                <li>Templates aufräumen</li>
+                <li>Code aufräumen</li>
+                <li>Mailing-Service auf Events umstellen</li>
+                <li>Sentry einziehen</li>
+                <li>Feature: Zinsen</li>
+                <li>Feature: Profil-Einstellungen: auto-accept, confirm, exchange</li>
+                <li>Feature: Filter auf Übersichtsseiten: Nach Usern, Höhe Betrag, Datum...</li>
+                <li>Feature: Benutzergruppen: Nicht jeder User soll jeden anderen sehen</li>
+                <li>Feature: Anonyme Nutzer zum Verwalten der eigenen Schulden</li>
+            </ul>
+        </div>
 
         <div class="statistics">
             <div id="balance_area" class="balance balance-hidden">

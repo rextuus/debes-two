@@ -20,12 +20,13 @@ class ChangePasswordFormType extends AbstractType
                 'options' => [
                     'attr' => [
                         'autocomplete' => 'new-password',
+                        'class' => 'form-style'
                     ],
                 ],
                 'first_options' => [
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Please enter a password',
+                            'message' => 'Bitte ein Passwort eingeben',
                         ]),
                         new Length([
                             'min' => 6,
@@ -34,10 +35,10 @@ class ChangePasswordFormType extends AbstractType
                             'max' => 4096,
                         ]),
                     ],
-                    'label' => 'New password',
+                    'label' => 'Passwort'
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password',
+                    'label' => 'Wiederholen',
                 ],
                 'invalid_message' => 'The password fields must match.',
                 // Instead of being set onto the object directly,
