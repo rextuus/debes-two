@@ -37,7 +37,13 @@ class LoanFactory
      */
     public function mapData(TransactionPartInterface $loan, TransactionPartDataInterface $data): void
     {
-        if ($data instanceof LoanCreateData) {
+        if ($data instanceof ImportLoanCreateData){
+            $loan->setCreated($data->getCreated());
+            $loan->setEdited($data->getEdited());
+            $loan->setState($data->getState());
+            $loan->setInitialAmount($data->getAmount());
+        }
+        elseif ($data instanceof LoanCreateData) {
             $loan->setCreated($data->getCreated());
             $loan->setEdited($data->getCreated());
             $loan->setState(Transaction::STATE_READY);

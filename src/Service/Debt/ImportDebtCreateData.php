@@ -8,7 +8,7 @@ use App\Service\Transaction\TransactionCreateLegacyImportData;
 use App\Service\Transaction\TransactionData;
 use DateTime;
 
-class DebtCreateData extends DebtData
+class ImportDebtCreateData extends DebtCreateData
 {
 
     /**
@@ -16,7 +16,7 @@ class DebtCreateData extends DebtData
      *
      * @param User $debtor
      *
-     * @return DebtCreateData
+     * @return ImportDebtCreateData
      */
     public function initFromUser(User $debtor): self
     {
@@ -33,17 +33,9 @@ class DebtCreateData extends DebtData
      */
     public function initFromData(TransactionData $data): self
     {
-        $this->setOwner($data->getOwner());
-        $this->setAmount($data->getAmount());
-        $this->setReason($data->getReason());
-        $this->setCreated(new DateTime());
-        $this->setEdited(new DateTime());
-        $this->setState(Transaction::STATE_READY);
-        $this->setPaid(false);
-        if ($data instanceof TransactionCreateLegacyImportData){
-            $this->setCreated($data->getCreated());
-            $this->setState($data->getState());
-        }
+        parent::initFromData($data);
+        $this->setCreated($data->getCreated());
+        $this->setState($data->getState());
 
         return $this;
     }

@@ -11,6 +11,7 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
+        "globalcitizen/php-iban": "^4.2",
         "guzzlehttp/guzzle": "^7.5",
         "nelmio/alice": "^3.12",
         "phpdocumentor/reflection-docblock": "^5.3",

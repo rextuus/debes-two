@@ -47,15 +47,26 @@ class LoanRepository extends ServiceEntityRepository
      *
      * @return int|mixed|string
      */
-    public function findTransactionsForUser(User $owner)
+    public function findTransactionsForUser(User $owner, array $filter)
     {
-        return $this->createQueryBuilder('l')
+        $qb = $this->createQueryBuilder('l')
             ->select('t')
             ->leftJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
             ->where('l.owner = :owner')
             ->setParameter('owner', $owner)
-            ->orderBy('l.amount', 'ASC')
-            ->getQuery()->getResult();
+            ->orderBy('l.amount', 'ASC');
+
+        if (array_key_exists('limit', $filter)){
+            $qb->setMaxResults($filter['limit']);
+        }
+        if (array_key_exists('states', $filter)){
+            $qb->andWhere('l.state IN (:states)');
+            $qb->setParameter('states', $filter['states']);
+        }
+        if (array_key_exists('order', $filter)) {
+            $qb->orderBy('l.edited', $filter['order']);
+        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -67,12 +78,14 @@ class LoanRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getTotalLoansForUser(User $owner): float
+    public function getTotalLoansForUser(User $owner, array $states = [Transaction::STATE_ACCEPTED, Transaction::STATE_READY]): float
     {
         $qb = $this->createQueryBuilder('l')
             ->select('SUM(l.amount)')
             ->where('l.owner = :owner')
-            ->setParameter('owner', $owner);
+            ->andWhere('l.state IN (:states)')
+            ->setParameter('owner', $owner)
+            ->setParameter('states', $states);
 
         return (float)$qb->getQuery()->getSingleScalarResult();
     }

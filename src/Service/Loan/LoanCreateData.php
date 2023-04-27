@@ -4,6 +4,7 @@ namespace App\Service\Loan;
 
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Service\Transaction\TransactionCreateLegacyImportData;
 use App\Service\Transaction\TransactionData;
 use DateTime;
 
@@ -27,6 +28,12 @@ class LoanCreateData extends LoanData
         $this->setOwner($owner);
         $this->setPaid(false);
         $this->setState(Transaction::STATE_READY);
+
+        if ($data instanceof TransactionCreateLegacyImportData){
+            $this->setCreated($data->getCreated());
+            $this->setState($data->getState());
+        }
+
         return $this;
     }
 }

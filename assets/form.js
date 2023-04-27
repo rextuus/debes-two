@@ -54,21 +54,23 @@ inputs.forEach(function(inputElement) {
 // const currencyField = document.getElementById('currency-field');
 var currencyField = document.querySelectorAll("input[data-type='currency']").item(0);
 
+if (currencyField){
+    currencyField.addEventListener('blur', (event) => {
+        let value = event.target.value;
 
-currencyField.addEventListener('blur', (event) => {
-    let value = event.target.value;
+        // Replace commas with dots
+        value = value.replace(',', '.');
 
-    // Replace commas with dots
-    value = value.replace(',', '.');
+        // Parse the value as a float
+        const floatValue = parseFloat(value);
 
-    // Parse the value as a float
-    const floatValue = parseFloat(value);
+        // If the value is valid, format it as a currency
+        if (!isNaN(floatValue)) {
+            event.target.value = floatValue.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+        }
+    });
+}
 
-    // If the value is valid, format it as a currency
-    if (!isNaN(floatValue)) {
-        event.target.value = floatValue.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
-    }
-});
 
 // // select all input elements with data-type attribute equals to "currency"
 // var currencyInputs = document.querySelectorAll("input[data-type='currency']");

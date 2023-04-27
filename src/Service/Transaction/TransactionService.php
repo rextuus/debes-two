@@ -12,6 +12,8 @@ use App\Repository\TransactionRepository;
 use App\Service\Debt\DebtCreateData;
 use App\Service\Debt\DebtService;
 use App\Service\Debt\DebtUpdateData;
+use App\Service\Debt\ImportDebtCreateData;
+use App\Service\Loan\ImportLoanCreateData;
 use App\Service\Loan\LoanCreateData;
 use App\Service\Loan\LoanDto;
 use App\Service\Loan\LoanService;
@@ -85,14 +87,23 @@ class TransactionService
 
     public function storeSingleTransaction(TransactionData $data, User $requester): Transaction
     {
-        $data->setState(Transaction::STATE_READY);
+        if (!$data instanceof TransactionCreateLegacyImportData) {
+            $data->setState(Transaction::STATE_READY);
+        }
+
         $transaction = $this->storeTransaction($data);
 
         $debtData = (new DebtCreateData())->initFromData($data);
+        if ($data instanceof TransactionCreateLegacyImportData) {
+            $debtData = (new ImportDebtCreateData())->initFromData($data);
+        }
         $debtData->setTransaction($transaction);
         $debt = $this->debtService->storeDebt($debtData);
 
         $loanData = (new LoanCreateData())->initFromData($data, $requester);
+        if ($data instanceof TransactionCreateLegacyImportData) {
+            $loanData = (new ImportLoanCreateData())->initFromData($data, $requester);
+        }
         $loanData->setTransaction($transaction);
         $loan = $this->loanService->storeLoan($loanData);
 
@@ -143,11 +154,25 @@ class TransactionService
     public function getAllTransactionBelongingUser(User $owner): array
     {
         $dtos = array();
-        $debtTransactions = $this->debtService->getAllDebtTransactionsForUser($owner);
+        $debtTransactions = $this->debtService->getAllDebtTransactionsForUser(
+            $owner,
+            [
+                'limit' => 3,
+                'states' => [Transaction::STATE_CLEARED, Transaction::STATE_ACCEPTED, Transaction::STATE_READY],
+                'order' => 'DESC'
+            ]
+        );
         foreach ($debtTransactions as $transaction) {
             $dtos[] = $this->dtoProvider->createTransactionDto($transaction, true);
         }
-        $loanTransactions = $this->loanService->getAllLoanTransactionsForUser($owner);
+        $loanTransactions = $this->loanService->getAllLoanTransactionsForUser(
+            $owner,
+            [
+                'limit' => 3,
+                'states' => [Transaction::STATE_CLEARED, Transaction::STATE_ACCEPTED, Transaction::STATE_READY],
+                'order' => 'DESC'
+            ]
+        );
         foreach ($loanTransactions as $transaction) {
             $dtos[] = $this->dtoProvider->createTransactionDto($transaction, false);
         }
@@ -361,7 +386,7 @@ class TransactionService
     public function getTotalDebtsBetweenUsers(User $debtor, User $loaner): int
     {
         $amount = $this->transactionRepository->getTotalDebtsBetweenUsers($debtor, $loaner);
-        if (!$amount){
+        if (!$amount) {
             return 0;
         }
         return $amount;

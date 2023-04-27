@@ -8,10 +8,6 @@ use App\Entity\TransactionPartInterface;
 use App\Entity\User;
 use App\Repository\DebtRepository;
 use App\Service\Transaction\TransactionPartDataInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 
 class DebtService
 {
@@ -46,9 +42,9 @@ class DebtService
     /**
      * @return Transaction[]
      */
-    public function getAllDebtTransactionsForUser(User $user): array
+    public function getAllDebtTransactionsForUser(User $user, array $filter): array
     {
-        return $this->debtRepository->findTransactionsForUser($user);
+        return $this->debtRepository->findTransactionsForUser($user, $filter);
     }
 
     /**

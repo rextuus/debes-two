@@ -47,15 +47,26 @@ class DebtRepository extends ServiceEntityRepository
      *
      * @return int|mixed|string
      */
-    public function findTransactionsForUser(User $owner)
+    public function findTransactionsForUser(User $owner, array $filter): mixed
     {
-        return $this->createQueryBuilder('d')
+        $qb = $this->createQueryBuilder('d')
             ->select('t')
             ->leftJoin(Transaction::class, 't', 'WITH', 'd.transaction = t.id')
             ->where('d.owner = :owner')
             ->setParameter('owner', $owner)
-            ->orderBy('d.amount', 'ASC')
-            ->getQuery()->getResult();
+            ->orderBy('d.amount', 'ASC');
+
+        if (array_key_exists('limit', $filter)) {
+            $qb->setMaxResults($filter['limit']);
+        }
+        if (array_key_exists('states', $filter)) {
+            $qb->andWhere('d.state IN (:states)');
+            $qb->setParameter('states', $filter['states']);
+        }
+        if (array_key_exists('order', $filter)) {
+            $qb->orderBy('d.edited', $filter['order']);
+        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -67,12 +78,14 @@ class DebtRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getTotalDebtsForUser(User $owner): float
+    public function getTotalDebtsForUser(User $owner, array $states = [Transaction::STATE_ACCEPTED, Transaction::STATE_READY]): float
     {
         $qb = $this->createQueryBuilder('d')
             ->select('SUM(d.amount)')
             ->where('d.owner = :owner')
-            ->setParameter('owner', $owner);
+            ->andWhere('d.state IN (:states)')
+            ->setParameter('owner', $owner)
+            ->setParameter('states', $states);
 
         return (float)$qb->getQuery()->getSingleScalarResult();
     }
@@ -96,7 +109,8 @@ class DebtRepository extends ServiceEntityRepository
             ->getQuery()->getResult();
     }
 
-    public function getCountForAllDebtsForUserAndState(User $owner, string $state){
+    public function getCountForAllDebtsForUserAndState(User $owner, string $state)
+    {
         return $this->createQueryBuilder('d')
             ->select('count(d)')
             ->where('d.owner = :owner')

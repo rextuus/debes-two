@@ -36,6 +36,13 @@ class TransactionFactory
         if ($data instanceof TransactionCreateData) {
             $transaction->setCreated(new DateTime());
             $transaction->setEdited($transaction->getCreated());
+
+            // Only for Legacy
+            if ($data instanceof TransactionCreateLegacyImportData){
+                $transaction->setCreated($data->getCreated());
+                $transaction->setEdited($data->getEdited());
+            }
+
             $transaction->setInitialAmount($data->getAmount());
         } else {
             $transaction->setEdited(new DateTime());

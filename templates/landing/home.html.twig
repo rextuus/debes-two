@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DEBES{% endblock %}
+
+{% block body %}
+<html lang="de">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link zur CSS-Datei -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+    <title>Debes - Übersicht</title>
+</head>
+<body>
+
+<div class="content-body">
+{#    <div class="home-image">#}
+{#        <img src="{{ asset('assets/img/home.jpg') }}" alt="Home image">#}
+{#    </div>#}
+    <div class="homepage-welcome">
+        <span class="">Debes:</span> das Management-System für deine Finanzen
+    </div>
+
+    <div class="slideshow-container">
+
+        <!-- Full-width images with number and caption text -->
+
+        <div class="mySlides fade">
+            <div class="slider-text">
+                <span class="">Das Original</span> ab jetzt mit noch mehr Features
+            </div>
+            <div class="image-container">
+
+                <img src="{{ asset('assets/img/home.jpg') }}" style="">
+            </div>
+            {#            <div class="text">Caption Two</div>#}
+        </div>
+
+        <div class="mySlides fade">
+            <div class="slider-text">
+                <span class="">Werde Kreditbär</span> professionell mit Buchhaltungssoftware
+            </div>
+            <div class="image-container">
+            <img src="{{ asset('assets/img/home/borrow.png') }}" style="">
+            </div>
+{#            <div class="text">Caption Two</div>#}
+        </div>
+
+        <div class="mySlides fade">
+            <div class="slider-text">
+                <span class="">Verrechne Schulden</span> mit deinen Verbindlichkeiten
+            </div>
+            <div class="image-container">
+                <img src="{{ asset('assets/img/home/exchange.png') }}" style="" alt="">
+            </div>
+{#            <div class="text">Caption Three</div>#}
+        </div>
+        <div class="mySlides fade">
+            <div class="slider-text">
+                <span class="">Erstelle Mahnungen</span> und erhalte Nachrichten zu neune Schulden
+            </div>
+            <div class="image-container">
+                <img src="{{ asset('assets/img/home/write.png') }}" style="" alt="">
+            </div>
+        </div>
+
+        <div class="mySlides fade">
+            <div class="slider-text">
+                <span class="">Bleib Verliehenem</span> auf den Fersen. Fein säuberlich und strukturiert
+            </div>
+            <div class="image-container">
+                <img src="{{ asset('assets/img/home/hunt.png') }}" style="" alt="">
+            </div>
+        </div>
+
+        <!-- Next and previous buttons -->
+{#        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>#}
+{#        <a class="next" onclick="plusSlides(1)">&#10095;</a>#}
+    </div>
+
+    <!-- The dots/circles -->
+
+</div>
+{% endblock %}

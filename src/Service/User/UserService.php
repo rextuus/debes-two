@@ -37,16 +37,18 @@ class UserService
      *
      * @param UserData $userData
      *
-     * @return void
+     * @return User
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function storeUser(UserData $userData): void
+    public function storeUser(UserData $userData): User
     {
         $user = $this->userFactory->createByData($userData);
 
         $this->userRepository->save($user, true);
+
+        return $user;
     }
 
     /**
@@ -73,5 +75,10 @@ class UserService
     public function findUserByUserName(string $userName): ?User
     {
         return $this->userRepository->findOneBy(['username' => $userName]);
+    }
+
+    public function findUserById(int $userId): ?User
+    {
+        return $this->userRepository->find($userId);
     }
 }

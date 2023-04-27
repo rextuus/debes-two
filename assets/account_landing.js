@@ -89,18 +89,21 @@ function showBalance(total) {
     image.style.width = (parent.offsetHeight - reduceValue) + 'px';
 }
 
-let debts = parseFloat(document.getElementById('total_debts').innerHTML.replace(',', '.'));
-let loans = parseFloat(document.getElementById('total_loans').innerHTML.replace(',', '.'));
-let total = loans - debts;
-document.getElementById('total_balance').innerHTML = total.toString();
-if (total < 0) {
-    document.querySelector('.balance-number').classList.toggle('balance-negative');
+if (document.getElementById('total_debts')){
+    let debts = parseFloat(document.getElementById('total_debts').innerHTML.replace(',', '.'));
+    let loans = parseFloat(document.getElementById('total_loans').innerHTML.replace(',', '.'));
+    let total = loans - debts;
+    document.getElementById('total_balance').innerHTML = total.toString();
+    if (total < 0) {
+        document.querySelector('.balance-number').classList.toggle('balance-negative');
+    }
+
+    Promise.all([
+        countDown('total_loans', loans, 0),
+        countDown('total_debts', debts, 1)
+    ]).then(showBalance);
 }
 
-Promise.all([
-    countDown('total_loans', loans, 0),
-    countDown('total_debts', debts, 1)
-]).then(showBalance);
 
 // tile reaction
 const tiles = document.querySelectorAll('.tile');
@@ -112,3 +115,25 @@ tiles.forEach(tile => {
     });
 });
 
+
+// slide show
+let slideIndex = 0;
+
+showSlides();
+
+function showSlides() {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {slideIndex = 1}
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "inline-block";
+    // dots[slideIndex-1].className += " active";
+    setTimeout(showSlides, 10000); // Change image every 2 seconds
+}

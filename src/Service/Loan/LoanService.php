@@ -47,9 +47,9 @@ class LoanService
     /**
      * @return Transaction[]
      */
-    public function getAllLoanTransactionsForUser(User $user): array
+    public function getAllLoanTransactionsForUser(User $user, array $filter): array
     {
-        return $this->loanRepository->findTransactionsForUser($user);
+        return $this->loanRepository->findTransactionsForUser($user, $filter);
     }
 
     /**

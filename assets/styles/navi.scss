@@ -219,3 +219,36 @@
     margin-left: $default-m-lr-m;
     margin-bottom: $default-m-b-s;
 }
+
+.login-button-container{
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    cursor: pointer;
+
+    .login-text{
+        margin: $default-m-b-xs;
+        margin-left: $default-m-b-s;
+        color: black;
+    }
+}
+.login-button {
+    margin-top: 20px;
+
+    margin-left: $default-m-lr-m;
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    cursor: pointer;
+
+    /* add a positioning context for the hover effect */
+
+    img {
+        width: $home-button-img-size;
+        height: $home-button-img-size;
+    }
+}

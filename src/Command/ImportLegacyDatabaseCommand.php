@@ -2,11 +2,24 @@
 
 namespace App\Command;
 
+use App\Entity\PaymentAction;
 use App\Entity\Transaction;
+use App\Entity\TransactionStateChangeEvent;
 use App\Service\Legacy\LegacyImportService;
+use App\Service\PaymentAction\PaymentActionData;
+use App\Service\PaymentAction\PaymentActionService;
+use App\Service\PaymentOption\BankAccountData;
+use App\Service\PaymentOption\BankAccountService;
+use App\Service\PaymentOption\IbanValidationService;
+use App\Service\Transaction\ChangeEvent\TransactionChangeEventData;
+use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
 use App\Service\Transaction\TransactionCreateData;
+use App\Service\Transaction\TransactionCreateLegacyImportData;
+use App\Service\Transaction\TransactionService;
 use App\Service\User\UserData;
 use App\Service\User\UserService;
+use DateTime;
+use PHP_IBAN\IBAN;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,28 +39,37 @@ class ImportLegacyDatabaseCommand extends Command
      */
     protected static $defaultName = self::NAME;
 
-    /**
-     * @var LegacyImportService
-     */
-    private $legacyImportService;
+    private array $idUserEntityRelations = [];
 
-    /**
-     * @var UserService
-     */
-    private $userService;
+    private array $oldIdNewIdRelation = [
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+        8 => 6,
+        9 => 7,
+        10 => 8,
+        11 => 9,
+        12 => 10,
+        13 => 11,
+        14 => 12,
+    ];
 
     /**
      * LoadFixtureFilesToDatabase constructor.
      */
     public function __construct(
-        LegacyImportService $legacyImportService,
-        UserService         $userService
+        private LegacyImportService           $legacyImportService,
+        private UserService                   $userService,
+        private BankAccountService            $bankAccountService,
+        private TransactionService            $transactionService,
+        private PaymentActionService          $paymentActionService,
+        private TransactionChangeEventService $changeEventService,
+        private IbanValidationService         $ibanValidationService,
     )
     {
         parent::__construct();
-
-        $this->legacyImportService = $legacyImportService;
-        $this->userService = $userService;
     }
 
     /**
@@ -69,9 +91,52 @@ class ImportLegacyDatabaseCommand extends Command
         $rawContent = file_get_contents($inputFile);
         $lines = explode("\n", $rawContent);
 
-        $userDatas = $this->getUserDataAndBankData($lines);
+        $userData = $this->getUserDataAndBankData($lines);
+        $userAutoIncrementId = 1;
+        foreach ($userData as $user => $data) {
+            dump($data);
+            $user = $this->userService->storeUser($data['user']);
+            /** @var BankAccountData $bankData */
+            $bankData = $data['bank'];
+            $bankData->setOwner($user);
+            $this->bankAccountService->storeBankAccount($bankData);
 
-        $userDatas = $this->getTransferData($lines);
+            $this->idUserEntityRelations[$userAutoIncrementId] = $user;
+            $userAutoIncrementId++;
+        }
+
+        $transactionDataSets = $this->getTransferData($lines);
+        foreach ($transactionDataSets as $dataSet) {
+            dump($dataSet);
+            /** @var TransactionCreateLegacyImportData $transactionData */
+            $transactionData = $dataSet['transaction'];
+            $debtor = $this->userService->findUserById($this->oldIdNewIdRelation[$transactionData->getDebtors()]);
+            $transactionData->setOwner($debtor);
+            $loaner = $this->userService->findUserById($this->oldIdNewIdRelation[$transactionData->getLoaners()]);
+            $transaction = $this->transactionService->storeSingleTransaction($transactionData, $loaner);
+
+            foreach ($dataSet['changeEvents'] as $stateChangeEventData) {
+                /** @var TransactionChangeEventData $stateChangeEventData */
+                $stateChangeEventData->setTransaction($transaction);
+
+                if ($stateChangeEventData->getType() === TransactionStateChangeEvent::TYPE_BANK_ACCOUNT) {
+
+                    // create payment action
+                    $paymentActionData = new PaymentActionData();
+                    $paymentActionData->setVariant(PaymentAction::VARIANT_BANK);
+
+                    $bankAccountSender = $this->bankAccountService->getBankAccountsOfUser($debtor)[0];
+                    $bankAccountReceiver = $this->bankAccountService->getBankAccountsOfUser($loaner)[0];
+                    $paymentActionData->setBankAccountSender($bankAccountSender);
+                    $paymentActionData->setBankAccountReceiver($bankAccountReceiver);
+                    $paymentActionData->setTransaction($transaction);
+
+                    $paymentAction = $this->paymentActionService->storePaymentAction($paymentActionData);
+                    $stateChangeEventData->setTarget($paymentAction);
+                }
+                $this->changeEventService->storeTransactionChangeEvent($stateChangeEventData);
+            }
+        }
 
         return 0;
     }
@@ -82,7 +147,7 @@ class ImportLegacyDatabaseCommand extends Command
      */
     protected function getUserDataAndBankData(array $lines): array
     {
-        $userDatas = [];
+        $dataSets = [];
         $sectionActive = false;
         foreach ($lines as $line) {
             if (str_contains($line, "INSERT INTO `users`")) {
@@ -118,10 +183,16 @@ class ImportLegacyDatabaseCommand extends Command
                 }
                 $userData->setFirstName($data[3]);
                 $userData->setLastName($data[4]);
-                $userDatas[$data[5]] = $userData;
+                $dataSets[$data[5]]['user'] = $userData;
+
+                // iban
+                $bankData = $this->ibanValidationService->validateIban($data[5]);
+                $bankData->setAccountName($data[3] . ' ' . $data[4]);
+                $bankData->setDescription('Konto ' . $bankData->getBankName() . ' - ' . $data[3] . ' ' . $data[4]);
+                $dataSets[$data[5]]['bank'] = $bankData;
             }
         }
-        return $userDatas;
+        return $dataSets;
     }
 
     /**
@@ -130,7 +201,7 @@ class ImportLegacyDatabaseCommand extends Command
      */
     protected function getTransferData(array $lines): array
     {
-        $userDatas = [];
+        $transactionToCreate = [];
         $sectionActive = false;
         foreach ($lines as $line) {
             if (str_contains($line, "INSERT INTO `kredit`")) {
@@ -144,6 +215,24 @@ class ImportLegacyDatabaseCommand extends Command
                 }
                 $data = explode(',', $line);
 
+                // when , is in
+                if (count($data) !== 9) {
+                    $content = '';
+                    $border = count($data);
+                    for ($contentNr = 5; $contentNr <= $border - 4; $contentNr++) {
+                        $content = $content . $data[$contentNr];
+                        unset($data[$contentNr]);
+                    }
+
+//                    dump($data);
+
+                    $data = array_values($data);
+                    $data[7] = $data[6];
+                    $data[6] = $data[5];
+                    $data[5] = $content;
+
+                }
+
                 array_walk(
                     $data,
                     function (&$value) {
@@ -155,34 +244,83 @@ class ImportLegacyDatabaseCommand extends Command
                         $value = trim($value);
                     }
                 );
-                dump($data);
+//                dump($data);
 
-                $transactionData = new TransactionCreateData();
+                $transactionData = new TransactionCreateLegacyImportData();
                 $transactionData->setDebtors($data[1]);
                 $transactionData->setLoaners($data[2]);
                 $transactionData->setAmount($data[3]);
                 $transactionData->setReason($data[5]);
+                $transactionData->setCreated(new DateTime($data[6]));
+                $editDate = str_replace(['(', ')'], '', $data[7]);
+                $transactionData->setEdited(new DateTime($editDate));
 
+                $transactionEvents = [];
                 switch (trim($data[4])) {
                     case '1':
                         $transactionData->setState(Transaction::STATE_READY);
                         break;
                     case '2':
                         $transactionData->setState(Transaction::STATE_ACCEPTED);
+
+                        $eventChangeData = new TransactionChangeEventData();
+                        $eventChangeData->setOldState(Transaction::STATE_READY);
+                        $eventChangeData->setNewState(Transaction::STATE_ACCEPTED);
+                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
+                        $transactionEvents[] = $eventChangeData;
+
                         break;
                     case '3':
-                        $transactionData->setState(Transaction::STATE_CONFIRMED);
+                        $transactionData->setState(Transaction::STATE_CLEARED);
+
+                        $eventChangeData = new TransactionChangeEventData();
+                        $eventChangeData->setOldState(Transaction::STATE_READY);
+                        $eventChangeData->setNewState(Transaction::STATE_ACCEPTED);
+                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
+                        $transactionEvents[] = $eventChangeData;
+
+                        $eventChangeData = new TransactionChangeEventData();
+                        $eventChangeData->setOldState(Transaction::STATE_ACCEPTED);
+                        $eventChangeData->setNewState(Transaction::STATE_CLEARED);
+                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BANK_ACCOUNT);
+                        $transactionEvents[] = $eventChangeData;
+
                         break;
                     case '4':
-                        $transactionData->setState(Transaction::STATE_CLEARED);
+                        $transactionData->setState(Transaction::STATE_CONFIRMED);
+
+                        $eventChangeData = new TransactionChangeEventData();
+                        $eventChangeData->setOldState(Transaction::STATE_READY);
+                        $eventChangeData->setNewState(Transaction::STATE_ACCEPTED);
+                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
+                        $transactionEvents[] = $eventChangeData;
+
+                        $eventChangeData = new TransactionChangeEventData();
+                        $eventChangeData->setOldState(Transaction::STATE_ACCEPTED);
+                        $eventChangeData->setNewState(Transaction::STATE_CLEARED);
+                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BANK_ACCOUNT);
+                        $transactionEvents[] = $eventChangeData;
+
+                        $eventChangeData = new TransactionChangeEventData();
+                        $eventChangeData->setOldState(Transaction::STATE_CLEARED);
+                        $eventChangeData->setNewState(Transaction::STATE_CONFIRMED);
+                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
+                        $transactionEvents[] = $eventChangeData;
                         break;
                 }
 
-                $userDatas[] = $transactionData;
+                $set = ['transaction' => $transactionData, 'changeEvents' => $transactionEvents];
+                $transactionToCreate[] = $set;
                 // TODO WAIT FOR HISTORY IS IMPLEMENTED
             }
         }
-        return $userDatas;
+        return $transactionToCreate;
     }
 
     private function generateInitialPassword(): string

@@ -34,7 +34,13 @@ class DebtFactory
      */
     public function mapData(TransactionPartInterface $debt, TransactionPartDataInterface $data): void
     {
-        if ($data instanceof DebtCreateData) {
+        if ($data instanceof ImportDebtCreateData){
+            $debt->setCreated($data->getCreated());
+            $debt->setEdited($data->getEdited());
+            $debt->setState($data->getState());
+            $debt->setInitialAmount($data->getAmount());
+        }
+        elseif ($data instanceof DebtCreateData) {
             $debt->setCreated($data->getCreated());
             $debt->setEdited($data->getCreated());
             $debt->setState(Transaction::STATE_READY);

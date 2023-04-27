@@ -32,16 +32,19 @@ if (slowmo){
 let clickEvent = new Event('click');
 
 window.addEventListener('load', function(e) {
-    slowmo.dispatchEvent(clickEvent);
-    burger.dispatchEvent(clickEvent);
-
-    setTimeout(function(){
+    if (slowmo){
+        slowmo.dispatchEvent(clickEvent);
         burger.dispatchEvent(clickEvent);
 
         setTimeout(function(){
-            slowmo.dispatchEvent(clickEvent);
-        }, 3500);
-    }, 5500);
+            burger.dispatchEvent(clickEvent);
+
+            setTimeout(function(){
+                slowmo.dispatchEvent(clickEvent);
+            }, 3500);
+        }, 5500);
+    }
+
 });
 
 var homeButton = document.getElementById('home-button');
