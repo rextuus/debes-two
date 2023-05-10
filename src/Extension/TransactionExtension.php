@@ -70,13 +70,14 @@ class TransactionExtension extends AbstractExtension
         );
     }
 
-    public function renderTransactionPartSummary(TransactionDto $part): string
+    public function renderTransactionPartSummary(TransactionDto $part, $exchangesElapsed = false): string
     {
         return $this->environment->render(
             'extension/transaction_part_summary.html.twig',
             [
                 'dto' => $part,
                 'debtVariant' => $part->isDebtVariant(),
+                'exchangesElapsed' => $exchangesElapsed ? '' : 'hidden',
             ]
         );
     }

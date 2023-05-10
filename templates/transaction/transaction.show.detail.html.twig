@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DEBES - Details{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="page-header-text">
+            Details
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/icons/transaction/detail.svg') }}" alt="">
+        </div>
+
+    </div>
+    <div class="content-body">
+        {{ transaction_part_summary(transaction, true) | raw}}
+
+    </div>
+
+{% endblock %}

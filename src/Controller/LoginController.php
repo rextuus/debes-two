@@ -37,7 +37,7 @@ class LoginController extends AbstractController
         $response = $security->logout(false);
 
         // ... return $response (if set) or e.g. redirect to the homepage
-        return $this->redirect($this->generateUrl('app_login'));
+        return $this->redirect($this->generateUrl('app_home'));
     }
 
     #[Route('/registration', name: 'registration')]

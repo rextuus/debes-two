@@ -43,6 +43,7 @@
   padding: 5px;
   background-color: $color-body-diff;
   border: 1px solid $color-header-main;
+  margin-bottom: $default-m-b-s;
 }
 
 .exchange-choice{
@@ -206,11 +207,17 @@
   max-width: 100%;
   font-size: 0.7em;
 
+  .list-header{
+    margin-left: $default-m-b-s;
+    font-size: $text-18;
+    color: black;
+    font-weight: bold;
+  }
 }
 .exchange-event{
-  margin-right: 10px;
-  margin-left: 10px;
-  margin-bottom: 5px;
+  margin-right: $default-m-b-s;
+  margin-left: $default-m-b-s;
+  margin-bottom: $default-m-b-xs;
  @extend .summary-info-filed;
 }
 
@@ -256,11 +263,11 @@
 .exchange-event-visual-amounts {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: $default-m-b-s;
 }
 
 .exchange-event-visual-amounts span {
-  margin: 0 10px;
+  margin: 0 $default-m-b-s;
 }
 
 .exchange-event-visual-users {
@@ -268,7 +275,7 @@
 }
 
 .exchange-event-visual-users span {
-  margin: 0 10px;
+  margin: 0 $default-m-b-s;
 }
 
 .user1-name {
@@ -292,8 +299,8 @@
   border-radius: 4px;
   border: 1px black solid;
   max-width: fit-content;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: $default-m-b-m;
+  padding-right: $default-m-b-m;
   img {
     $img-size: 50px;
     max-width: $img-size;

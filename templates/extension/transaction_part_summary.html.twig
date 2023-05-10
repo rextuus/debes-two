@@ -68,7 +68,8 @@
     </div>
 
 
-    <div class="exchange-list hidden">
+    <div class="exchange-list {{ exchangesElapsed }}">
+        <div class="list-header">Verrechnungen</div>
     {% for exchangeDto in dto.exchangeDtos %}
         <div class="exchange-event">
             <div class="exchange-list-row">

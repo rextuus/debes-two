@@ -28,7 +28,18 @@
         <div class="description body-element">
             {{ infoText}}
         </div>
-        {{ transaction_part_details(part, true) | raw }}
+
+        <div class="summary-transaction-details">
+            {{ transaction_part_details(part, true) | raw }}
+
+
+            <div class="exchange-collapsable-row">
+
+                <a href="{{ path('transaction_detail', {'slug': part.transactionSlug}) }}" class="detail-link {% if part.exchangeDtos|length == 0 %}deactivated{% endif %}">
+                    <img src="{{ asset('assets/img/icons/transaction/detail.svg') }}" alt="Tile image"><span class="bold detail-link-text"> Details</span>
+                </a>
+            </div>
+        </div>
 
         <div class="next-state-button body-element">
             {% if acceptLink != '' %}

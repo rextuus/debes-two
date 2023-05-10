@@ -7,6 +7,7 @@ use App\Entity\Loan;
 use App\Entity\Transaction;
 use App\Entity\TransactionStateChangeEvent;
 use App\Entity\User;
+use App\Exception\TransactionPartIsNotInCorrectStateException;
 use App\Exception\UserNotCorrectParticipantOfTransaction;
 use App\Repository\TransactionRepository;
 use App\Service\Debt\DebtCreateData;
@@ -27,6 +28,10 @@ class TransactionService
 {
     const DEBTOR_VIEW = 'debtor';
     const LOANER_VIEW = 'loaner';
+
+    public const ERROR_MESSAGE_NO_DEBTOR = 'User is not a debtor of this transaction';
+    public const ERROR_MESSAGE_NO_LOANER = 'User is not a loaner of this transaction';
+    public const ERROR_MESSAGE_NOT_CORRECT_STATE = 'TransactionPart is not in correct state';
 
     public function __construct(
         private TransactionFactory            $transactionFactory,
@@ -271,6 +276,7 @@ class TransactionService
     /**
      * @throws UserNotCorrectParticipantOfTransaction
      * @throws Exception
+     * @throws TransactionPartIsNotInCorrectStateException
      */
     public function checkRequestForVariant(
         User        $requester,
@@ -282,23 +288,23 @@ class TransactionService
         if ($variant === self::DEBTOR_VIEW) {
             $debt = $this->getDebtPartOfUserForTransaction($transaction, $requester);
             if (is_null($debt)) {
-                throw new UserNotCorrectParticipantOfTransaction('User is not a loaner of this transaction');
+                throw new UserNotCorrectParticipantOfTransaction(self::ERROR_MESSAGE_NO_DEBTOR);
             }
             if ($debt->getState() !== $state) {
-                throw new Exception('TransactionPart is not in correct sate');
+                throw new TransactionPartIsNotInCorrectStateException(self::ERROR_MESSAGE_NOT_CORRECT_STATE);
             }
             return true;
         } elseif ($variant === self::LOANER_VIEW) {
             $loan = $this->getLoanPartOfUserForTransaction($transaction, $requester);
             if (is_null($loan)) {
-                throw new UserNotCorrectParticipantOfTransaction('User is not a loaner of this transaction');
+                throw new UserNotCorrectParticipantOfTransaction(self::ERROR_MESSAGE_NO_LOANER);
             }
             if ($loan->getState() !== $state) {
-                throw new Exception('TransactionPart is not in correct sate');
+                throw new TransactionPartIsNotInCorrectStateException(self::ERROR_MESSAGE_NOT_CORRECT_STATE);
             }
             return true;
         } else {
-            throw new Exception('User is not involved in this transaction');
+            throw new UserNotCorrectParticipantOfTransaction('User is not involved in this transaction');
         }
     }
 

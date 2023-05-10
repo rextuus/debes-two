@@ -210,13 +210,15 @@ body{
     display: inline-block;
     .image-container{
         display: inline-block;
-        background: black;
+        background: $color-body-diff-2;
         padding: 5px;
         max-width: 100%;
         max-height: 50%;
 
-        border: black solid 3px;
+        border: $color-body-diff-2 solid 3px;
         border-radius: 8px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
 
         img{
             max-width: 100%;
@@ -234,8 +236,10 @@ body{
     margin-bottom: 1px;
     padding: 8px;
     background-color: $color-body-diff-2;
-    border: black solid 3px;
+    border: $color-body-diff-2 solid 3px;
     border-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 
     span{
         color: #ffffff;
@@ -315,4 +319,26 @@ body{
 @keyframes fade {
     from {opacity: .4}
     to {opacity: 1}
+}
+
+.undecorated-link-text{
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.gif-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: $default-m-b-m;
+}
+
+.gif-container img {
+    width: 95vw;
+    height: auto;
+    max-height: 100%;
+    background-color: $color-body-diff-2;
+    border: black solid 3px;
+    border-radius: 8px;
 }

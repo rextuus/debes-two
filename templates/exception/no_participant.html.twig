@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Schuld verrechnen{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="page-header-text">
+            Oops. Da ist was schief gelaufen!
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/icons/error/error.svg') }}" alt="Tile image">
+        </div>
+
+    </div>
+    <div class="content-body">
+        <div class="empty-list-info text-10">
+            Ein Fehler ist aufgetreten. Das tut uns leid. Aber keine Panik. Die unglaublich kompetenten Software-Devleoper der WH-Company
+            sind bereits informiert und kümmern sich schnellstmöglich um die Behebung des Problems.
+        </div>
+        <div class="gif-container">
+            <a class="undecorated-link-text" href="{{path('app_home')}}"><img src="{{ asset('assets/img/error/travolta.gif') }}" style="" alt=""></a>
+        </div>
+        <div>Hier gehts zurück zur <span class="undecorated-link-text"></span><a class="undecorated-link-text" href="{{path('app_home')}}">Startseite</a></div>
+
+        </div>
+
+{% endblock %}

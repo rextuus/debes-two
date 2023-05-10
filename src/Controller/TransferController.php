@@ -8,6 +8,7 @@ use App\Entity\PaymentOption;
 use App\Entity\PaypalAccount;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Exception\UserNotOwnerOfBankAccountException;
 use App\Form\ChoiceType;
 use App\Form\Transfer\ExchangeType;
 use App\Form\Transfer\PrepareBankType;
@@ -115,9 +116,7 @@ class TransferController extends AbstractController
     public function sendTransferBank(
         Transaction $transaction,
         BankAccount $senderBankAccount,
-        Request     $request,
-        DtoProvider $dtoProvider,
-        MailService $mailService
+        Request     $request
     ): Response
     {
         /** @var User $requester */
@@ -134,6 +133,10 @@ class TransferController extends AbstractController
         $debt = $this->transactionService->getDebtPartOfUserForTransaction($transaction, $requester);
         if (is_null($debt)) {
             throw new Exception('User has no debt part in this transaction');
+        }
+
+        if ($senderBankAccount->getOwner() !== $requester){
+            throw new UserNotOwnerOfBankAccountException('This is not your bank account!');
         }
 
 
@@ -324,7 +327,7 @@ class TransferController extends AbstractController
             if ($isAccepted) {
                 $exchangeService->exchangeTransactionParts($debt, $loan);
                 $this->mailService->sendNotificationMail($loan->getTransaction(), MailService::MAIL_DEBT_EXCHANGED);
-                return $this->redirectToRoute('account_debts', []);
+                return $this->redirectToRoute('transfer_overview', ['slug' => $debt->getTransaction()->getSlug(), 'variant' => 3]);
             } else {
                 return $this->redirectToRoute('transfer_overview', ['slug' => $debt->getTransaction()->getSlug(), 'variant' => 3]);
             }

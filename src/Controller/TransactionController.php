@@ -374,4 +374,20 @@ class TransactionController extends AbstractController
         return $this->redirectToRoute('account_loans', []);
     }
 
+    #[Route('/show/{slug}', name: 'transaction_detail')]
+    public function showTransaction(
+        Request     $request,
+        Transaction $transaction,
+        DtoProvider $dtoProvider
+    ): Response
+    {
+        $dto = $dtoProvider->createTransactionDto($transaction, true);
+        return $this->render(
+            'transaction/transaction.show.detail.html.twig',
+            [
+                'transaction' => $dto
+            ]
+        );
+    }
+
 }

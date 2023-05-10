@@ -28,11 +28,12 @@ security:
                 # "app_login" is the name of the route created previously
                 login_path: app_login
                 check_path: app_login
+                success_handler: App\Service\System\CustomAuthenticationSuccessHandler
 
             logout:
                 path: app_logout
 #           where to redirect after logout
-                target: account_overview
+                target: app_home
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
