@@ -94,7 +94,6 @@ class ImportLegacyDatabaseCommand extends Command
         $userData = $this->getUserDataAndBankData($lines);
         $userAutoIncrementId = 1;
         foreach ($userData as $user => $data) {
-            dump($data);
             $user = $this->userService->storeUser($data['user']);
             /** @var BankAccountData $bankData */
             $bankData = $data['bank'];
@@ -107,7 +106,6 @@ class ImportLegacyDatabaseCommand extends Command
 
         $transactionDataSets = $this->getTransferData($lines);
         foreach ($transactionDataSets as $dataSet) {
-            dump($dataSet);
             /** @var TransactionCreateLegacyImportData $transactionData */
             $transactionData = $dataSet['transaction'];
             $debtor = $this->userService->findUserById($this->oldIdNewIdRelation[$transactionData->getDebtors()]);
@@ -244,12 +242,13 @@ class ImportLegacyDatabaseCommand extends Command
                         $value = trim($value);
                     }
                 );
-//                dump($data);
+                dump($data);
 
                 $transactionData = new TransactionCreateLegacyImportData();
                 $transactionData->setDebtors($data[1]);
                 $transactionData->setLoaners($data[2]);
                 $transactionData->setAmount($data[3]);
+                $transactionData->setInitialAmount($data[3]);
                 $transactionData->setReason($data[5]);
                 $transactionData->setCreated(new DateTime($data[6]));
                 $editDate = str_replace(['(', ')'], '', $data[7]);
@@ -266,7 +265,7 @@ class ImportLegacyDatabaseCommand extends Command
                         $eventChangeData = new TransactionChangeEventData();
                         $eventChangeData->setOldState(Transaction::STATE_READY);
                         $eventChangeData->setNewState(Transaction::STATE_ACCEPTED);
-                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setCreated(new DateTime($editDate));
                         $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
                         $transactionEvents[] = $eventChangeData;
 
@@ -277,39 +276,41 @@ class ImportLegacyDatabaseCommand extends Command
                         $eventChangeData = new TransactionChangeEventData();
                         $eventChangeData->setOldState(Transaction::STATE_READY);
                         $eventChangeData->setNewState(Transaction::STATE_ACCEPTED);
-                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setCreated(new DateTime($editDate));
                         $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
                         $transactionEvents[] = $eventChangeData;
 
                         $eventChangeData = new TransactionChangeEventData();
                         $eventChangeData->setOldState(Transaction::STATE_ACCEPTED);
                         $eventChangeData->setNewState(Transaction::STATE_CLEARED);
-                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setCreated(new DateTime($editDate));
                         $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BANK_ACCOUNT);
                         $transactionEvents[] = $eventChangeData;
 
                         break;
                     case '4':
+                        $transactionData->setAmount(0.0);
+
                         $transactionData->setState(Transaction::STATE_CONFIRMED);
 
                         $eventChangeData = new TransactionChangeEventData();
                         $eventChangeData->setOldState(Transaction::STATE_READY);
                         $eventChangeData->setNewState(Transaction::STATE_ACCEPTED);
-                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setCreated(new DateTime($editDate));
                         $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
                         $transactionEvents[] = $eventChangeData;
 
                         $eventChangeData = new TransactionChangeEventData();
                         $eventChangeData->setOldState(Transaction::STATE_ACCEPTED);
                         $eventChangeData->setNewState(Transaction::STATE_CLEARED);
-                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setCreated(new DateTime($editDate));
                         $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BANK_ACCOUNT);
                         $transactionEvents[] = $eventChangeData;
 
                         $eventChangeData = new TransactionChangeEventData();
                         $eventChangeData->setOldState(Transaction::STATE_CLEARED);
                         $eventChangeData->setNewState(Transaction::STATE_CONFIRMED);
-                        $eventChangeData->setCreated(new DateTime());
+                        $eventChangeData->setCreated(new DateTime($editDate));
                         $eventChangeData->setType(TransactionStateChangeEvent::TYPE_BLANK);
                         $transactionEvents[] = $eventChangeData;
                         break;

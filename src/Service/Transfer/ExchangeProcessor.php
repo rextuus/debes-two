@@ -3,11 +3,13 @@
 namespace App\Service\Transfer;
 
 use App\Entity\Debt;
+use App\Entity\Exchange;
 use App\Entity\Loan;
 use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
 use App\Entity\TransactionStateChangeEvent;
 use App\Entity\User;
+use App\EntityListener\Event\TransactionExchangeEvent;
 use App\Service\Debt\DebtService;
 use App\Service\Debt\DebtUpdateData;
 use App\Service\Exchange\ExchangeCreateData;
@@ -21,53 +23,25 @@ use App\Service\Transaction\TransactionUpdateData;
 use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * ExchangeProcessor
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
+ *
  */
 class ExchangeProcessor
 {
-    /**
-     * @var TransactionService
-     */
-    private $transactionService;
+    public function __construct(
+        private TransactionService $transactionService,
+        private ExchangeService $exchangeService,
+        private LoanService $loanService,
+        private DebtService $debtService,
+        private DtoProvider $dtoProvider,
+        private EventDispatcherInterface $dispatcher
 
-    /**
-     * @var ExchangeService
-     */
-    private $exchangeService;
-
-    /**
-     * @var LoanService
-     */
-    private $loanService;
-    /**
-     * @var DebtService
-     */
-    private $debtService;
-
-    /**
-     * @var DtoProvider
-     */
-    private $dtoProvider;
-
-    /**
-     * @param TransactionService $transactionService
-     * @param ExchangeService $exchangeService
-     * @param LoanService $loanService
-     * @param DebtService $debtService
-     * @param DtoProvider $dtoProvider
-     */
-    public function __construct(TransactionService $transactionService, ExchangeService $exchangeService, LoanService $loanService, DebtService $debtService, DtoProvider $dtoProvider)
-    {
-        $this->transactionService = $transactionService;
-        $this->exchangeService = $exchangeService;
-        $this->loanService = $loanService;
-        $this->debtService = $debtService;
-        $this->dtoProvider = $dtoProvider;
+    ) {
     }
 
 
@@ -125,8 +99,8 @@ class ExchangeProcessor
         $exchangeCandidateSet->setNonFittingCandidatesDtoVersion([]);
         return $exchangeCandidateSet;
 
-        $fittingCandidates = array();
-        $nonFittingCandidates = array();
+        $fittingCandidates = [];
+        $nonFittingCandidates = [];
 //        foreach ($candidates as $candidate) {
 //            /** @var Transaction $candidate */
 //            if ($candidate->getAmount() >= $debt->getAmount()) {
@@ -175,7 +149,6 @@ class ExchangeProcessor
             $loanUpdateData->setAmount(0.0);
             $loanUpdateData->setPaid(true);
             $loanUpdateData->setState(Transaction::STATE_CLEARED);
-
         } else {
             $difference = $loan->getAmount() - $debt->getAmount();
             $transactionDifference = $difference;
@@ -190,22 +163,17 @@ class ExchangeProcessor
         }
         $debtUpdateData->setEdited(new DateTime());
         $loanUpdateData->setEdited(new DateTime());
-
-
         // create exchange
     }
 
     /**
-     * exchangeTransactions
-     *
-     * @param TransactionPartInterface $transactionPart1
-     * @param TransactionPartInterface $transactionPart2
-     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function exchangeTransactionParts(TransactionPartInterface $transactionPart1, TransactionPartInterface $transactionPart2): void
-    {
+    public function exchangeTransactionParts(
+        TransactionPartInterface $transactionPart1,
+        TransactionPartInterface $transactionPart2
+    ): void {
         if ($transactionPart1->getAmount() >= $transactionPart2->getAmount()) {
             $exchanges = $this->fillExchangeCreateDataSets($transactionPart1, $transactionPart2);
             $this->fillTransactionUpdateDataSets($transactionPart1, $transactionPart2, $exchanges);
@@ -213,18 +181,23 @@ class ExchangeProcessor
             $exchanges = $this->fillExchangeCreateDataSets($transactionPart2, $transactionPart1);
             $this->fillTransactionUpdateDataSets($transactionPart2, $transactionPart1, $exchanges);
         }
+
+        // fire exchangeEvents
+        foreach ($exchanges as $exchange) {
+            $event = new TransactionExchangeEvent($exchange);
+            $this->dispatcher->dispatch($event, TransactionExchangeEvent::NAME);
+        }
     }
 
     /**
-     * fillExchangeCreateDataSets
-     *
-     * @param TransactionPartInterface $transactionWithHigherAmount
-     * @param TransactionPartInterface $transactionWithLowerAmount
+     * @return Exchange[]
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function fillExchangeCreateDataSets(TransactionPartInterface $transactionWithHigherAmount, TransactionPartInterface $transactionWithLowerAmount)
-    {
+    private function fillExchangeCreateDataSets(
+        TransactionPartInterface $transactionWithHigherAmount,
+        TransactionPartInterface $transactionWithLowerAmount
+    ): array {
         $exchangeCreationDataHigher = new ExchangeCreateData();
         $exchangeCreationDataHigher->setTransaction($transactionWithHigherAmount->getTransaction());
         $exchangeCreationDataLower = new ExchangeCreateData();
@@ -233,7 +206,9 @@ class ExchangeProcessor
         $exchangeCreationDataHigher->setAmount($transactionWithLowerAmount->getAmount());
         $exchangeCreationDataLower->setAmount($transactionWithLowerAmount->getAmount());
 
-        $exchangeCreationDataHigher->setRemainingAmount($transactionWithHigherAmount->getAmount() - $transactionWithLowerAmount->getAmount());
+        $exchangeCreationDataHigher->setRemainingAmount(
+            $transactionWithHigherAmount->getAmount() - $transactionWithLowerAmount->getAmount()
+        );
         $exchangeCreationDataLower->setRemainingAmount(0);
 
         if ($transactionWithHigherAmount->isDebt()) {
@@ -256,20 +231,15 @@ class ExchangeProcessor
     //TODO: Asicht für Multitransaktionen fixen
 
     /**
-     * fillTransactionUpdateDataSets
-     *
      * @param TransactionPartInterface $transactionPartWithHigherAmount
      * @param TransactionPartInterface $transactionPartWithLowerAmount
-     * @param array $exchanges
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param Exchange[] $exchanges
      */
     private function fillTransactionUpdateDataSets(
         TransactionPartInterface $transactionPartWithHigherAmount,
         TransactionPartInterface $transactionPartWithLowerAmount,
-        array                    $exchanges
-    )
-    {
+        array $exchanges
+    ): void {
         // we got 4 scenarios:
         // 1. high is single | low is single
         // 2. high is multi  | low is single
@@ -288,7 +258,13 @@ class ExchangeProcessor
             $user1 = $higherAmountTransaction->getDebtor();
             $user2 = $higherAmountTransaction->getLoaner();
 
-            $updateDataCollection = $this->prepareUpdateDataSets($user1, $user2, $higherAmountTransaction, $lowerAmountTransaction, $exchanges);
+            $updateDataCollection = $this->prepareUpdateDataSets(
+                $user1,
+                $user2,
+                $higherAmountTransaction,
+                $lowerAmountTransaction,
+                $exchanges
+            );
             $highTransactionData = $updateDataCollection->getTransactionHighData();
             $highTransactionData->setState(Transaction::STATE_ACCEPTED);
             $this->transactionService->updateInclusive($higherAmountTransaction, $highTransactionData);
@@ -298,13 +274,20 @@ class ExchangeProcessor
             $this->transactionService->updateInclusive($lowerAmountTransaction, $lowTransactionData);
         }
         // HIGH = single | LOW = multi
-        if ($transactionPartWithHigherAmount->getTransaction()->isSingleTransaction() && $transactionPartWithLowerAmount->getTransaction()->hasMultipleSide()) {
+        if ($transactionPartWithHigherAmount->getTransaction()->isSingleTransaction(
+            ) && $transactionPartWithLowerAmount->getTransaction()->hasMultipleSide()) {
             dump('HIGH = single | LOW = multi');
 //            $this->updateHighSingleAndLowMultipleTransaction($transactionPartWithHigherAmount, $transactionPartWithLowerAmount);
             $user1 = $higherAmountTransaction->getDebtor();
             $user2 = $higherAmountTransaction->getLoaner();
 
-            $updateDataCollection = $this->prepareUpdateDataSets($user1, $user2, $higherAmountTransaction, $lowerAmountTransaction, $exchanges);
+            $updateDataCollection = $this->prepareUpdateDataSets(
+                $user1,
+                $user2,
+                $higherAmountTransaction,
+                $lowerAmountTransaction,
+                $exchanges
+            );
             $updateDataCollection->setStateTransactionHigh(Transaction::STATE_ACCEPTED);
             if ($updateDataCollection->getTransactionHighData()->getAmount() == 0.0) {
                 $updateDataCollection->setStateTransactionHigh(Transaction::STATE_CLEARED);
@@ -315,16 +298,29 @@ class ExchangeProcessor
                 $updateDataCollection->setStateTransactionLow(Transaction::STATE_CLEARED);
             }
 
-            $this->transactionService->update($updateDataCollection->getTransactionHigh(), $updateDataCollection->getTransactionHighData());
-            $this->transactionService->update($updateDataCollection->getTransactionLow(), $updateDataCollection->getTransactionLowData());
+            $this->transactionService->update(
+                $updateDataCollection->getTransactionHigh(),
+                $updateDataCollection->getTransactionHighData()
+            );
+            $this->transactionService->update(
+                $updateDataCollection->getTransactionLow(),
+                $updateDataCollection->getTransactionLowData()
+            );
         }
         // HIGH = multi | LOW = single
-        if ($transactionPartWithHigherAmount->getTransaction()->hasMultipleSide() && $transactionPartWithLowerAmount->getTransaction()->isSingleTransaction()) {
+        if ($transactionPartWithHigherAmount->getTransaction()->hasMultipleSide(
+            ) && $transactionPartWithLowerAmount->getTransaction()->isSingleTransaction()) {
             $user1 = $lowerAmountTransaction->getDebtor();
             $user2 = $lowerAmountTransaction->getLoaner();
 
             // do in everyCase
-            $updateDataCollection = $this->prepareUpdateDataSets($user1, $user2, $higherAmountTransaction, $lowerAmountTransaction, $exchanges);
+            $updateDataCollection = $this->prepareUpdateDataSets(
+                $user1,
+                $user2,
+                $higherAmountTransaction,
+                $lowerAmountTransaction,
+                $exchanges
+            );
             $updateDataCollection->setStateTransactionHigh(Transaction::STATE_PARTIAL_CLEARED);
             if ($updateDataCollection->getTransactionHighData()->getAmount() == 0.0) {
                 $updateDataCollection->setStateTransactionHigh(Transaction::STATE_CLEARED);
@@ -335,11 +331,18 @@ class ExchangeProcessor
                 $updateDataCollection->setStateTransactionLow(Transaction::STATE_CLEARED);
             }
 
-            $this->transactionService->update($updateDataCollection->getTransactionHigh(), $updateDataCollection->getTransactionHighData());
-            $this->transactionService->update($updateDataCollection->getTransactionLow(), $updateDataCollection->getTransactionLowData());
+            $this->transactionService->update(
+                $updateDataCollection->getTransactionHigh(),
+                $updateDataCollection->getTransactionHighData()
+            );
+            $this->transactionService->update(
+                $updateDataCollection->getTransactionLow(),
+                $updateDataCollection->getTransactionLowData()
+            );
         }
         // HIGH = multi | LOW = multi
-        if ($transactionPartWithHigherAmount->getTransaction()->hasMultipleSide() && $transactionPartWithLowerAmount->getTransaction()->hasMultipleSide()) {
+        if ($transactionPartWithHigherAmount->getTransaction()->hasMultipleSide(
+            ) && $transactionPartWithLowerAmount->getTransaction()->hasMultipleSide()) {
             dump('HIGH = multi | LOW = multi');
             // askingUser is owner of both parts => one is his loan and other is his debt
             $askingUser = $transactionPartWithHigherAmount->getOwner();
@@ -359,7 +362,8 @@ class ExchangeProcessor
                 /** @var TransactionPartInterface $transactionPart */
                 foreach ($correspondingTransactionPartsLow->toArray() as $candidate) {
                     /** @var TransactionPartInterface $candidate */
-                    if ($transactionPart->getOwner() === $candidate->getOwner() && $transactionPart->getOwner() !== $askingUser) {
+                    if ($transactionPart->getOwner() === $candidate->getOwner() && $transactionPart->getOwner(
+                        ) !== $askingUser) {
                         $exchangeCandidates[] = $transactionPart->getOwner();
                     }
                 }
@@ -368,7 +372,13 @@ class ExchangeProcessor
             // TODO we use the first exchange candidate to keep it simple. But it would be also an option
             // to search for the highest one or give the requester the option to choose
             // do in everyCase
-            $updateDataCollection = $this->prepareUpdateDataSets($askingUser, $exchangeCandidates[0], $higherAmountTransaction, $lowerAmountTransaction, $exchanges);
+            $updateDataCollection = $this->prepareUpdateDataSets(
+                $askingUser,
+                $exchangeCandidates[0],
+                $higherAmountTransaction,
+                $lowerAmountTransaction,
+                $exchanges
+            );
             $updateDataCollection->setStateTransactionHigh(Transaction::STATE_PARTIAL_CLEARED);
             if ($updateDataCollection->getTransactionHighData()->getAmount() == 0.0) {
                 $updateDataCollection->setStateTransactionHigh(Transaction::STATE_CLEARED);
@@ -379,21 +389,29 @@ class ExchangeProcessor
                 $updateDataCollection->setStateTransactionLow(Transaction::STATE_CLEARED);
             }
 
-            $this->transactionService->update($updateDataCollection->getTransactionHigh(), $updateDataCollection->getTransactionHighData());
-            $this->transactionService->update($updateDataCollection->getTransactionLow(), $updateDataCollection->getTransactionLowData());
+            $this->transactionService->update(
+                $updateDataCollection->getTransactionHigh(),
+                $updateDataCollection->getTransactionHighData()
+            );
+            $this->transactionService->update(
+                $updateDataCollection->getTransactionLow(),
+                $updateDataCollection->getTransactionLowData()
+            );
         }
     }
 
-    private function updateTransactionPart(TransactionPartInterface $transactionPart, TransactionPartDataInterface $transactionPartData): void
-    {
+    private function updateTransactionPart(
+        TransactionPartInterface $transactionPart,
+        TransactionPartDataInterface $transactionPartData
+    ): void {
         if ($transactionPart->isDebt()) {
             $this->debtService->update($transactionPart, $transactionPartData);
         }
         $this->loanService->update($transactionPart, $transactionPartData);
     }
 
-    private function getTransactionPartUpdateData(TransactionPartInterface $transactionPart): TransactionPartDataInterface
-    {
+    private function getTransactionPartUpdateData(TransactionPartInterface $transactionPart
+    ): TransactionPartDataInterface {
         if ($transactionPart->isDebt()) {
             return (new DebtUpdateData())->initFrom($transactionPart);
         }
@@ -407,8 +425,12 @@ class ExchangeProcessor
      * @param Transaction $lowerAmountTransaction
      * @return TransactionPartInterface[]
      */
-    private function findEffectedTransactionParts(User $user1, User $user2, Transaction $higherAmountTransaction, Transaction $lowerAmountTransaction)
-    {
+    private function findEffectedTransactionParts(
+        User $user1,
+        User $user2,
+        Transaction $higherAmountTransaction,
+        Transaction $lowerAmountTransaction
+    ): array {
         $transactionParts = [];
         $counter = 0;
         foreach ($higherAmountTransaction->getLoans() as $loan) {
@@ -444,13 +466,24 @@ class ExchangeProcessor
      * @param User $user2
      * @param Transaction $higherAmountTransaction
      * @param Transaction $lowerAmountTransaction
+     * @param array $exchanges
      * @return TransactionUpdateDataCollection
      */
-    private function prepareUpdateDataSets(User $user1, User $user2, Transaction $higherAmountTransaction, Transaction $lowerAmountTransaction, array $exchanges): TransactionUpdateDataCollection
-    {
+    private function prepareUpdateDataSets(
+        User $user1,
+        User $user2,
+        Transaction $higherAmountTransaction,
+        Transaction $lowerAmountTransaction,
+        array $exchanges
+    ): TransactionUpdateDataCollection {
         $collection = new TransactionUpdateDataCollection();
 
-        $activeTransactionParts = $this->findEffectedTransactionParts($user1, $user2, $higherAmountTransaction, $lowerAmountTransaction);
+        $activeTransactionParts = $this->findEffectedTransactionParts(
+            $user1,
+            $user2,
+            $higherAmountTransaction,
+            $lowerAmountTransaction
+        );
         $lowestAmount = PHP_INT_MAX;
         foreach ($activeTransactionParts as $part) {
             if ($part->getAmount() < $lowestAmount) {

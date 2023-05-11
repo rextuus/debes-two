@@ -25,6 +25,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/EntityListener/Event/'
 
     App\EntityListener\TransactionEntityListener:
         tags:

@@ -18,7 +18,7 @@
         </div>
         <div class="row row-info">
             <div class="left-side-icon">@{{ part.transactionPartner }}</div>
-            <div class="left-side-icon">{{ part.totalAmount }} &euro;</div>
+            <div class="left-side-icon">{% if part.state == 4 %}{{ part.initialAmount }}{% else %}{{ part.totalAmount }}{% endif %} &euro;</div>
             <div class="right-side-icon state-icon">
                 <img src="{{ asset(cardIcon) }}" alt="Tile image">
             </div>

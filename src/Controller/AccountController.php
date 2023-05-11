@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Service\PaymentOption\PaypalAccountService;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
 use App\Service\Transaction\TransactionService;
 use Exception;
@@ -23,7 +24,7 @@ class AccountController extends AbstractController
     }
 
     #[Route('/', name: 'account_overview')]
-    public function listTransactionsForUser(TransactionService $transactionService): Response
+    public function listTransactionsForUser(TransactionService $transactionService, PaypalAccountService $paypalAccountService): Response
     {
         $user = $this->security->getUser();
         if (!$user instanceof User){
@@ -37,6 +38,7 @@ class AccountController extends AbstractController
         $acceptedDebts = $transactionService->getCountForDebtTransactionsForUserAndState($user, Transaction::STATE_ACCEPTED);
         $openLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_READY);
         $acceptedLoans = $transactionService->getCountForAllLoanTransactionsForUserAndSate($user, Transaction::STATE_ACCEPTED);
+        $paypalAccountNeeded = count($paypalAccountService->getPaypalAccountsOfUser($user)) === 0;
 
         return $this->render('landing/account_overview.html.twig', [
             'controller_name' => 'LandingController',
@@ -48,6 +50,7 @@ class AccountController extends AbstractController
             'openLoans' => $openLoans,
             'acceptedDebts' => $acceptedDebts,
             'acceptedLoans' => $acceptedLoans,
+            'paypalAccountNeeded' => $paypalAccountNeeded,
         ]);
     }
 

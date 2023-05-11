@@ -100,21 +100,21 @@ class TransactionExtension extends AbstractExtension
                 $accepted = $event->getCreated();
                 $isAccepted = 'active';
                 if ($prefixed) {
-                    $accepted = 'Akzeptiert am ' . $event->getCreated()->format('d.m.Y');
+                    $accepted = 'Akzeptiert am ' . $event->getCreated()->format('d.m.Y H:m:s');
                 }
             }
             if ($event->getNewState() === Transaction::STATE_CLEARED) {
                 $cleared = $event->getCreated();
                 $isCleared = 'active';
                 if ($prefixed) {
-                    $cleared = 'Bezahlt am ' . $event->getCreated()->format('d.m.Y');
+                    $cleared = 'Bezahlt am ' . $event->getCreated()->format('d.m.Y H:m:s');
                 }
             }
             if ($event->getNewState() === Transaction::STATE_CONFIRMED) {
                 $confirmed = $event->getCreated();
                 $isConfirmed = 'active';
                 if ($prefixed) {
-                    $confirmed = 'Abgewickelt am ' . $event->getCreated()->format('d.m.Y');
+                    $confirmed = 'Abgewickelt am ' . $event->getCreated()->format('d.m.Y H:m:s');
                 }
             }
         }

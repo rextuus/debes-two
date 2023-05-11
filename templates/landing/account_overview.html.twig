@@ -112,6 +112,13 @@
                 </div>
             </div>
         </div>
+        {% if paypalAccountNeeded %}
+            <div class="paypal-info has-mt-m">
+                <p>Schon mal von Paypal gehört du Hinterwelter? Ich wollt schon sagen. Dann trag deinen Paypal Account <a class="undecorated-link-text" href="{{path('payment_create_paypal')}}">hier</a> ein, damit dir andere Leute leichter Geld zurückzahlen können!</p>
+                <a class="undecorated-link-text" href="{{path('payment_create_paypal')}}"><img src="{{ asset('assets/img/home/cletus.png') }}" style="" alt=""></a>
+            </div>
+        {% endif %}
+
         <div style="margin-bottom: 10px; margin-top: 10px;">
             Newest Ones
             {% for part in transactions%}

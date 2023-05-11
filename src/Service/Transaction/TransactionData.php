@@ -10,10 +10,9 @@ use Doctrine\Common\Collections\Collection;
 class TransactionData
 {
 
-    /**
-     * @var float
-     */
-    private $amount;
+    private float $amount;
+
+    private ?float $initialAmount;
 
     /**
      * @var Collection|Debt[]
@@ -134,5 +133,16 @@ class TransactionData
     public function setState(?string $state): void
     {
         $this->state = $state;
+    }
+
+    public function getInitialAmount(): ?float
+    {
+        return $this->initialAmount;
+    }
+
+    public function setInitialAmount(?float $initialAmount): TransactionData
+    {
+        $this->initialAmount = $initialAmount;
+        return $this;
     }
 }

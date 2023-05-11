@@ -125,6 +125,9 @@ body{
 .has-mb-m{
     margin-bottom: $default-m-b-m;
 }
+.has-mt-m{
+    margin-top: $default-m-b-m;
+}
 .has-default-border{
     border: 1px solid #424243;
     border-radius: $default-border-radius;
@@ -341,4 +344,34 @@ body{
     background-color: $color-body-diff-2;
     border: black solid 3px;
     border-radius: 8px;
+}
+
+.paypal-info {
+    background-color: $color-balance-negative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: $default-m-b-m;
+    padding: $default-m-b-s;
+    background-color: #e6e6e6;
+    color: black;
+    font-weight: bold;
+    border: black solid 4px;
+    border-radius: 8px;
+
+    .undecorated-link-text{
+        color: black;
+        font-weight: bold;
+        font-size: $text-13;
+        color: $color-balance-negative;
+
+    }
+}
+
+.paypal-info img {
+    width: 50vw;
+    height: auto;
+    max-height: 100%;
+
+    margin: 2px;
 }

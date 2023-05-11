@@ -16,9 +16,9 @@ class Transaction
 
     const STATE_CREATED = 'created';
     const STATE_READY = 'ready';
-    const STATE_ACCEPTED = 'accepted';
     const STATE_PARTIAL_ACCEPTED = 'partial_accepted';
     const STATE_DECLINED = 'declined';
+    const STATE_ACCEPTED = 'accepted';
     const STATE_PARTIAL_CLEARED = 'partial_cleared';
     const STATE_CLEARED = 'cleared';
     const STATE_CONFIRMED = 'confirmed';

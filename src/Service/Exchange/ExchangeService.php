@@ -5,9 +5,11 @@ namespace App\Service\Exchange;
 use App\Entity\Exchange;
 use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
+use App\EntityListener\Event\TransactionExchangeEvent;
 use App\Repository\ExchangeRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * ExchangeService
@@ -17,50 +19,33 @@ use Doctrine\ORM\ORMException;
  */
 class ExchangeService
 {
-    /**
-     * @var ExchangeFactory
-     */
-    private $exchangeFactory;
 
-    /**
-     * @var ExchangeRepository
-     */
-    private $exchangeRepository;
-
-    /**
-     * LoanService constructor.
-     *
-     * @param ExchangeFactory $exchangeFactory
-     * @param ExchangeRepository $exchangeRepository
-     */
     public function __construct(
-        ExchangeFactory    $exchangeFactory,
-        ExchangeRepository $exchangeRepository
+        private ExchangeFactory    $exchangeFactory,
+        private ExchangeRepository $exchangeRepository,
     )
     {
-        $this->exchangeFactory = $exchangeFactory;
-        $this->exchangeRepository = $exchangeRepository;
     }
 
     /**
      * storeExchange
      *
-     * @param ExchangeCreateData $transactionData
+     * @param ExchangeCreateData $exchangeData
      * @param bool $persist
      *
      * @return Exchange
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function storeExchange(ExchangeCreateData $transactionData, bool $persist = true): Exchange
+    public function storeExchange(ExchangeCreateData $exchangeData, bool $persist = true): Exchange
     {
-        $transaction = $this->exchangeFactory->createByData($transactionData);
+        $exchange = $this->exchangeFactory->createByData($exchangeData);
 
         if ($persist) {
-            $this->exchangeRepository->persist($transaction);
+            $this->exchangeRepository->persist($exchange);
         }
 
-        return $transaction;
+        return $exchange;
     }
 
     /**
