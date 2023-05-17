@@ -20,6 +20,19 @@
     border-bottom: $color-navi-secondary solid 4px;
 }
 
+.top-navi-left{
+    display: flex;
+}
+
+.navi-favicon{
+    margin-right: 20px;
+
+    img {
+        width: $navi-favicon-size;
+        height: $navi-favicon-size;
+    }
+}
+
 .top-navi-with-tabs{
     margin-bottom: 0;
 }

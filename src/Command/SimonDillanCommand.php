@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Cdn\CloudinaryService;
 use App\Entity\Transaction;
 use App\Service\Legacy\LegacyImportService;
 use App\Service\Transaction\TransactionCreateData;
@@ -30,6 +31,7 @@ class SimonDillanCommand extends Command
      * LoadFixtureFilesToDatabase constructor.
      */
     public function __construct(
+        private CloudinaryService $cloudinaryService
     )
     {
         parent::__construct();
@@ -48,31 +50,37 @@ class SimonDillanCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $client = new Client();
-        $response = $client->request('GET', 'https://www.vita34.de/namenslisten/vornamen-fuer-jungen/#letter-B');
-        $content = $response->getBody()->getContents();
-        $crawler = new Crawler($content);
-        $names = $crawler->filter('li');
+        $imagePath = 'public/assets/img/home/borrow.png';
+        $cdnPath = 'debes/app/';
+        $fileName = 'home_page_1';
 
-        $charsToExclude = ['l', 'L', 'w', 'W', 'x', 'X', 'y', 'Y'];
-        $possibleNames = [];
-        foreach ($names as $name){
-            $plainName = trim($name->nodeValue);
-            $invalid = false;
-            foreach ($charsToExclude as $charToExclude){
-                if (str_contains($plainName, $charToExclude)){
-                    $invalid = true;
-                }
-                if (strlen($plainName) !== 5){
-                    $invalid = true;
-                }
-            }
-            if (!$invalid){
-                $possibleNames[] = $plainName;
-            }
-        }
-        dump($possibleNames);
-        dump(count($possibleNames));
+        $this->cloudinaryService->cartoon($imagePath, $cdnPath, $fileName);
+
+//        $client = new Client();
+//        $response = $client->request('GET', 'https://www.vita34.de/namenslisten/vornamen-fuer-jungen/#letter-B');
+//        $content = $response->getBody()->getContents();
+//        $crawler = new Crawler($content);
+//        $names = $crawler->filter('li');
+//
+//        $charsToExclude = ['l', 'L', 'w', 'W', 'x', 'X', 'y', 'Y'];
+//        $possibleNames = [];
+//        foreach ($names as $name){
+//            $plainName = trim($name->nodeValue);
+//            $invalid = false;
+//            foreach ($charsToExclude as $charToExclude){
+//                if (str_contains($plainName, $charToExclude)){
+//                    $invalid = true;
+//                }
+//                if (strlen($plainName) !== 5){
+//                    $invalid = true;
+//                }
+//            }
+//            if (!$invalid){
+//                $possibleNames[] = $plainName;
+//            }
+//        }
+//        dump($possibleNames);
+//        dump(count($possibleNames));
 
         return 0;
     }

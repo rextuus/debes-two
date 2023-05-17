@@ -1,5 +1,10 @@
-<div class="top-navi top-navi-with-tabs">
-    <div>
+
+<div class="top-navi">
+    <div class="top-navi-left">
+        <div class="navi-favicon">
+            <img src="{{ asset('favicon.ico') }}" alt="Tile image">
+
+        </div>
     {{ navi_button() | raw }}
 {#        <button id="home-button" class="link" data-link="{{ path('account_overview') }}"#}
 {#                data-image="{{ asset('assets/img/home.svg') }}">#}
@@ -9,6 +14,7 @@
 {#        </div>#}
 
     </div>
+
     <button id="burger" class="open-main-nav">
         <span class="burger"></span>
         <span class="burger-text">Menu</span>
