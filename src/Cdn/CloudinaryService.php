@@ -49,13 +49,11 @@ class CloudinaryService
         }
     }
 
-    public function cartoon(string $localPath): void
+    public function getImageFromCdn(string $cdnPath, int $height, int $width): string
     {
-        $uploadApi = new ImageTag('debes/app/home_page_1.png', $this->config);
-        $result = $uploadApi->effect(Effect::cartoonify())
-            ->roundCorners(RoundCorners::max())
-            ->backgroundColor(Color::LIGHTBLUE)
-            ->resize(Resize::scale()->height(300));
-        dd($result->longUrlSignature());
+        $uploadApi = new ImageTag($cdnPath, $this->config);
+
+        $result = $uploadApi->resize(Resize::scale()->height($height));
+        return (string) $result;
     }
 }

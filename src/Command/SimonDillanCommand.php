@@ -51,10 +51,11 @@ class SimonDillanCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $imagePath = 'public/assets/img/home/borrow.png';
-        $cdnPath = 'debes/app/';
+        $cdnPath = 'debes/app/borrow.png';
         $fileName = 'home_page_1';
 
-        $this->cloudinaryService->cartoon($imagePath, $cdnPath, $fileName);
+        $img = $this->cloudinaryService->getImageFromCdn($cdnPath, 500, 500);
+        dd($img);
 
 //        $client = new Client();
 //        $response = $client->request('GET', 'https://www.vita34.de/namenslisten/vornamen-fuer-jungen/#letter-B');
