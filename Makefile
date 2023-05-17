@@ -1,7 +1,7 @@
-deploy: patch install database build
+deploy: pull install database build
 
-patch:
-	git patch
+pull:
+	git pull
 
 install:
 	composer install
