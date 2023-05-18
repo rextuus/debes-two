@@ -43,7 +43,6 @@ class TransferController extends AbstractController
     public function __construct(
         private TransactionService   $transactionService,
         private MailService          $mailService,
-        private PaymentActionService $paymentActionService,
         private TransferService      $transferService,
         private BankAccountService   $bankAccountService
     )
@@ -327,6 +326,9 @@ class TransferController extends AbstractController
             if ($isAccepted) {
                 $exchangeService->exchangeTransactionParts($debt, $loan);
                 $this->mailService->sendNotificationMail($loan->getTransaction(), MailService::MAIL_DEBT_EXCHANGED);
+                if ($debt->getTransaction()->getAmount() === 0){
+                    return $this->redirectToRoute('account_debts', []);
+                }
                 return $this->redirectToRoute('transfer_overview', ['slug' => $debt->getTransaction()->getSlug(), 'variant' => 3]);
             } else {
                 return $this->redirectToRoute('transfer_overview', ['slug' => $debt->getTransaction()->getSlug(), 'variant' => 3]);

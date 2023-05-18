@@ -78,7 +78,7 @@
             </div>
             <div class="exchange-list-row reason">
                 <div class="exchange-list-entry bold">Schuld:</div>
-                <div class="exchange-list-entry">{{ exchangeDto.exchangeReason  }}</div>
+                <div class="exchange-list-entry">{{ exchangeDto.exchangeReason  }} <a class="undecorated-link-text" href="{{ path('transaction_detail', {'slug': exchangeDto.exchangeSlug}) }}">(Details)</a></div>
             </div>
 
             <div class="exchange-event-visual-container">

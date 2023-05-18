@@ -7,7 +7,7 @@ class PaypalAccountData extends PaymentOptionData
 
     private string $email;
 
-    private ?string $paypalMeLink;
+    private ?string $paypalMeLink = null;
 
     public function getEmail(): string
     {

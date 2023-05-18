@@ -22,42 +22,43 @@
 
     <div class="content-body">
         <div id="tab-1" class="tab active">
-            {% if last_username %}
-                <div class="empty-list-info font-size-1-2">Willkommen zurück {{ last_username }}</div>
-            {% else %}
-                {% if error %}
-                    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {% endif %}
-                <div class="empty-list-info font-size-1-2">Willkommen zurück</div>
 
-                <div class="form-area">
-                    <form action="{{ path('app_login') }}" method="post">
-                        <div class="form-input-field">
-                            <label class="hidden" for="username">Email:</label>
-                            <div class="image-form-row">
-                                <div class="image-form-row-image">
-                                    <img src="{{ asset('assets/img/person.svg') }}" alt="Tile image">
-                                </div>
-                                <input class="form-style" type="text" id="username" name="_username"
-                                       value="{{ last_username }}" placeholder="Username">
-                            </div>
-                        </div>
 
-                        <div class="form-input-field">
-                            <label class="hidden" for="password">Password:</label>
-                            <div class="image-form-row">
-                                <div class="image-form-row-image">
-                                    <img src="{{ asset('assets/img/password.svg') }}" alt="Tile image">
-                                </div>
-                                <input class="form-style" type="password" id="password" name="_password"
-                                       placeholder="Passwort">
-                            </div>
-                        </div>
-                        <button class="btn" type="submit">login</button>
-                    </form>
-                </div>
-                <a href="{{ path('app_forgot_password_request') }}">Passwort vergessen?</a>
+            <div class="empty-list-info font-size-1-2">Willkommen zurück {{ last_username }}</div>
+
+            {% if error %}
+                <div class="form-errors">Invalide Username Passwort Kombination</div>
             {% endif %}
+
+            <div class="form-area">
+                <form action="{{ path('app_login') }}" method="post">
+                    <div class="form-input-field">
+                        <label class="hidden" for="username">Email:</label>
+                        <div class="image-form-row">
+                            <div class="image-form-row-image">
+                                <img src="{{ asset('assets/img/person.svg') }}" alt="Tile image">
+                            </div>
+                            <input class="form-style" type="text" id="username" name="_username"
+                                   value="{{ last_username }}" placeholder="Username">
+                        </div>
+                    </div>
+
+                    <div class="form-input-field">
+                        <label class="hidden" for="password">Password:</label>
+                        <div class="image-form-row">
+                            <div class="image-form-row-image">
+                                <img src="{{ asset('assets/img/password.svg') }}" alt="Tile image">
+                            </div>
+                            <input class="form-style" type="password" id="password" name="_password"
+                                   placeholder="Passwort">
+                        </div>
+                    </div>
+                    <button class="btn" type="submit">login</button>
+                </form>
+            </div>
+            <div class="has-mb-m has-mt-l">
+                <a class="default-button decline undecorated-link-text" href="{{ path('app_forgot_password_request') }}">Passwort vergessen?</a>
+            </div>
         </div>
     </div>
 {% endblock %}

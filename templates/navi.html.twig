@@ -1,10 +1,9 @@
 
 <div class="top-navi">
     <div class="top-navi-left">
-        <div class="navi-favicon">
+        <a href="{{path('app_home')}}" class="navi-favicon">
             <img src="{{ asset('favicon.ico') }}" alt="Tile image">
-
-        </div>
+        </a>
     {{ navi_button() | raw }}
 {#        <button id="home-button" class="link" data-link="{{ path('account_overview') }}"#}
 {#                data-image="{{ asset('assets/img/home.svg') }}">#}

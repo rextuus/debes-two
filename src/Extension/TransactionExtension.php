@@ -8,7 +8,9 @@ use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
 use App\Entity\TransactionStateChangeEvent;
 use App\Extension\NextStateProvider\NextStateProvider;
+use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
 use App\Service\Transaction\TransactionDtos\TransactionDto;
+use App\Service\Transaction\TransactionService;
 use App\Service\Util\TimeConverter;
 use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -27,6 +29,8 @@ class TransactionExtension extends AbstractExtension
         private TimeConverter         $timeConverter,
         private UrlGeneratorInterface $router,
         private NextStateProvider $nextStateProvider,
+        private TransactionChangeEventService $changeEventService,
+        private TransactionService $transactionService,
     )
     {
     }

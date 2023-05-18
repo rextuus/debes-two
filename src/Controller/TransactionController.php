@@ -381,6 +381,10 @@ class TransactionController extends AbstractController
         DtoProvider $dtoProvider
     ): Response
     {
+        $requester = $this->getUser();
+
+        $this->transactionService->checkRequesterIsParticipant($requester, $transaction);
+
         $dto = $dtoProvider->createTransactionDto($transaction, true);
         return $this->render(
             'transaction/transaction.show.detail.html.twig',

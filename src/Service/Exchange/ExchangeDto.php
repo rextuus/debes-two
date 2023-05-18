@@ -73,6 +73,11 @@ class ExchangeDto
         $dto->setRemainingAmount($exchange->getRemainingAmount());
         $dto->setExchangeReason($reason);
         $dto->setExchangeSlug($exchange->getTransaction()->getSlug());
+        if ($exchange->getTransaction()->getSlug() === $exchange->getLoan()->getTransaction()->getSlug()){
+            $dto->setExchangeSlug($exchange->getDebt()->getTransaction()->getSlug());
+        }else{
+            $dto->setExchangeSlug($exchange->getLoan()->getTransaction()->getSlug());
+        }
 
         return $dto;
     }

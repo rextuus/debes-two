@@ -125,8 +125,14 @@ body{
 .has-mb-m{
     margin-bottom: $default-m-b-m;
 }
+.has-mb-l{
+    margin-top: $default-m-b-l;
+}
 .has-mt-m{
     margin-top: $default-m-b-m;
+}
+.has-mt-l{
+    margin-top: $default-m-b-l;
 }
 .has-default-border{
     border: 1px solid #424243;
@@ -179,13 +185,14 @@ body{
     padding: 5px;
     font-size: $text-18;
     //text-align: center;
-    margin: $default-m-b-s 3px $default-m-b-m;
+    //margin: $default-m-b-s 3px $default-m-b-m;
     background-color: $color-body-diff;
     font-weight: bold;
+    margin-bottom: $default-m-b-m;
 
     color: #b6b6b6;
-    border: black solid 3px;
-    border-radius: 8px;
+    //border: black solid 3px;
+    //border-radius: 8px;
     span{
         color: #ffffff;
     }
@@ -374,4 +381,28 @@ body{
     max-height: 100%;
 
     margin: 2px;
+}
+
+.default-button{
+    padding: $default-m-b-s;
+    color: black;
+    font-weight: bold;
+    border: black solid 4px;
+    border-radius: 8px;
+}
+
+.home-login-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .home-login-button{
+        background-color: $color-balance-positive;
+        display: inline-block;
+        padding: $default-m-b-s;
+        color: black;
+        font-weight: bold;
+        font-size: $text-18;
+        border: black solid 4px;
+        border-radius: 8px;
+    }
 }

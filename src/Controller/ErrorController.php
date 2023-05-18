@@ -29,6 +29,7 @@ class ErrorController extends AbstractController
 
             ]);
         }
+        return $this->render('exception/no_participant.html.twig', []);
 
         dd($exception);
     }

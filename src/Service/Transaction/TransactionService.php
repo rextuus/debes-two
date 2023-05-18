@@ -308,6 +308,16 @@ class TransactionService
         }
     }
 
+    public function checkRequesterIsParticipant(User $requester, Transaction $transaction): void
+    {
+        $debt = $this->getDebtPartOfUserForTransaction($transaction, $requester);
+        $loan = $this->getLoanPartOfUserForTransaction($transaction, $requester);
+
+        if (is_null($debt) && is_null($loan)) {
+            throw new UserNotCorrectParticipantOfTransaction(self::ERROR_MESSAGE_NO_DEBTOR);
+        }
+    }
+
     public function getTransactionBySlug(string $slug): ?Transaction
     {
         return $this->transactionRepository->findOneBy(['slug' => $slug]);
