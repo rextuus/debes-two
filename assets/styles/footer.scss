@@ -4,6 +4,7 @@
 .footer{
   margin-top: auto;
   background: $color-footer;
+  color: black;
 }
 .footer-element{
   color: #0a0800;
@@ -11,4 +12,14 @@
   margin-top: 20px;
   margin-bottom: 20px;
   margin-left: 20px;
+}
+
+.footer-company-logo{
+
+  img {
+    border: 1px solid black;
+
+    width: $footer-company-logo-size;
+    height: $footer-company-logo-size;
+  }
 }
