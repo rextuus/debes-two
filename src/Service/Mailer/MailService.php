@@ -76,7 +76,9 @@ class MailService
                 $headerImage = '@images/debt.png';
 
                 $subject = 'Neue Schulden';
-                $handleLink = $this->router->generate('transaction_confirm', ['slug' => $transaction->getSlug()]);
+
+                $params = ['slug' => $transaction->getSlug(),'variant' => 'debtor'];
+                $handleLink = $this->router->generate('transaction_confirm', $params);
                 $handleLink = self::BASE_URL.$handleLink;
                 break;
             case self::MAIL_DEBT_CANCELED:
