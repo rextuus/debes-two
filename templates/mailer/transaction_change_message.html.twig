@@ -35,10 +35,12 @@
                 <p style="margin-bottom: 50px"></p>
             </td>
         </tr>
+        {% if handleLink is not null %}
         <tr>
             <td class="handle-area p-left p-right p-bottom p-top">
                 <p>Klicke <a href="{{ handleLink }}">hier</a> um die Angelegenheit direkt zu regeln</p>
             </td>
         </tr>
+        {% endif %}
     </table>
 {% endblock %}

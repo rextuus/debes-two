@@ -4,6 +4,8 @@
 .footer{
   margin-top: auto;
   background: $color-footer;
+  background: #171717;
+  color: rgba(255, 255, 255, .5);
   color: black;
 }
 .footer-element{
@@ -15,11 +17,74 @@
 }
 
 .footer-company-logo{
+  text-decoration: none;
+  a{
+    text-decoration: none;
+  }
 
   img {
-    border: 1px solid black;
+    border: 2px solid black;
 
-    width: $footer-company-logo-size;
+    width: $footer-company-logo-size*2;
     height: $footer-company-logo-size;
   }
+}
+
+.footer-info-container {
+  background: #171717;
+
+  padding: $default-m-b-s;
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-column,
+.right-column {
+  font-size: 0.7em;
+
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: rgba(255, 255, 255, .5);
+  h3{
+    color: #f1f1f1;
+    font-size: 0.9em;
+
+  }
+
+  .footer-text-entry{
+    margin-bottom: 2px;
+  }
+}
+
+h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.footer-logo-container {
+  background: #4e4e4f;
+
+  padding: $default-m-b-s;
+  display: flex;
+  align-items: center;
+
+}
+
+//img {
+//  width: 50px;
+//  height: 50px;
+//  margin-right: 10px;
+//}
+
+.wh-company-logo-left-name{
+  margin-left: $default-m-b-s;
+  font-size: 0.7em;
+}
+
+.footer-link{
+  text-decoration: none;
+  color: $color-balance-negative;
 }

@@ -61,7 +61,7 @@ class MailService
 
         $subject = '';
         $text = '';
-        $handleLink = 'https://debes.wh-company.de';
+        $handleLink = null;
         $slug = $transaction->getSlug();
 
         switch ($mailVariant) {
@@ -78,7 +78,7 @@ class MailService
                 $subject = 'Neue Schulden';
 
                 $params = ['slug' => $transaction->getSlug(),'variant' => 'debtor'];
-                $handleLink = $this->router->generate('transaction_confirm', $params);
+                $handleLink = $this->router->generate('transaction_accept', $params);
                 $handleLink = self::BASE_URL.$handleLink;
                 break;
             case self::MAIL_DEBT_CANCELED:
@@ -92,7 +92,6 @@ class MailService
                 $headerImage = '@images/decline.png';
 
                 $subject = 'Schuld zurückgezogen';
-                $handleLink = 'mailer/mail.canceled.html.twig';
 
                 break;
             case self::MAIL_DEBT_ACCEPTED:
@@ -107,7 +106,6 @@ class MailService
                 $headerImage = '@images/handshake.png';
 
                 $subject = 'Schuldlast akzeptiert ';
-                $handleLink = 'mailer/mail.accepted.html.twig';
 
                 break;
             case
@@ -123,7 +121,7 @@ class MailService
                 $headerImage = '@images/declined.jpg';
 
                 $subject = 'Schuldlast abgelehnt ';
-                $handleLink = 'mailer/mail.declined.html.twig';
+
                 break;
             case self::MAIL_DEBT_EXCHANGED:
                 $receiver = $transaction->getLoaner();
@@ -136,7 +134,6 @@ class MailService
                 $headerImage = '@images/transferred.png';
 
                 $subject = 'Schulden verrechnet';
-                $handleLink = 'mailer/mail.transferred.html.twig';
                 break;
             case self::MAIL_DEBT_PAYED_ACCOUNT:
                 $receiver = $transaction->getLoaner();
@@ -149,8 +146,10 @@ class MailService
                 $headerImage = '@images/transferred.png';
 
                 $subject = 'Schulden zurück erhalten';
-                $handleLink = 'mailer/mail.transferred.html.twig';
 
+                $params = ['slug' => $transaction->getSlug(),'variant' => 'debtor'];
+                $handleLink = $this->router->generate('transaction_confirm', $params);
+                $handleLink = self::BASE_URL.$handleLink;
                 break;
             case self::MAIL_DEBT_PAYED_PAYPAL:
                 $receiver = $transaction->getLoaner();
@@ -163,7 +162,10 @@ class MailService
                 $headerImage = '@images/transferred.png';
 
                 $subject = 'Schulden zurück erhalten';
-                $handleLink = 'mailer/mail.transferred.html.twig';
+
+                $params = ['slug' => $transaction->getSlug(),'variant' => 'debtor'];
+                $handleLink = $this->router->generate('transaction_confirm', $params);
+                $handleLink = self::BASE_URL.$handleLink;
 
                 break;
             case self::MAIL_DEBT_CONFIRMED:
@@ -177,7 +179,6 @@ class MailService
                 $headerImage = '@images/handshake.png';
 
                 $subject = 'Geldeingang bestätigt';
-                $handleLink = 'mailer/mail.confirmed.html.twig';
 
                 break;
             case self::MAIL_DEBT_REMINDER:
@@ -191,7 +192,10 @@ class MailService
                 $header = 'Kleiner Reminder';
                 $headerImage = '@images/reminder.jpg';
                 $subject = 'Erinnerung nicht akzeptierte Schuld';
-                $handleLink = 'mailer/mail.base.html.twig';
+
+                $params = ['slug' => $transaction->getSlug()];
+                $handleLink = $this->router->generate('transfer_overview', $params);
+                $handleLink = self::BASE_URL.$handleLink;
 
                 break;
         }

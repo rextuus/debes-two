@@ -1,9 +1,31 @@
 <div class="footer">
-    <div class="footer-company-logo">
-        <a href="https://www.wh-company.de">
-            <img src="{{ asset('assets/img/home/wh-company-logo_small.png') }}" alt="Tile image">
-        </a>
-    </div>
+{#    <div class="footer-company-logo">#}
+{#        <a href="https://www.wh-company.de">#}
+{#            <img src="{{ asset('assets/img/home/wh-company-logo_small.png') }}" alt="Tile image">#}
+{#        </a>#}
+{#    </div>#}
 {#        © WH-Company: Where 'u' double quality of life#}
-        © {{ 'now' | date('Y') }} WH-Company
+{#        © {{ 'now' | date('Y') }} WH-Company#}
+    <div class="footer-info-container">
+        <div class="left-column">
+            <h3>About</h3>
+            <div class="footer-text-entry">DEBES ist ein kostenloser</div>
+            <div class="footer-text-entry">Service der <a class="footer-link" href="https://www.wh-company.de">WH-Company</a></div>
+        </div>
+        <div class="right-column">
+            <h3>Contact</h3>
+            <div class="footer-text-entry">Venloer Str. 265</div>
+            <div class="footer-text-entry">50823 Köln</div>
+            <div class="footer-text-entry">+49 1632503494</div>
+            <div class="footer-text-entry"><a class="footer-link" href="mailto:debes@wh-company.de?subject=Support-Anfrage">debes@wh-company.de</a></div>
+        </div>
+    </div>
+    <div class="footer-logo-container">
+            <div class="footer-company-logo">
+                <a href="https://www.wh-company.de">
+                    <img src="https://res.cloudinary.com/dl4y4cfvs/image/upload/v1688743509/debes/mail/WH-Company_logo_banner_afewk7.png" alt="Tile image">
+                </a>
+                <span class="wh-company-logo-left-name">&copy; {{ 'now' | date('Y') }} WH-Company. All Rights Reserved</span>
+            </div>
+    </div>
 </div>
