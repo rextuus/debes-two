@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+{% apply inline_css %}
+    {% include 'mailer/style_2.html.twig' %}
+{% endapply %}
+<body>
+<!--[if mso]>
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+    <tr>
+        <td>
+<![endif]-->
+<table class="outer-mail-body">
+    <tr>
+        <td>
+            {# Header section #}
+            {% include 'mailer/header.html.twig' %}
+        </td>
+    </tr>
+    <tr>
+        <td class="greeter p-top">
+            <h1>{{ header }}</h1>
+        </td>
+    </tr>
+    <tr>
+        <td class="inner-mail-body">
+            {# Middle section (variable) #}
+            {% block content %}{% endblock %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {# Footer section #}
+            {% include 'mailer/footer.html.twig' %}
+        </td>
+    </tr>
+</table>
+<!--[if mso]>
+</td>
+</tr>
+</table>
+<![endif]-->
+</body>
+</html>

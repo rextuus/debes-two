@@ -4,6 +4,7 @@ namespace App\Service\Mailer;
 
 use App\Entity\PaymentAction;
 use App\Entity\Transaction;
+use App\Entity\User;
 use App\Service\Transaction\TransactionService;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Bridge\Twig\Mime\BodyRenderer;
@@ -14,6 +15,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 /**
@@ -26,6 +28,7 @@ class MailService
 {
 
     private const DEBES_MAIL_ADDRESS = 'debes@wh-company.de';
+    private const BASE_URL = 'https://debes.wh-company.de';
     public const MAIL_DEBT_CREATED = 'debt_created';
     public const MAIL_DEBT_CANCELED = 'debt_canceled';
     public const MAIL_DEBT_ACCEPTED = 'debt_accepted';
@@ -36,7 +39,7 @@ class MailService
     public const MAIL_DEBT_CONFIRMED = 'debt_confirmed';
     public const MAIL_DEBT_REMINDER = 'debt_reminder';
 
-    public function __construct(private CustomMailer $mailer, private TransactionService $transactionService)
+    public function __construct(private CustomMailer $mailer, private TransactionService $transactionService, protected UrlGeneratorInterface $router)
     {
 //        $mailDsn = $_ENV['MAILER_DSN_REAL'];
 //        $transport = Transport::fromDsn($mailDsn);
@@ -58,7 +61,7 @@ class MailService
 
         $subject = '';
         $text = '';
-        $template = '';
+        $handleLink = 'https://debes.wh-company.de';
         $slug = $transaction->getSlug();
 
         switch ($mailVariant) {
@@ -73,8 +76,8 @@ class MailService
                 $headerImage = '@images/debt.png';
 
                 $subject = 'Neue Schulden';
-                $template = 'mailer/mail.created.html.twig';
-
+                $handleLink = $this->router->generate('transaction_confirm', ['slug' => $transaction->getSlug()]);
+                $handleLink = self::BASE_URL.$handleLink;
                 break;
             case self::MAIL_DEBT_CANCELED:
                 $receiver = $transaction->getDebtor();
@@ -87,7 +90,7 @@ class MailService
                 $headerImage = '@images/decline.png';
 
                 $subject = 'Schuld zurückgezogen';
-                $template = 'mailer/mail.canceled.html.twig';
+                $handleLink = 'mailer/mail.canceled.html.twig';
 
                 break;
             case self::MAIL_DEBT_ACCEPTED:
@@ -102,7 +105,7 @@ class MailService
                 $headerImage = '@images/handshake.png';
 
                 $subject = 'Schuldlast akzeptiert ';
-                $template = 'mailer/mail.accepted.html.twig';
+                $handleLink = 'mailer/mail.accepted.html.twig';
 
                 break;
             case
@@ -118,7 +121,7 @@ class MailService
                 $headerImage = '@images/declined.jpg';
 
                 $subject = 'Schuldlast abgelehnt ';
-                $template = 'mailer/mail.declined.html.twig';
+                $handleLink = 'mailer/mail.declined.html.twig';
                 break;
             case self::MAIL_DEBT_EXCHANGED:
                 $receiver = $transaction->getLoaner();
@@ -131,7 +134,7 @@ class MailService
                 $headerImage = '@images/transferred.png';
 
                 $subject = 'Schulden verrechnet';
-                $template = 'mailer/mail.transferred.html.twig';
+                $handleLink = 'mailer/mail.transferred.html.twig';
                 break;
             case self::MAIL_DEBT_PAYED_ACCOUNT:
                 $receiver = $transaction->getLoaner();
@@ -144,7 +147,7 @@ class MailService
                 $headerImage = '@images/transferred.png';
 
                 $subject = 'Schulden zurück erhalten';
-                $template = 'mailer/mail.transferred.html.twig';
+                $handleLink = 'mailer/mail.transferred.html.twig';
 
                 break;
             case self::MAIL_DEBT_PAYED_PAYPAL:
@@ -158,7 +161,7 @@ class MailService
                 $headerImage = '@images/transferred.png';
 
                 $subject = 'Schulden zurück erhalten';
-                $template = 'mailer/mail.transferred.html.twig';
+                $handleLink = 'mailer/mail.transferred.html.twig';
 
                 break;
             case self::MAIL_DEBT_CONFIRMED:
@@ -172,7 +175,7 @@ class MailService
                 $headerImage = '@images/handshake.png';
 
                 $subject = 'Geldeingang bestätigt';
-                $template = 'mailer/mail.confirmed.html.twig';
+                $handleLink = 'mailer/mail.confirmed.html.twig';
 
                 break;
             case self::MAIL_DEBT_REMINDER:
@@ -186,7 +189,7 @@ class MailService
                 $header = 'Kleiner Reminder';
                 $headerImage = '@images/reminder.jpg';
                 $subject = 'Erinnerung nicht akzeptierte Schuld';
-                $template = 'mailer/mail.base.html.twig';
+                $handleLink = 'mailer/mail.base.html.twig';
 
                 break;
         }
@@ -212,11 +215,17 @@ class MailService
 //            ]
 //        );
 
+        $mailActive = (bool)$_ENV['MAILER_ACTIVE'];
+        $receiverMail = $_ENV['MAILER_ADDRESS_NON_ACTIVE'];
+        if ($mailActive) {
+            $receiverMail = $receiver->getEmail();
+        }
+
         $email = (new TemplatedEmail())
             ->from(self::DEBES_MAIL_ADDRESS)
-            ->to($receiver->getEmail())
+            ->to($receiverMail)
             ->subject($subject)
-            ->htmlTemplate('mailer/mail.base.html.twig')
+            ->htmlTemplate('mailer/transaction_change_message.html.twig')
             ->context([
                 'userName' => $receiver->getFirstName(),
                 'text' => $text,
@@ -232,6 +241,7 @@ class MailService
                 'debts' => $debts,
                 'slug' => $slug,
                 'paymentAction' => $paymentAction,
+                'handleLink' => $handleLink,
             ]);
 
 //        $bodyRender = new BodyRenderer($this->renderer);
@@ -241,10 +251,11 @@ class MailService
 //        $mailer = new Mailer($transport);
 //        $mailer->send($email);
 
+
         $this->mailer->send($email);
     }
 
-    public function sendTestMail(){
+    public function sendTestMail(User $receiver){
         $email = (new TemplatedEmail())
             ->from(self::DEBES_MAIL_ADDRESS)
             ->to('wrextuus@gmail.com')
@@ -263,6 +274,24 @@ class MailService
 //        $mailer = new Mailer($transport);
 ////        dd($this->mailer);
 ///
+        $this->mailer->send($email);
+    }
+
+    public function sendLaunchMail(User $receiver){
+        $text = 'Launchparty';
+        $header = 'Launchparty';
+
+        $email = (new TemplatedEmail())
+            ->from(self::DEBES_MAIL_ADDRESS)
+            ->to('wrextuus@gmail.com')
+            ->subject('DEBES 2.0 Launch')
+            ->htmlTemplate('mailer/transaction_change_message.html.twig')
+            ->context([
+                'userName' => $receiver->getFirstName(),
+                'text' => $text,
+                'header' => $header,
+                'headerImage' => '@images/debt.png',
+            ]);
         $this->mailer->send($email);
     }
 }

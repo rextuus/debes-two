@@ -1,6 +1,6 @@
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<table width="100%">
     <tr>
-        <td class="bg_white email-section">
+        <td class="">
             <div class="heading-section"
                  style="text-align: center; padding: 0 30px;">
                 <h2>Die Fakten</h2>
@@ -11,20 +11,27 @@
                     <td valign="top" width="50%">
                         <table role="presentation" cellspacing="0" cellpadding="0"
                                border="0" width="100%">
+
                             <tr>
                                 <td style="padding-top: 20px; padding-right: 10px;">
-                                    <img class="info-area-img" src="{{ email.image('@icons/coins.svg') }}">
+                                    <img class="info-area-img" src="https://res.cloudinary.com/dl4y4cfvs/image/upload/c_scale,w_50/v1688749024/debes/mail/target-person_b1ciza.png">
                                     <div class="text-tour"
                                          style="text-align: center;">
-                                        <h3>Geforderte Summe</h3>
-                                        <span class="price">{{ amount }} €</span>
+                                        <h3>{{ interacterVariant }}</h3>
+                                        <span class="price">{{ interacter }}</span>
                                     </div>
                                 </td>
                             </tr>
 
+
+                        </table>
+                    </td>
+                    <td valign="top" width="50%">
+                        <table role="presentation" cellspacing="0" cellpadding="0"
+                               border="0" width="100%">
                             <tr>
                                 <td style="padding-top: 20px; padding-left: 10px;">
-                                    <img class="info-area-img" src="{{ email.image('@icons/reason.svg') }}">
+                                    <img class="info-area-img" src="https://res.cloudinary.com/dl4y4cfvs/image/upload/c_scale,w_50/v1688749024/debes/mail/reason_eladdi.png">
                                     <div class="text-tour"
                                          style="text-align: center;">
                                         <h3>Grund</h3>
@@ -32,7 +39,6 @@
                                     </div>
                                 </td>
                             </tr>
-
                         </table>
                     </td>
                     <td valign="top" width="50%">
@@ -40,26 +46,11 @@
                                border="0" width="100%">
                             <tr>
                                 <td style="padding-top: 20px; padding-right: 10px;">
-                                    <img class="info-area-img" src="{{ email.image('@icons/target-person.svg') }}">
+                                    <img class="info-area-img" src="https://res.cloudinary.com/dl4y4cfvs/image/upload/c_scale,w_50/v1688749024/debes/mail/coins_txbsi8.png">
                                     <div class="text-tour"
                                          style="text-align: center;">
-                                        <h3>{{ interacterVariant }}</h3>
-                                        <span class="price">{{ interacter }}</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td valign="top" width="50%">
-                        <table role="presentation" cellspacing="0" cellpadding="0"
-                               border="0" width="100%">
-                            <tr>
-                                <td style="padding-top: 20px; padding-right: 10px;">
-                                    <img class="info-area-img" src="{{ email.image('@icons/target-person.svg') }}">
-                                    <div class="text-tour"
-                                         style="text-align: center;">
-                                        <h3>{{ interacterVariant }}</h3>
-                                        <span class="price">{{ interacter }}</span>
+                                        <h3>Geforderte Summe</h3>
+                                        <span class="price">{{ amount }} €</span>
                                     </div>
                                 </td>
                             </tr>

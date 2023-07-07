@@ -4,7 +4,9 @@ namespace App\Command;
 
 use App\Cdn\CloudinaryService;
 use App\Entity\Transaction;
+use App\Entity\User;
 use App\Service\Legacy\LegacyImportService;
+use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionCreateData;
 use App\Service\User\UserData;
 use App\Service\User\UserService;
@@ -13,25 +15,18 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Console\Attribute\AsCommand;
 
-/**
- * ImportLegacyDatabaseCommand
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- *
- */
+#[AsCommand(name: 'debes:simon:dillan')]
 class SimonDillanCommand extends Command
 {
-    const NAME = 'debes:simon:dillan';
-
-    protected static $defaultName = self::NAME;
-
 
     /**
      * LoadFixtureFilesToDatabase constructor.
      */
     public function __construct(
-        private CloudinaryService $cloudinaryService
+        private CloudinaryService $cloudinaryService,
+        private MailService $mailService
     )
     {
         parent::__construct();
@@ -50,12 +45,16 @@ class SimonDillanCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $imagePath = 'public/assets/img/home/borrow.png';
-        $cdnPath = 'debes/app/borrow.png';
-        $fileName = 'home_page_1';
+        $user = new User();
+        $user->setFirstName("Pitter");
+        $this->mailService->sendTestMail($user);
 
-        $img = $this->cloudinaryService->getImageFromCdn($cdnPath, 500, 500);
-        dd($img);
+//        $imagePath = 'public/assets/img/home/borrow.png';
+//        $cdnPath = 'debes/app/borrow.png';
+//        $fileName = 'home_page_1';
+//
+//        $img = $this->cloudinaryService->getImageFromCdn($cdnPath, 500, 500);
+//        dd($img);
 
 //        $client = new Client();
 //        $response = $client->request('GET', 'https://www.vita34.de/namenslisten/vornamen-fuer-jungen/#letter-B');

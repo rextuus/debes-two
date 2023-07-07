@@ -1,0 +1,89 @@
+{% extends 'mailer/base.html.twig' %}
+
+{% block content %}
+    <table>
+        <tr>
+            <td style="width: 95%; align-content: center">
+                <img style="display: block; max-width: 95%; border: black solid 3px"
+                     src="https://res.cloudinary.com/dl4y4cfvs/image/upload/v1684965758/debes/mail/party_lwgibx.gif"
+                     alt="party">
+            </td>
+        </tr>
+        <tr>
+            <td class="p-bottom p-top">
+                <h3>Hey UserName,</h3>
+                <p>Heute ist es endlich soweit. Wir launchen Debes 2.0. Und du hast die besondere Ehre von Beginn an
+                    dabei
+                    zu sein. Also freu dich auf viele tolle neue Features und einen modernen Look. Denn wir haben die
+                    alten
+                    dilletantischen php5 Entwickler rausgeworfen und durch kompetente Coding-Genies, php8 und Symfony
+                    ersetzt. Lass dir den Unterschied von ChatGpt erklären oder stell es dir einfach so vor:</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td class="p-bottom" style="width: 85%;">
+                            <img src="{{ email.image('@images/jobs.png') }}" alt="Image 1"
+                                 style="display: block; max-width: 85%; border: black solid 1px">
+                        </td>
+                        <td class="left-side">
+                            <b>DEBES 1.0</b> (Hitler-Technik)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 85%;">
+                            <img src="{{ email.image('@images/flux.png') }}" alt="Image 2"
+                                 style="display: block; max-width: 85%; border: black solid 1px">
+                        </td>
+                        <td class="left-side">
+                            <b>DEBES 2.0</b> (Flux-Kompensator)
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="p-bottom p-top">
+                <h4>Die wichtigsten Neuerungen:</h4>
+                <ul>
+                    <li>Verrechne Transaktion miteinander. So wird Geldüberweisen manchmal überflüssig</li>
+                    <li>Du erhältst Nachrichten zu Updates deiner Transaktionen</li>
+                    <li>Der View ist endlich mobil optimiert</li>
+                </ul>
+
+                <h4>Wie geht's jetzt weiter?</h4>
+                <p>Deine alten Daten wurden bereits vollständig ins neue System migriert. Du musst nun eigentlich nur
+                    noch
+                    zwei Dinge beachten, bevor du loslegst:</p>
+
+                <ol>
+                    <li>
+                        Logge dich in deinen alten neuen Debes Account <a
+                                href="https://debes.wh-company.de/login/">hier</a> ein. Dein aktuelles Passwort lautet:
+                        <b>skojklöjas</b>
+                        <br>Hier kannst du ein neues setzen: <a href="https://debes.wh-company.de/reset-password/">Passwort
+                            ändern</a>
+                    </li>
+                    <li>
+                        Checke ob dieses von dir hinterlegte Bankverbindung noch aktiv ist.
+                        <br>Ansonsten kannst du sie hier ändern: <a href="https://debes.wh-company.de/reset-password/">Bankverbindung
+                            anpassen</a>
+                    </li>
+                </ol>
+
+                <h4>Lange nicht bei DEBES gewesen?</h4>
+                <p>Oder etwa gar nicht mehr gewusst, dass du einen Account für dieses geniale System hast? In jedem Fall
+                    hast du ein theoretisches Guthaben von <b>444,44€!</b> Keine Ahnung, ob das nun eine gute oder
+                    schlechte
+                    Nachricht ist
+                </p>
+                <p>
+                    Wir freuen uns auf dich UserName. Deine WH-Company.
+                </p>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'mailer/base.html.twig' %}
+
+{% block content %}
+    <table>
+        <tr>
+            <td class="p-bottom p-top" style="width: 95%; align-content: center">
+                <img style="display: block; max-width: 95%; border: black solid 3px"
+                     src="{{ email.image(headerImage) }}"
+                     alt="header">
+            </td>
+        </tr>
+        <tr>
+            <td class="text-area p-bottom p-top">
+                <h3>Hey {{ userName }},</h3>
+                <p>{{ text | raw }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="transaction-info-body m-bottom m-top p-bottom p-top">
+                {% include 'mailer/transaction_info.html.twig' %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="margin-bottom: 50px"></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="statistic-body m-bottom m-top p-bottom p-top">
+            {% include 'mailer/statistic.html.twig' %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="margin-bottom: 50px"></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="handle-area p-left p-right p-bottom p-top">
+                <p>Klicke <a href="{{ handleLink }}">hier</a> um die Angelegenheit direkt zu regeln</p>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

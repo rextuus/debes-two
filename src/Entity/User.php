@@ -51,9 +51,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: PaymentOption::class, cascade: ['persist'])]
     private Collection $paymentOptions;
 
+    #[ORM\ManyToMany(targetEntity: GroupEventUserCollection::class, mappedBy: 'users')]
+    private Collection $groupEventUserCollections;
+
+    #[ORM\OneToMany(mappedBy: 'loaner', targetEntity: GroupEventPayment::class)]
+    private Collection $groupEventPayments;
+
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: GroupEvent::class)]
+    private Collection $groupEvents;
+
     public function __construct()
     {
         $this->paymentOptions = new ArrayCollection();
+        $this->groupEventUserCollections = new ArrayCollection();
+        $this->groupEventPayments = new ArrayCollection();
+        $this->groupEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,5 +267,92 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullName(): string
     {
         return $this->getFirstName() . ' ' . $this->getLastName();
+    }
+
+    /**
+     * @return Collection<int, GroupEventUserCollection>
+     */
+    public function getGroupEventUserCollections(): Collection
+    {
+        return $this->groupEventUserCollections;
+    }
+
+    public function addGroupEventUserCollection(GroupEventUserCollection $groupEventUserCollection): static
+    {
+        if (!$this->groupEventUserCollections->contains($groupEventUserCollection)) {
+            $this->groupEventUserCollections->add($groupEventUserCollection);
+            $groupEventUserCollection->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupEventUserCollection(GroupEventUserCollection $groupEventUserCollection): static
+    {
+        if ($this->groupEventUserCollections->removeElement($groupEventUserCollection)) {
+            $groupEventUserCollection->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupEventPayment>
+     */
+    public function getGroupEventPayments(): Collection
+    {
+        return $this->groupEventPayments;
+    }
+
+    public function addGroupEventPayment(GroupEventPayment $groupEventPayment): static
+    {
+        if (!$this->groupEventPayments->contains($groupEventPayment)) {
+            $this->groupEventPayments->add($groupEventPayment);
+            $groupEventPayment->setLoaner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupEventPayment(GroupEventPayment $groupEventPayment): static
+    {
+        if ($this->groupEventPayments->removeElement($groupEventPayment)) {
+            // set the owning side to null (unless already changed)
+            if ($groupEventPayment->getLoaner() === $this) {
+                $groupEventPayment->setLoaner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupEvent>
+     */
+    public function getGroupEvents(): Collection
+    {
+        return $this->groupEvents;
+    }
+
+    public function addGroupEvent(GroupEvent $groupEvent): static
+    {
+        if (!$this->groupEvents->contains($groupEvent)) {
+            $this->groupEvents->add($groupEvent);
+            $groupEvent->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupEvent(GroupEvent $groupEvent): static
+    {
+        if ($this->groupEvents->removeElement($groupEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($groupEvent->getCreator() === $this) {
+                $groupEvent->setCreator(null);
+            }
+        }
+
+        return $this;
     }
 }
