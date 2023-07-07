@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Event erstellen{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="page-header-text">
+            Event erstellen
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/icons/transfer/bank-account.svg') }}" alt="Tile image">
+        </div>
+    </div>
+
+    <div class="content-body">
+        <div class="form-area has-mb-m">
+            {{ form_start(form, {'method': 'POST'}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="form-input-field">
+                <label class="hidden" for="paypal_account_update_description"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/description.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.description, {'attr': {'class': 'form-style', 'placeholder': 'Beschreibung', 'id': 'description'}}) }}
+                </div>
+            </div>
+{#            <div class="form-input-field">#}
+{#                <label class="hidden" for="paypal_account_update_description"></label>#}
+{#                <div class="image-form-row">#}
+{#                    <div class="image-form-row-image">#}
+{#                        <img src="{{ asset('assets/img/description.svg') }}" alt="Tile image">#}
+{#                    </div>#}
+{#                    {{ form_widget(form.users, {'attr': {'class': 'form-style', 'placeholder': 'Beschreibung', 'id': 'description'}}) }}#}
+{#                </div>#}
+{#            </div>#}
+
+            <div class="user-selection">
+                <div class="options-panel">
+                    <h3>Wer war dabei?</h3>
+                    <ul class="user-list">
+                        {% for user in allUsers %}
+                            <li class="user-option" data-value="{{ user.id }}">{{ user.fullName }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="selected-panel">
+                    <h3>Ausgewählte User</h3>
+                    <ul class="user-list">
+                        {% for user in form.selectedUsers %}
+                            <li class="selected-user" data-value="{{ user.id }}">{{ user.fullName }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {{ form_row(form.selectedUsers) }}
+
+
+            {{ form_row(form._token) }}
+            <div class="form-submit-field">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+            </div>
+
+            <a href="{{ path('payment_overview') }}" class="form-submit-field decline btn plain-link">
+                <div class="next-state-button-text">Abbrechen</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var optionsPanel = document.querySelector('.options-panel .user-list');
+            var selectedPanel = document.querySelector('.selected-panel .user-list');
+            var selectedUsersField = document.querySelector('#init_group_event_selectedUsers');
+
+            optionsPanel.addEventListener('click', function(event) {
+                if (event.target.classList.contains('user-option')) {
+                    var value = event.target.getAttribute('data-value');
+                    var label = event.target.innerText;
+                    var selectedUser = document.createElement('li');
+                    selectedUser.classList.add('selected-user');
+                    selectedUser.setAttribute('data-value', value);
+                    selectedUser.innerText = label;
+                    selectedPanel.appendChild(selectedUser);
+                    event.target.remove();
+                    updateSelectedUsersField();
+                }
+            });
+
+            selectedPanel.addEventListener('click', function(event) {
+                if (event.target.classList.contains('selected-user')) {
+                    var value = event.target.getAttribute('data-value');
+                    var label = event.target.innerText;
+                    var userOption = document.createElement('li');
+                    userOption.classList.add('user-option');
+                    userOption.setAttribute('data-value', value);
+                    userOption.innerText = label;
+                    optionsPanel.appendChild(userOption);
+                    event.target.remove();
+                    updateSelectedUsersField();
+                }
+            });
+
+            function updateSelectedUsersField() {
+                let selectedUsers = document.querySelectorAll('.selected-user');
+                let selectedUserValues = Array.from(selectedUsers).map(function (user) {
+                    return user.getAttribute('data-value');
+                });
+                selectedUsersField.value = selectedUserValues.join(',');
+            }
+        });
+    </script>
+
+{% endblock %}

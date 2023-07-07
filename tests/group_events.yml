@@ -1,0 +1,26 @@
+App\Entity\User:
+  creator:
+    username: 'creator'
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+    email: '<email()>'
+    password: '<password()>'
+  user2:
+    username: 'user2'
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+    email: '<email()>'
+    password: '<password()>'
+  loaner:
+    username: 'loaner'
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+    email: '<email()>'
+    password: '<password()>'
+  loaner2:
+    username: 'loaner2'
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+    email: '<email()>'
+    password: '<password()>'
+
