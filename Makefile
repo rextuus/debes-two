@@ -1,4 +1,4 @@
-deploy: stash save pull install database build restore
+deploy: stash save pull restore install database build
 stash:
 	git stash
 
