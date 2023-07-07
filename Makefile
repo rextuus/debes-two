@@ -1,4 +1,6 @@
-deploy: pull install database build
+deploy: stash save pull install database build restore
+stash:
+	git stash
 
 pull:
 	git pull
@@ -11,3 +13,9 @@ database:
 
 build:
 	npm run build
+
+save:
+	cp .env .env_backup
+
+restore:
+	cp .env_backup .env
