@@ -88,8 +88,6 @@ class AccountController extends AbstractController
         /** @var User $requester */
         $requester = $this->getUser();
 
-        $events = $changeEventService->getAllByUser($requester);
-        dump($events);
 
         return $this->render('transaction/transaction.list.loans.html.twig', [
             'user' => $requester

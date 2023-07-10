@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Service\Legacy\LegacyImportService;
 use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionCreateData;
+use App\Service\Transaction\TransactionService;
 use App\Service\User\UserData;
 use App\Service\User\UserService;
 use GuzzleHttp\Client;
@@ -26,7 +27,8 @@ class SimonDillanCommand extends Command
      */
     public function __construct(
         private CloudinaryService $cloudinaryService,
-        private MailService $mailService
+        private MailService $mailService,
+        private TransactionService $transactionService,
     )
     {
         parent::__construct();
@@ -47,7 +49,10 @@ class SimonDillanCommand extends Command
     {
         $user = new User();
         $user->setFirstName("Pitter");
-        $this->mailService->sendTestMail($user);
+
+        $transaction = $this->transactionService->getTransactionById(8);
+
+        $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_REMINDER);
 
 //        $imagePath = 'public/assets/img/home/borrow.png';
 //        $cdnPath = 'debes/app/borrow.png';
@@ -79,8 +84,6 @@ class SimonDillanCommand extends Command
 //                $possibleNames[] = $plainName;
 //            }
 //        }
-//        dump($possibleNames);
-//        dump(count($possibleNames));
 
         return 0;
     }

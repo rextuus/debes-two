@@ -379,14 +379,14 @@ class TransferController extends AbstractController
 
         $paypalData = (new PrepareTransferData());
         $paypalForm = null;
-        if (!empty($paymentOptions->getAvailablePaypalAccountsDebtor())){
-            $paypalData->setPaymentOption($paymentOptions->getAvailablePaypalAccountsDebtor()[0]);
+        if (!empty($paymentOptions->getAvailablePaypalAccountsLoaner())){
+            $paypalData->setPaymentOption($paymentOptions->getAvailablePaypalAccountsLoaner()[0]);
             $paypalForm = $this->createForm(
                 PreparePaypalType::class,
                 $paypalData,
-                ['payment_accounts' => $paymentOptions->getAvailablePaypalAccountsDebtor()]
+                ['payment_accounts' => $paymentOptions->getAvailablePaypalAccountsLoaner()]
             );
-            $showPaypal = false;
+            $showPaypal = true;
         }
 
         // prepare exchange tab
@@ -448,7 +448,7 @@ class TransferController extends AbstractController
                 $paypalForm->handleRequest($request);
                 if ($paypalForm->isSubmitted() && $paypalForm->isValid()) {
                     // process the paypal form data and redirect or render a response
-                    $data = $bankForm->getData();
+                    $data = $paypalForm->getData();
                     return $this->redirectToRoute(
                         'transfer_send_paypal',
                         [

@@ -24,8 +24,8 @@ class NextStateDebtCleared extends AbstractNextState implements NextStateInterfa
 
     public function getTwigParameters(TransactionDto $part): array
     {
-        $params = ['slug' => $part->getTransactionSlug()];
-        $acceptLink = $this->router->generate('transaction_detail', $params);
+        $params = ['slug' => $part->getTransactionSlug(),'variant' => TransactionController::REQUESTER_VARIANT_DEBTOR];
+        $acceptLink = $this->router->generate('transaction_notify', $params);
         $acceptButton = 'Hinweis senden';
         $acceptIcon = 'assets/img/email.svg';
 

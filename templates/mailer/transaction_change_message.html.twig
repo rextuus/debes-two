@@ -35,12 +35,25 @@
                 <p style="margin-bottom: 50px"></p>
             </td>
         </tr>
+        {% if detailText is not null %}
+            <tr>
+                <td class="handle-area p-left p-right p-bottom p-top">
+                    <p>{{ detailText | raw }}</p>
+                </td>
+            </tr>
+        {% endif %}
         {% if handleLink is not null %}
         <tr>
             <td class="handle-area p-left p-right p-bottom p-top">
                 <p>Klicke <a href="{{ handleLink }}">hier</a> um die Angelegenheit direkt zu regeln</p>
             </td>
         </tr>
+        {% else %}
+            <tr>
+                <td class="handle-area p-left p-right p-bottom p-top">
+                    <p>Du willst wissen, was sonst noch bei deinen Finanzen los ist? <a href="https://debes.wh-company.de">Hier</a> gehts direkt zu deinem DEBES-Account.</p>
+                </td>
+            </tr>
         {% endif %}
     </table>
 {% endblock %}

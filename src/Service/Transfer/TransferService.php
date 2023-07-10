@@ -89,9 +89,13 @@ class TransferService
 //        $this->transactionService->update($transaction, $transactionUpdateData);
         $this->transactionProcessor->process($debt);
 
+        $mailVariant = MailService::MAIL_DEBT_PAYED_ACCOUNT;
+        if ($paymentAction->getVariant() === PaymentAction::VARIANT_PAYPAL){
+            $mailVariant = MailService::MAIL_DEBT_PAYED_PAYPAL;
+        }
         $this->mailService->sendNotificationMail(
             $transaction,
-            MailService::MAIL_DEBT_PAYED_ACCOUNT,
+            $mailVariant,
             $paymentAction
         );
     }

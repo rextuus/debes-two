@@ -15,6 +15,9 @@ services:
     _instanceof:
         App\Extension\NextStateProvider\NextStateInterface:
             tags: [ 'next.state' ]
+        App\Service\Mailer\MailTemplateInterface:
+            tags: [ 'mail.template' ]
+
 
 
     # makes classes in src/ available to be used as services

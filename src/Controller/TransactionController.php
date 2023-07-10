@@ -6,6 +6,7 @@ use App\Entity\Transaction;
 use App\Entity\User;
 use App\Exception\UserNotCorrectParticipantOfTransaction;
 use App\Form\ChoiceType;
+use App\Form\SingleChoiceType;
 use App\Form\TransactionCreateMultipleType;
 use App\Form\TransactionCreateSimpleType;
 use App\Service\Debt\DebtCreateData;
@@ -205,25 +206,21 @@ class TransactionController extends AbstractController
             Transaction::STATE_CLEARED
         );
 
-        if ($isDebtor) {
-//            $dto = DebtDto::create($this->transactionService->getDebtPartOfUserForTransaction($transaction, $requester));
-//            $dto = $dtoProvider->createLoanDto($transaction->getDebts()[0]);
+        $isDebtor = $request->get('variant') === TransactionService::DEBTOR_VIEW;
 
+        if ($isDebtor) {
             $labels = ['label' => ['submit' => 'Bestätigen', 'decline' => 'Bestätigen']];
         } else {
-//            $dto = LoanDto::create($transaction);
-//            $dto = $dtoProvider->createLoanDto($transaction->getLoans()[0]);
-            $labels = ['label' => ['submit' => 'Bestätigen', 'decline' => 'Bemängeln']];
+            $labels = ['label' => ['submit' => 'Bestätigen', 'decline' => 'd']];
         }
         $dto = $this->transactionService->createDtoFromTransaction($transaction, $isDebtor);
 
 
-        $form = $this->createForm(ChoiceType::class, null, $labels);
+        $form = $this->createForm(SingleChoiceType::class, null, $labels);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $isAccepted = (bool)$form->get('submit')->isClicked();
-
             if ($isDebtor) {
                 if ($isAccepted) {
                     // TODO

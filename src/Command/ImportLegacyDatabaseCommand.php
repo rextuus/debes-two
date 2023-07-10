@@ -222,8 +222,6 @@ class ImportLegacyDatabaseCommand extends Command
                         unset($data[$contentNr]);
                     }
 
-//                    dump($data);
-
                     $data = array_values($data);
                     $data[7] = $data[6];
                     $data[6] = $data[5];
@@ -242,7 +240,6 @@ class ImportLegacyDatabaseCommand extends Command
                         $value = trim($value);
                     }
                 );
-                dump($data);
 
                 $transactionData = new TransactionCreateLegacyImportData();
                 $transactionData->setDebtors($data[1]);

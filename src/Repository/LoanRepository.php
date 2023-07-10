@@ -146,7 +146,6 @@ class LoanRepository extends ServiceEntityRepository
         array  $loaner
     )
     {
-        dump($loaner);
         return $this->createQueryBuilder('l')
             ->select('l')
             ->innerJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
