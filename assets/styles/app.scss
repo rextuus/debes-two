@@ -1,13 +1,26 @@
 @import "variables";
 body{
+    background: black;
+    //min-height: 100vh;
+    margin: 0;
+    align-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.body-container{
     background: $color-body-main;
     color: #d7e6cf;
     font-family: arial, verdana, sans-serif;
-    margin: 0;
 
     display: flex;
     flex-direction: column;
+
+    width: 100%;
+    max-width: $max-width;
     min-height: 100vh;
+    margin: 0 auto; // Center the container horizontally
 }
 
 .page-header{

@@ -18,10 +18,14 @@
 /*    02516c*/
 /*    02516c*/
     border-bottom: $color-navi-secondary solid 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .top-navi-left{
     display: flex;
+    align-items: center;
 }
 
 .navi-favicon{
@@ -56,6 +60,10 @@
     opacity: 1;
     z-index: 100;
     visibility: visible;
+    width: 100%;
+    max-width: $max-width;
+    margin: 0 auto; // Center the container horizontally
+
 }
 
 /* Yellow band effect */
@@ -136,8 +144,23 @@
 }
 
 /* Burger Style: @see: https://codepen.io/CreativeJuiz/full/oMZNXy */
+.header-container {
+    display: flex; /* Added */
+    justify-content: space-between; /* Added */
+    align-items: center; /* Added */
+    height: 90px; /* Added */
+    margin-bottom: 10px; /* Added */
+    min-width: 100%;
+}
+
+
+.nav-container {
+    display: flex;
+    align-items: center;
+}
+
 .open-main-nav {
-    position: absolute;
+
     top: 15px;
     padding-top: 20px;
     right: 15px;

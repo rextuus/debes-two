@@ -46,148 +46,6 @@ class MailService
         if ($_ENV['APP_ENV'] === 'dev' || $_ENV['APP_ENV'] === 'test') {
 //            return;
         }
-        $receiver = $transaction->getDebts()[0]->getOwner();
-
-        $subject = '';
-        $text = '';
-        $handleLink = null;
-        $slug = $transaction->getSlug();
-
-
-        switch ($mailVariant) {
-//            case self::MAIL_DEBT_CREATED:
-//                $receiver = $transaction->getDebtor();
-//                $sender = $transaction->getLoaner();;
-//                $text = sprintf(
-//                    'Es gibt leider schlechte Nachrichten. <b>%s</b> hat eine neue Schuldlast für deinen Debes-Account hinterlegt',
-//                    $sender->getFullName()
-//                );
-//                $header = 'Du lebst wohl auf großem Fuße!';
-//                $headerImage = '@images/debt.png';
-//
-//                $subject = 'Neue Schulden';
-//
-//                $params = ['slug' => $transaction->getSlug(), 'variant' => 'debtor'];
-//                $handleLink = $this->router->generate('transaction_accept', $params);
-//                $handleLink = self::BASE_URL . $handleLink;
-//                break;
-            case self::MAIL_DEBT_CANCELED:
-                $receiver = $transaction->getDebtor();
-                $sender = $transaction->getLoaner();
-                $text = sprintf(
-                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuldlast für deinen Debes-Account zurückgezogen',
-                    $sender->getFullName()
-                );
-                $header = 'Dein Einfluss zahlt sich aus!';
-                $headerImage = '@images/decline.png';
-
-                $subject = 'Schuld zurückgezogen';
-
-                break;
-//            case self::MAIL_DEBT_ACCEPTED:
-//                $receiver = $transaction->getLoaner();
-//                $sender = $transaction->getDebtor();;
-//
-//                $text = sprintf(
-//                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuldenforderung von dir akzeptiert',
-//                    $sender->getFullName()
-//                );
-//                $header = 'Dein Einfluss zahlt sich aus!';
-//                $headerImage = '@images/handshake.png';
-//
-//                $subject = 'Schuldlast akzeptiert ';
-//
-//                break;
-//            case self::MAIL_DEBT_DECLINED:
-//                $receiver = $transaction->getLoaner();
-//                $sender = $transaction->getDebtor();
-//
-//                $text = sprintf(
-//                    'Es gibt schlechte Nachrichten. <b>%s</b> hat eine Schuldenforderung von dir abgewiesen',
-//                    $sender->getFullName()
-//                );
-//                $header = 'Da stimmt was nicht';
-//                $headerImage = '@images/declined.jpg';
-//
-//                $subject = 'Schuldlast abgelehnt ';
-//
-//                break;
-//            case self::MAIL_DEBT_EXCHANGED:
-//                $receiver = $transaction->getLoaner();
-//                $sender = $transaction->getDebtor();
-//                $text = sprintf(
-//                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuld beglichen in dem er sie mit einer anderen verrechnet hat',
-//                    $sender->getFullName()
-//                );
-//                $header = 'Ein fairer Austausch!';
-//                $headerImage = '@images/transferred.png';
-//
-//                $subject = 'Schulden verrechnet';
-//                break;
-//            case self::MAIL_DEBT_PAYED_ACCOUNT:
-//                $receiver = $transaction->getLoaner();
-//                $sender = $transaction->getDebtor();
-//                $text = sprintf(
-//                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuld beglichen und dir Geld auf dein Bank-Konto überwiesen',
-//                    $sender->getFullName()
-//                );
-//                $header = 'Zahltag!';
-//                $headerImage = '@images/transferred.png';
-//
-//                $subject = 'Schulden zurück erhalten';
-//
-//                $params = ['slug' => $transaction->getSlug(), 'variant' => 'debtor'];
-//                $handleLink = $this->router->generate('transaction_confirm', $params);
-//                $handleLink = self::BASE_URL . $handleLink;
-//                break;
-//            case self::MAIL_DEBT_PAYED_PAYPAL:
-//                $receiver = $transaction->getLoaner();
-//                $sender = $transaction->getDebtor();
-//                $text = sprintf(
-//                    'Es gibt gute Nachrichten. <b>%s</b> hat eine Schuld beglichen und dir Geld auf dein Paypal-Konto überwiesen',
-//                    $sender->getFullName()
-//                );
-//                $header = 'Zahltag!';
-//                $headerImage = '@images/transferred.png';
-//
-//                $subject = 'Schulden zurück erhalten';
-//
-//                $params = ['slug' => $transaction->getSlug(), 'variant' => 'debtor'];
-//                $handleLink = $this->router->generate('transaction_confirm', $params);
-//                $handleLink = self::BASE_URL . $handleLink;
-//
-//                break;
-//            case self::MAIL_DEBT_CONFIRMED:
-//                $receiver = $transaction->getLoaner();
-//                $sender = $transaction->getDebtor();
-//                $text = sprintf(
-//                    "Es gibt gute Nachrichten. <b>%s</b> hat den Eingang deiner Schuldrückzahlung bestätigt",
-//                    $sender->getFullName()
-//                );
-//                $header = 'Zahltag!';
-//                $headerImage = '@images/handshake.png';
-//
-//                $subject = 'Geldeingang bestätigt';
-//
-//                break;
-            case self::MAIL_DEBT_REMINDER:
-                $receiver = $transaction->getDebtor();
-                $sender = $transaction->getLoaner();
-
-                $text = sprintf(
-                    "Ein freundlicher Hinweis von <b>%s</b>!\n Es wäre toll, wenn du diesen Schuldeintrag nicht vergisst",
-                    $sender->getFullName()
-                );
-                $header = 'Kleiner Reminder';
-                $headerImage = '@images/reminder.jpg';
-                $subject = 'Erinnerung nicht akzeptierte Schuld';
-
-                $params = ['slug' => $transaction->getSlug()];
-                $handleLink = $this->router->generate('transfer_overview', $params);
-                $handleLink = self::BASE_URL . $handleLink;
-
-                break;
-        }
 
         $template = $this->mailTemplateProvider->getTemplateByIdent($mailVariant);
         $template->setTransaction($transaction);
@@ -203,7 +61,6 @@ class MailService
             $receiver
         );
         $problems = 0;
-        $debts = $this->transactionService->getTotalDebtsBetweenUsers($sender, $receiver);
 
         $mailActive = (bool)$_ENV['MAILER_ACTIVE'];
         $receiverMail = $_ENV['MAILER_ADDRESS_NON_ACTIVE'];
@@ -229,7 +86,7 @@ class MailService
                 'transactionsFrom' => $transactionsFromMailReceiverToOther,
                 'transactionsTo' => $transactionsToMailReceiverFromOther,
                 'debts' => $template->getDebts(),
-                'slug' => $slug,
+                'slug' => $transaction->getSlug(),
                 'paymentAction' => $paymentAction,
                 'handleLink' => $template->getHandleLink(),
                 'detailText' => $template->getDetailText(),

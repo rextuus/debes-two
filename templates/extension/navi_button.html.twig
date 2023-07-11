@@ -1,21 +1,24 @@
-<div class="">
-{% if user is defined and user is not null%}
-    <div class="account-landing-header">
-        Hallo {{ user.fullName }}
+<div class="header-container">
+    <div class="header-left">
+        {% if user is defined and user is not null %}
+            <div class="account-landing-header">
+                Hallo {{ user.fullName }}
+            </div>
+            <div class="home-button-container">
+                <a href="{{ path('account_overview') }}" class="home-button">
+                    <img src="{{ asset('assets/img/home.svg') }}" alt="Tile image">
+                </a>
+            </div>
+        {% else %}
+            <div class="login-button-container">
+                <a href="{{ path('app_login') }}" class="login-button">
+                    <img src="{{ asset('assets/img/icons/navigation/login.svg') }}" alt="Tile image">
+                </a>
+                <div class="login-text">
+                    Login
+                </div>
+            </div>
+        {% endif %}
     </div>
-    <div class="home-button-container">
-        <a href="{{ path('account_overview') }}" class="home-button">
-            <img src="{{ asset('assets/img/home.svg') }}" alt="Tile image">
-        </a>
-    </div>
-{% else %}
-    <div class="login-button-container">
-        <a href="{{ path('app_login') }}" class="login-button">
-            <img src="{{ asset('assets/img/icons/navigation/login.svg') }}" alt="Tile image">
-        </a>
-        <div class="login-text">
-            Login
-        </div>
-    </div>
-{% endif %}
+
 </div>
