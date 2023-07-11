@@ -16,7 +16,7 @@ function addFlashMessage(value) {
     const flashMessage = document.createElement('div');
     flashMessage.classList.add('flash-message');
     flashMessage.textContent = value;
-    document.body.insertBefore(flashMessage, document.querySelector('.content-body'));
+    document.querySelector('.body-container').insertBefore(flashMessage, document.querySelector('.content-body'));
     setTimeout(() => {
         flashMessage.remove();
     }, 3000);
