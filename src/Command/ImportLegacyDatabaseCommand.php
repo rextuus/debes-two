@@ -213,6 +213,10 @@ class ImportLegacyDatabaseCommand extends Command
                 }
                 $data = explode(',', $line);
 
+                if (count($data) !== 9) {
+                    $modifiedLine = str_replace(';', ',', $line);
+                    $data = explode(',', $modifiedLine);
+                }
                 // when , is in
                 if (count($data) !== 9) {
                     $content = '';

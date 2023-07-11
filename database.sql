@@ -7,6 +7,9 @@ DROP TABLE loan;
 DROP TABLE debt;
 DROP TABLE transactions;
 DROP TABLE reset_password_request;
+DROP TABLE group_event_payment;
+DROP TABLE group_event;
+DROP TABLE group_event_user_collection_user;
 DROP TABLE user;
 
 CREATE USER 'debes_user'@'localhost' IDENTIFIED BY 'password';
