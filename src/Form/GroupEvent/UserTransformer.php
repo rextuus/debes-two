@@ -25,27 +25,12 @@ class UserTransformer implements DataTransformerInterface
 
     public function transform($value)
     {
-        /** @var GroupEventInitData $value */
-
-        // If the value is an array of user objects, transform it to an array of user IDs
-//        if (is_array($value->getSelectedUsers())) {
-//            return array_map(function ($user) {
-//                return $user->getId();
-//            }, $value->getSelectedUsers());
-//        }
-
-        // Otherwise, return the user ID or null
-        if ($value instanceof User) {
-            return $value->getId();
-        }
-
-        return null;
+        return implode(',', $value);
     }
 
     public function reverseTransform($value)
     {
-        dd($value);
-        if ($value) {
+        if (!$value) {
             return [];
         }
 

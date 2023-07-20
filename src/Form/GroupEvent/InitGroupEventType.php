@@ -35,15 +35,16 @@ class InitGroupEventType extends AbstractType
     {
         parent::buildForm($builder, $options);
         $builder->add('description', TextType::class, ['label' => 'Beschreibung']);
-        $builder->add('submit', SubmitType::class, ['label' => 'Event anlegen']);
-        $builder->add('selectedUsers', TextType::class)->addModelTransformer($this->transformer);
+        $builder->add('selectedUsers', TextType::class);
         // Add the choice field for displaying all users
-        $builder->add('allUsers', ChoiceType::class, [
-            'label' => 'All Users',
-            'choices' => $options['users'], // an array of users to populate the choices
-            'multiple' => false, // allow single selection
-            'expanded' => false, // render as a select dropdown
-        ]);
+//        $builder->add('allUsers', ChoiceType::class, [
+//            'label' => 'All Users',
+//            'choices' => $options['users'], // an array of users to populate the choices
+//            'multiple' => false, // allow single selection
+//            'expanded' => false, // render as a select dropdown
+//        ]);
+        $builder->add('submit', SubmitType::class, ['label' => 'Event anlegen']);
+        $builder->get('selectedUsers')->addModelTransformer($this->transformer);
     }
 
     public function configureOptions(OptionsResolver $resolver)

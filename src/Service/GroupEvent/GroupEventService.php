@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\GroupEvent;
 
 use App\Entity\GroupEvent;
+use App\Entity\GroupEventUserCollection;
 
 /**
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
@@ -45,5 +46,13 @@ class GroupEventService
     public function findGroupEvent(int $id): ?GroupEvent
     {
         return $this->groupEventRepository->find($id);
+    }
+
+    public function addGroupToEvent(
+        GroupEvent $groupEvent,
+        GroupEventUserCollection $groupEventUserCollection
+    ) {
+        $groupEvent->addParticipantGroup($groupEventUserCollection);
+        $this->groupEventRepository->persist($groupEvent);
     }
 }

@@ -6,8 +6,10 @@ namespace App\Service\GroupEvent;
 
 use App\Entity\GroupEvent;
 use App\Entity\GroupEventUserCollection;
+use App\Service\GroupEvent\Calculation\GroupEventCalculator;
 use App\Service\GroupEvent\Payment\GroupEventPaymentData;
 use App\Service\GroupEvent\Payment\GroupEventPaymentService;
+use App\Service\GroupEvent\Result\GroupEventResultService;
 use App\Service\GroupEvent\UserCollection\GroupEventUserCollectionData;
 use App\Service\GroupEvent\UserCollection\GroupEventUserCollectionService;
 
@@ -21,6 +23,8 @@ class GroupEventManager
         private GroupEventService $groupEventService,
         private GroupEventPaymentService $groupEventPaymentService,
         private GroupEventUserCollectionService $groupEventUserCollectionService,
+        private GroupEventCalculator $groupEventCalculator,
+        private GroupEventResultService $groupEventResultService,
     ) {
     }
 
@@ -29,9 +33,66 @@ class GroupEventManager
         return $this->groupEventService->storeGroupEvent($groupEventData);
     }
 
-    public function addUserCollectionToGroupEvent(GroupEventUserCollectionData $groupEventUserCollectionData,
+    public function addInitialUserCollectionsToGroupEvent(
+        GroupEventInitData $groupEventData,
+        GroupEvent $event
+    ): ?GroupEventUserCollection {
+        // TODO check if there already exist the userGroups
+
+        // all members
+        $userGroup = $this->groupEventUserCollectionService->getGroupByUserList($groupEventData->getSelectedUsers());
+        if (is_null($userGroup)) {
+            $data = new GroupEventUserCollectionData();
+
+            $users = $groupEventData->getSelectedUsers();
+            $data->setUsers($users);
+            $data->setInitial(true);
+            $data->setGroupEvent($event);
+            $data->setName('Alle');
+
+            $this->addUserCollectionToGroupEventByData($data);
+        }else{
+            $this->addUserCollectionToGroupEvent($event, $userGroup);
+        }
+
+        // all members initiator excluded
+        $users = $groupEventData->getSelectedUsers();
+        $creator = $groupEventData->getCreator();
+        $users = array_filter($users, function ($user) use ($creator) {
+            return $user !== $creator;
+        });
+
+        $userGroup = $this->groupEventUserCollectionService->getGroupByUserList($users);
+
+        $collection = null;
+        if (is_null($userGroup)) {
+            $data = new GroupEventUserCollectionData();
+
+            $data->setUsers($users);
+            $data->setAllOthers(true);
+            $data->setGroupEvent($event);
+            $data->setName('Alle außer mir');
+            $collection = $this->addUserCollectionToGroupEventByData($data);
+        }else{
+            $this->addUserCollectionToGroupEvent($event, $userGroup);
+        }
+
+        return $collection;
+    }
+
+    public function addUserCollectionToGroupEvent(
+        GroupEvent $groupEvent,
+        GroupEventUserCollection $groupEventUserCollection,
+    ): void {
+        $this->groupEventService->addGroupToEvent(
+            $groupEvent,
+            $groupEventUserCollection
+        );
+    }
+
+    public function addUserCollectionToGroupEventByData(GroupEventUserCollectionData $groupEventUserCollectionData,
     ): GroupEventUserCollection {
-        return $this->groupEventUserCollectionService->storeGroupEventPayment($groupEventUserCollectionData);
+        return $this->groupEventUserCollectionService->storeGroupEventUserCollection($groupEventUserCollectionData);
     }
 
     public function addPaymentToEvent(GroupEventPaymentData $groupEventPaymentData)
@@ -47,5 +108,19 @@ class GroupEventManager
     public function findGroupEvent(int $id): ?GroupEvent
     {
         return $this->groupEventService->findGroupEvent($id);
+    }
+
+    public function getGroupsOfEvent(GroupEvent $groupEvent): ?GroupEventUserCollection
+    {
+        return $this->groupEventUserCollectionService->getGroupsByEvent($groupEvent);
+    }
+
+    public function calculateGroupEventFinalBill(GroupEvent $event)
+    {
+        $this->groupEventCalculator->calculateGroupEventFinalBill($event);
+    }
+
+    public function triggerTransactionCreation(GroupEvent $event):void{
+        $this->groupEventCalculator->triggerTransactionCreation($event);
     }
 }

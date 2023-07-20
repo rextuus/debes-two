@@ -56,7 +56,7 @@
                     </ul>
                 </div>
             </div>
-            {{ form_row(form.selectedUsers) }}
+            {{ form_row(form.selectedUsers, {'attr': {'class': 'hidden'}}) }}
 
 
             {{ form_row(form._token) }}
@@ -71,47 +71,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var optionsPanel = document.querySelector('.options-panel .user-list');
-            var selectedPanel = document.querySelector('.selected-panel .user-list');
-            var selectedUsersField = document.querySelector('#init_group_event_selectedUsers');
 
-            optionsPanel.addEventListener('click', function(event) {
-                if (event.target.classList.contains('user-option')) {
-                    var value = event.target.getAttribute('data-value');
-                    var label = event.target.innerText;
-                    var selectedUser = document.createElement('li');
-                    selectedUser.classList.add('selected-user');
-                    selectedUser.setAttribute('data-value', value);
-                    selectedUser.innerText = label;
-                    selectedPanel.appendChild(selectedUser);
-                    event.target.remove();
-                    updateSelectedUsersField();
-                }
-            });
-
-            selectedPanel.addEventListener('click', function(event) {
-                if (event.target.classList.contains('selected-user')) {
-                    var value = event.target.getAttribute('data-value');
-                    var label = event.target.innerText;
-                    var userOption = document.createElement('li');
-                    userOption.classList.add('user-option');
-                    userOption.setAttribute('data-value', value);
-                    userOption.innerText = label;
-                    optionsPanel.appendChild(userOption);
-                    event.target.remove();
-                    updateSelectedUsersField();
-                }
-            });
-
-            function updateSelectedUsersField() {
-                let selectedUsers = document.querySelectorAll('.selected-user');
-                let selectedUserValues = Array.from(selectedUsers).map(function (user) {
-                    return user.getAttribute('data-value');
-                });
-                selectedUsersField.value = selectedUserValues.join(',');
-            }
-        });
     </script>
 
 {% endblock %}

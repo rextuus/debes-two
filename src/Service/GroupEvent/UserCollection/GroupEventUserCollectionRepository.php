@@ -2,7 +2,9 @@
 
 namespace App\Service\GroupEvent\UserCollection;
 
+use App\Entity\GroupEvent;
 use App\Entity\GroupEventUserCollection;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -68,5 +70,31 @@ class GroupEventUserCollectionRepository extends ServiceEntityRepository
     {
         $this->_em->persist($groupEventUserCollection);
         $this->_em->flush();
+    }
+
+    public function getGroupByUserList(array $users)
+    {
+        $userIds = array_map(function (User $user) {
+            return $user->getId();
+        }, $users);
+
+        $queryBuilder = $this->createQueryBuilder('uc');
+
+        $queryBuilder->select('uc')
+            ->leftJoin('uc.users', 'u', $queryBuilder->expr()->in('u.id', $userIds))
+//            ->where($queryBuilder->expr()->in('u.id', $userIds))
+            ->groupBy('uc.id')
+            ->having(
+                $queryBuilder->expr()->eq(
+                    $queryBuilder->expr()->count('uc.id'),
+                    count($userIds)
+                )
+            )
+        ;
+
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+dump($userIds);
+dump($result);
+        return $result;
     }
 }

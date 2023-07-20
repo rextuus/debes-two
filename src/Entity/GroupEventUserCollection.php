@@ -22,12 +22,22 @@ class GroupEventUserCollection
     private Collection $groupEventPayments;
 
     #[ORM\Column]
-    private ?bool $initial = null;
+    private ?bool $initial = false;
+
+    #[ORM\ManyToMany(targetEntity: GroupEvent::class, mappedBy: 'participantGroups')]
+    private Collection $groupEvents;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column]
+    private ?bool $allOthers = false;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->groupEventPayments = new ArrayCollection();
+        $this->groupEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,6 +107,57 @@ class GroupEventUserCollection
     public function setInitial(bool $initial): static
     {
         $this->initial = $initial;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupEvent>
+     */
+    public function getGroupEvents(): Collection
+    {
+        return $this->groupEvents;
+    }
+
+    public function addGroupEvent(GroupEvent $groupEvent): static
+    {
+        if (!$this->groupEvents->contains($groupEvent)) {
+            $this->groupEvents->add($groupEvent);
+            $groupEvent->addParticipantGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupEvent(GroupEvent $groupEvent): static
+    {
+        if ($this->groupEvents->removeElement($groupEvent)) {
+            $groupEvent->removeParticipantGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function isAllOthers(): ?bool
+    {
+        return $this->allOthers;
+    }
+
+    public function setAllOthers(bool $allOthers): static
+    {
+        $this->allOthers = $allOthers;
 
         return $this;
     }

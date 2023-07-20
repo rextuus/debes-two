@@ -19,6 +19,11 @@ class ErrorController extends AbstractController
     public function show(Request $request): Response
     {
         $exception = $request->get('exception');
+
+        if ($_ENV['APP_ENV'] === 'dev'){
+            dd($exception);
+        }
+
         $requestUri = $request->getRequestUri();
         if ($exception instanceof UserNotCorrectParticipantOfTransaction) {
 //            if ($exception->getMessage() === TransactionService::ERROR_MESSAGE_NO_DEBTOR) {
@@ -30,7 +35,5 @@ class ErrorController extends AbstractController
             ]);
         }
         return $this->render('exception/no_participant.html.twig', []);
-
-        dd($exception);
     }
 }

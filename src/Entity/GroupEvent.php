@@ -25,13 +25,24 @@ class GroupEvent
     #[ORM\ManyToOne(inversedBy: 'groupEvents')]
     private ?User $creator = null;
 
-    #[ORM\OneToMany(mappedBy: 'groupEvent', targetEntity: GroupEventPayment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'groupEvent', targetEntity: GroupEventPayment::class, cascade: ['persist'], orphanRemoval: true,)]
     private Collection $payments;
+
+    #[ORM\ManyToMany(targetEntity: GroupEventUserCollection::class, inversedBy: 'groupEvents')]
+    private Collection $participantGroups;
+
+    #[ORM\Column]
+    private ?bool $open = null;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: GroupEventResult::class)]
+    private Collection $groupEventResults;
 
 
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->participantGroups = new ArrayCollection();
+        $this->groupEventResults = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,6 +110,85 @@ class GroupEvent
             // set the owning side to null (unless already changed)
             if ($payment->getGroupEvent() === $this) {
                 $payment->setGroupEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupEventUserCollection>
+     */
+    public function getParticipantGroups(): Collection
+    {
+        return $this->participantGroups;
+    }
+
+    public function addParticipantGroup(GroupEventUserCollection $participantGroup): static
+    {
+        if (!$this->participantGroups->contains($participantGroup)) {
+            $this->participantGroups->add($participantGroup);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipantGroup(GroupEventUserCollection $participantGroup): static
+    {
+        $this->participantGroups->removeElement($participantGroup);
+
+        return $this;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsers(): array
+    {
+        foreach ($this->getParticipantGroups()->toArray() as $group){
+            if ($group->isInitial()){
+                return $group->getUsers()->toArray();
+            }
+        }
+        return [];
+    }
+
+    public function isOpen(): ?bool
+    {
+        return $this->open;
+    }
+
+    public function setOpen(bool $open): static
+    {
+        $this->open = $open;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupEventResult>
+     */
+    public function getGroupEventResults(): Collection
+    {
+        return $this->groupEventResults;
+    }
+
+    public function addGroupEventResult(GroupEventResult $groupEventResult): static
+    {
+        if (!$this->groupEventResults->contains($groupEventResult)) {
+            $this->groupEventResults->add($groupEventResult);
+            $groupEventResult->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupEventResult(GroupEventResult $groupEventResult): static
+    {
+        if ($this->groupEventResults->removeElement($groupEventResult)) {
+            // set the owning side to null (unless already changed)
+            if ($groupEventResult->getEvent() === $this) {
+                $groupEventResult->setEvent(null);
             }
         }
 

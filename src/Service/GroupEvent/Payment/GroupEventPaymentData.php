@@ -19,6 +19,8 @@ class GroupEventPaymentData
     private User $loaner;
     private GroupEventUserCollection $debtors;
 
+    private string $reason;
+
     public function getGroupEvent(): GroupEvent
     {
         return $this->groupEvent;
@@ -60,6 +62,17 @@ class GroupEventPaymentData
     public function setDebtors(GroupEventUserCollection $debtors): GroupEventPaymentData
     {
         $this->debtors = $debtors;
+        return $this;
+    }
+
+    public function getReason(): string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(string $reason): GroupEventPaymentData
+    {
+        $this->reason = $reason;
         return $this;
     }
 }

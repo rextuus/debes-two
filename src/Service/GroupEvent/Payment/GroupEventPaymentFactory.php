@@ -27,6 +27,7 @@ class GroupEventPaymentFactory
         $groupEventPayment->setAmount($groupEventPaymentData->getAmount());
         $groupEventPayment->setLoaner($groupEventPaymentData->getLoaner());
         $groupEventPayment->setDebtors($groupEventPaymentData->getDebtors());
+        $groupEventPayment->setReason($groupEventPaymentData->getReason());
     }
 
     private function createNewGroupEventPaymentInstance(): GroupEventPayment

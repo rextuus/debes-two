@@ -1,0 +1,312 @@
+@import "variables";
+
+.event-user-tile {
+    background-color: #737373;
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    display: inline-block;
+
+}
+
+.user-selection {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    .options-panel,
+    .selected-panel {
+        padding: 10px;
+        border: 1px solid #ccc;
+
+        h3 {
+            margin-top: 0;
+        }
+
+        .user-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+
+            li {
+                padding: 5px;
+                margin-bottom: 5px;
+                cursor: pointer;
+                margin-right: 5px;
+
+                &:hover {
+                    background-color: #e9e9e9;
+                }
+
+                &.selected-user {
+                    @extend .event-user-tile;
+                    background-color: $color-balance-positive; // Green background for selected entries
+                }
+
+                &.user-option {
+                    @extend .event-user-tile;
+
+                    background-color: $color-balance-negative; // Red background for unselected entries
+                }
+            }
+        }
+    }
+
+    .options-panel {
+        margin-bottom: 10px;
+    }
+}
+
+.user-group {
+    @extend .user-selection;
+}
+
+.group-panel {
+    @extend .selected-panel;
+}
+
+.event-header-description {
+    background-color: #a2a1a1;
+    color: #000000;
+
+    border: 5px solid #000000;
+    border-radius: 4px;
+    margin-bottom: $default-m-b-s;
+    padding: $default-m-b-s;
+
+    display: flex;
+    justify-content: space-between;
+
+
+    .event-header-description-text{
+
+    }
+    .event-header-description-amount{
+        font-size: 1.6em;
+        font-weight: bold;
+    }
+}
+
+//header
+.event-header-container {
+    background-color: #331c1c;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    border: 5px solid #000000;
+    border-radius: 4px;
+    //max-height: 0;
+    //max-height: 1000px; /* Set the desired max-height for the expanded list */
+
+}
+
+.event-header-user-list{
+    padding: 15px;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: black;
+
+}
+
+.event-header-container.collapsed {
+    max-height: 120px; /* Set the desired max-height for the expanded list */
+}
+.event-header-user-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #000000;
+    color: black;
+}
+.event-header-user-entry .event-header-name {
+    flex-basis: 40%;
+}
+.event-header-user-entry .event-header-amount,
+.event-header-user-entry .event-header-percentage {
+    flex-basis: 30%;
+    text-align: right;
+}
+
+
+
+//payment
+.event-payment-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.event-payment-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    border: 2px solid #000000;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: #4e4e4f;
+}
+
+.event-payment-row-body {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.event-payer-tile {
+    background-color: #282828;
+    padding: 5px 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.event-infobox {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    padding: 10px;
+    background-color: #282828;
+    border-radius: 4px;
+}
+
+.event-info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    border-bottom: #ccc solid 2px;
+}
+
+.event-info-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.event-info-value {
+    font-style: italic;
+    margin-left: $default-m-b-m;
+}
+
+.event-tile {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+
+.event-group {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #737373;
+
+}
+
+.event-users {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+
+
+
+.event-group.collapsed {
+}
+
+.event-users.collapsed {
+    display: none;
+}
+
+
+
+// payment adding
+.event-payment-form {
+    display: flex;
+    flex-direction: column;
+
+    &-pool, &-selection {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        height: 200px;
+        overflow-y: auto;
+
+
+
+        & .event-payment-form-tile {
+            &.non-choosen{
+                min-width: 100px;
+                min-height: 30px;
+                border-color: black;
+            }
+
+            display: inline-block;
+            padding: 5px;
+            margin: 5px;
+            border: 2px solid;
+            cursor: pointer;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 150px;
+
+            padding: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+
+            &:hover {
+                background-color: #e9e9e9;
+            }
+        }
+
+        &-empty-tile {
+            border: 1px dashed #ccc;
+            background-color: #f9f9f9;
+        }
+    }
+
+    .event-payment-form-group-members{
+        max-width: 100%;
+        background-color: $color-balance-positive;
+
+    }
+
+    &-group-members {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+
+    }
+}
+
+.payment-button{
+    background-color: #80596f; /* Green background */
+
+}
+
+.payment-button-container {
+
+    &.next-state-button {
+        justify-content: flex-end;
+
+    }
+}
+
+// group colors
+.event-group-color-1{
+    background-color: #1d437c;
+    border-color: #15325e !important;
+}
+.event-group-color-2{
+    background-color: #47503e;
+    border-color: #353b2e !important;
+}
+.event-group-color-3{
+    background-color: rgba(253, 0, 0, 0.3);
+}
+.event-group-color-4{
+    background-color: #591d7c;
+}

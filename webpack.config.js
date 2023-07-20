@@ -28,6 +28,7 @@ Encore
     .addEntry('transaction-part-content-card', './assets/transaction-part-content-card.js')
     .addEntry('content-card', './assets/content-card.js')
     .addEntry('transaction-handling', './assets/transaction-handling.js')
+    .addEntry('group-event', './assets/group-event.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

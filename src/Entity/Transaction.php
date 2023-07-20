@@ -493,4 +493,8 @@ class Transaction
 
         return $this;
     }
+
+    public function formatted(): string{
+        return sprintf('%s => %s: %.2f€', $this->getLoaner()->getId(), $this->getDebtor()->getId(), $this->getAmount());
+    }
 }

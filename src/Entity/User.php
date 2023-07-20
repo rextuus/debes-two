@@ -60,12 +60,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'creator', targetEntity: GroupEvent::class)]
     private Collection $groupEvents;
 
+    #[ORM\OneToMany(mappedBy: 'loaner', targetEntity: GroupEventResult::class)]
+    private Collection $groupEventResults;
+
     public function __construct()
     {
         $this->paymentOptions = new ArrayCollection();
         $this->groupEventUserCollections = new ArrayCollection();
         $this->groupEventPayments = new ArrayCollection();
         $this->groupEvents = new ArrayCollection();
+        $this->groupEventResults = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -350,6 +354,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($groupEvent->getCreator() === $this) {
                 $groupEvent->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupEventResult>
+     */
+    public function getGroupEventResults(): Collection
+    {
+        return $this->groupEventResults;
+    }
+
+    public function addGroupEventResult(GroupEventResult $groupEventResult): static
+    {
+        if (!$this->groupEventResults->contains($groupEventResult)) {
+            $this->groupEventResults->add($groupEventResult);
+            $groupEventResult->setLoaner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupEventResult(GroupEventResult $groupEventResult): static
+    {
+        if ($this->groupEventResults->removeElement($groupEventResult)) {
+            // set the owning side to null (unless already changed)
+            if ($groupEventResult->getLoaner() === $this) {
+                $groupEventResult->setLoaner(null);
             }
         }
 

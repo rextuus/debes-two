@@ -1,0 +1,31 @@
+{% for payment in dtos %}
+    <div class="event-payment-row">
+        <div class="event-payer-tile">{{ payment.loaner }}</div>
+        <div class="event-payment-row-body">
+            <div class="event-infobox">
+                <div class="event-info-row">
+                    <span class="event-info-label">Reason:</span>
+                    <span class="event-info-value">{{ payment.reason }}</span>
+                </div>
+                <div class="event-info-row">
+                    <span class="event-info-label">Amount:</span>
+                    <span class="event-info-value">{{ payment.amount |round(2, 'floor')}}€</span>
+                </div>
+                <div class="event-info-row">
+                    <span class="event-info-label">Split Amount:</span>
+                    <span class="event-info-value">{{ payment.splitAmount }}€</span>
+                </div>
+            </div>
+            <div class="event-tile collapsed {{ payment.groupColorClass }}">
+                <div class="event-group collapsed {{ payment.groupColorClass }}">
+                    {{ payment.groupName }}
+                </div>
+                <div class="event-users collapsed">
+                    {% for member in payment.members %}
+                        <div class="event-user-tile">{{ member }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

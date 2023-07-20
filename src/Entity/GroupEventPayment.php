@@ -16,15 +16,18 @@ class GroupEventPayment
     #[ORM\ManyToOne(inversedBy: 'groupEventPayments')]
     private ?User $loaner = null;
 
-    #[ORM\ManyToOne(inversedBy: 'groupEventPayments')]
+    #[ORM\ManyToOne( inversedBy: 'groupEventPayments')]
     private ?GroupEventUserCollection $debtors = null;
 
     #[ORM\Column]
     private ?float $amount = null;
 
-    #[ORM\ManyToOne(inversedBy: 'payments')]
+    #[ORM\ManyToOne(inversedBy: 'payments', cascade: ['persist'],)]
     #[ORM\JoinColumn(nullable: false)]
     private ?GroupEvent $groupEvent = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $reason = null;
 
     public function getId(): ?int
     {
@@ -75,6 +78,18 @@ class GroupEventPayment
     public function setGroupEvent(?GroupEvent $groupEvent): static
     {
         $this->groupEvent = $groupEvent;
+
+        return $this;
+    }
+
+    public function getReason(): ?string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(string $reason): static
+    {
+        $this->reason = $reason;
 
         return $this;
     }

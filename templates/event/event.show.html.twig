@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Event Details{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="page-header-text">
+            Event Details
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/icons/event/group.svg') }}" alt="Tile image">
+        </div>
+    </div>
+
+    <div class="content-body">
+
+
+        <div class="next-state-button payment-button-container has-mb-m">
+            <a href="{{ path('event_payment_add', {'groupEvent' : event.id}) }}" class="accept-link payment-button">
+                <img src="{{ asset('assets/img/icons/event/add.svg') }}" alt="Button Image">
+                <div class="next-state-button-text">Zahlung adden</div>
+            </a>
+        </div>
+
+        {{ render_participant_list(event) | raw }}
+
+
+
+        <div class="event-payment-list">
+            <h3>Zahlungen:</h3>
+
+            {{ render_payment_entry(event) | raw }}
+
+        </div>
+    </div>
+{% endblock %}

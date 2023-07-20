@@ -32,6 +32,10 @@ class GroupEventUserCollectionFactory
             $groupEventUserCollection->addUser($user);
         }
         $groupEventUserCollection->setInitial($groupEventUserCollectionData->isInitial());
+        $groupEventUserCollection->setAllOthers($groupEventUserCollectionData->isAllOthers());
+        $groupEventUserCollection->setName($groupEventUserCollectionData->getName());
+        $groupEventUserCollection->addGroupEvent($groupEventUserCollectionData->getGroupEvent());
+        $groupEventUserCollectionData->getGroupEvent()->getParticipantGroups()->add($groupEventUserCollection);
     }
 
     private function createNewGroupEventUserCollectionInstance(): GroupEventUserCollection

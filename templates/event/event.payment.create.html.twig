@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zahlungen hinzufügen{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="page-header-text">
+            Zahlungen hinzufügen
+        </div>
+        <div class="page-header-image">
+            <img src="{{ asset('assets/img/icons/event/group.svg') }}" alt="Tile image">
+        </div>
+    </div>
+
+    <div class="content-body">
+        <h3>Event: {{ event.decscription }}</h3>
+        <div class="form-area has-mb-m">
+            {{ form_start(form, {'method': 'POST'}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="form-input-field">
+                <label class="hidden" for="create_event_payment_amount">Betrag</label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/coins.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.amount, {'attr': {'data-type': "currency", 'class': 'form-style', 'id': 'amount', 'type': 'text', 'name': 'currency-field', 'placeholder':"1.000,00 €", 'value': ""}}) }}
+                </div>
+            </div>
+
+            <div class="form-input-field">
+                <label class="hidden" for="create_event_payment_reason">Grund</label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/reason.svg') }}" alt="Tile image">
+                    </div>
+                    {{ form_widget(form.reason, {'attr': {'class': 'form-style', 'placeholder': 'Grund', 'id': 'reason'}}) }}
+                </div>
+            </div>
+
+            <div class="event-payment-form has-mt-m">
+                <div class="event-payment-form-pool">
+                    {% for group in groups %}
+                        <div class="event-payment-form-tile event-group-color-{{ loop.index }}" groupId="{{ group.id }}" members="{{ user_names(group.users) }}">{{ group.name }}</div>
+                    {% endfor %}
+                </div>
+
+                <h3>Zielgruppe:</h3>
+                <div class="event-payment-form-selection">
+
+                    <div class="event-payment-form-tile event-payment-form-empty-tile non-choosen"></div>
+                </div>
+                <p>Gruppenmitglieder</p>
+                <div class="event-payment-form-group-members"></div>
+            </div>
+
+
+            {{ form_row(form.debtors, {'attr': {'class': 'hidden'}}) }}
+
+
+            {{ form_row(form._token) }}
+            <div class="form-submit-field">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
+            </div>
+
+            <a href="{{ path('payment_overview') }}" class="form-submit-field decline btn plain-link">
+                <div class="next-state-button-text">Abbrechen</div>
+            </a>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+<div class="event-header-description">
+    <div class="event-header-description-text">{{ event.decscription }}</div>
+    <div class="event-header-description-amount">{{totalAmount |round(2, 'floor')}}€</div>
+</div>
+
+
+
+<div class="event-header-container collapsed">
+    <div class="event-header-user-list">Beteiligte</div>
+    {% for dto in dtos %}
+        <div class="event-header-user-entry">
+            <div class="event-header-name">{{ dto.name }}</div>
+            <div class="event-header-amount">{{ dto.amount |round(2, 'floor')}}€</div>
+{#            <div class="event-header-percentage">dto</div>#}
+        </div>
+    {% endfor %}
+</div>
