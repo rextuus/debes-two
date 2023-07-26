@@ -3,14 +3,11 @@ declare(strict_types=1);
 
 namespace App\Service\PaymentOption;
 
+use App\Service\PaymentOption\Form\BankAccountData;
 use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class IbanValidationService
 {
     private const API_BASE_URL = 'https://openiban.com/validate/';

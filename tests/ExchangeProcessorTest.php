@@ -5,18 +5,16 @@ namespace App\Tests;
 use App\Entity\Debt;
 use App\Entity\Loan;
 use App\Entity\Transaction;
-use App\Entity\User;
-use App\Repository\DebtRepository;
 use App\Repository\ExchangeRepository;
-use App\Repository\UserRepository;
-use App\Service\Exchange\ExchangeService;
 use App\Service\Transfer\ExchangeProcessor;
+
+use function Clue\StreamFilter\fun;
 
 /**
  * ExchangeProcessorTest
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
+ *
  */
 class ExchangeProcessorTest extends FixtureTestCase
 {
@@ -32,8 +30,8 @@ class ExchangeProcessorTest extends FixtureTestCase
         $this->loadFixtureFiles(
             [
                 __DIR__ . '/users.yml',
-                __DIR__.'/transactions.yml',
-                __DIR__.'/bank_accounts.yml'
+                __DIR__ . '/transactions.yml',
+                __DIR__ . '/bank_accounts.yml'
             ]
         );
         $this->exchangeProcessor = $this->getService(ExchangeProcessor::class);
@@ -41,7 +39,6 @@ class ExchangeProcessorTest extends FixtureTestCase
 
     protected function tearDown(): void
     {
-
         parent::tearDown();
     }
 
@@ -65,13 +62,15 @@ class ExchangeProcessorTest extends FixtureTestCase
         /** @var Transaction $fittingTransaction2 */
         $fittingTransaction2 = $this->getFixtureEntity(Transaction::class, 3);
 
-        $candidateSets = $this->exchangeProcessor->findExchangeCandidatesForTransactionPart($transactionToFindExchangeFor->getDebts()[0]);
+        $candidateSets = $this->exchangeProcessor->findExchangeCandidatesForTransactionPart(
+            $transactionToFindExchangeFor->getDebts()[0]
+        );
 
         $fittingCandidates = $candidateSets->getFittingCandidatesDtoVersion();
         $this->assertCount(2, $fittingCandidates);
 
         $expectedTransactionIds = [$fittingTransaction->getId(), $fittingTransaction2->getId()];
-        foreach ($fittingCandidates as $candidate){
+        foreach ($fittingCandidates as $candidate) {
             $this->assertContains($candidate->getTransactionId(), $expectedTransactionIds);
         }
     }
@@ -116,9 +115,9 @@ class ExchangeProcessorTest extends FixtureTestCase
         $exchangesAfter = $exchangeRepository->count([]);
 
         // there will be 2 new exchanges created for each of both transactions
-        $this->assertEquals($exchangesBefore+2, $exchangesAfter);
-        $newExchange1 = $exchangeRepository->find($exchangesBefore+1);
-        $newExchange2 = $exchangeRepository->find($exchangesBefore+2);
+        $this->assertEquals($exchangesBefore + 2, $exchangesAfter);
+        $newExchange1 = $exchangeRepository->find($exchangesBefore + 1);
+        $newExchange2 = $exchangeRepository->find($exchangesBefore + 2);
 
         // transaction1 should be cleared by amount of 20 and remain 0
         $this->assertEquals($transaction1, $newExchange2->getTransaction());
@@ -139,8 +138,8 @@ class ExchangeProcessorTest extends FixtureTestCase
         $this->assertEquals(0.0, $loan1->getAmount());
         $this->assertEquals(10.0, $debt2->getAmount());
         $this->assertEquals(10.0, $loan2->getAmount());
-        $this->assertEquals(Transaction::STATE_CLEARED, $debt1->getState());
-        $this->assertEquals(Transaction::STATE_CLEARED, $loan1->getState());
+        $this->assertEquals(Transaction::STATE_CONFIRMED, $debt1->getState());
+        $this->assertEquals(Transaction::STATE_CONFIRMED, $loan1->getState());
         $this->assertEquals(Transaction::STATE_ACCEPTED, $debt2->getState());
         $this->assertEquals(Transaction::STATE_ACCEPTED, $debt2->getState());
     }
@@ -185,9 +184,9 @@ class ExchangeProcessorTest extends FixtureTestCase
         $exchangesAfter = $exchangeRepository->count([]);
 
         // there will be 2 new exchanges created for each of both transactions
-        $this->assertEquals($exchangesBefore+2, $exchangesAfter);
-        $newExchange1 = $exchangeRepository->find($exchangesBefore+1);
-        $newExchange2 = $exchangeRepository->find($exchangesBefore+2);
+        $this->assertEquals($exchangesBefore + 2, $exchangesAfter);
+        $newExchange1 = $exchangeRepository->find($exchangesBefore + 1);
+        $newExchange2 = $exchangeRepository->find($exchangesBefore + 2);
 
         // transaction1 should be cleared by amount of 20 and remain 0
         $this->assertEquals($transaction1, $newExchange2->getTransaction());
@@ -208,8 +207,8 @@ class ExchangeProcessorTest extends FixtureTestCase
         $this->assertEquals(0.0, $loan1->getAmount());
         $this->assertEquals(10.0, $debt2->getAmount());
         $this->assertEquals(10.0, $loan2->getAmount());
-        $this->assertEquals(Transaction::STATE_CLEARED, $debt1->getState());
-        $this->assertEquals(Transaction::STATE_CLEARED, $loan1->getState());
+        $this->assertEquals(Transaction::STATE_CONFIRMED, $debt1->getState());
+        $this->assertEquals(Transaction::STATE_CONFIRMED, $loan1->getState());
         $this->assertEquals(Transaction::STATE_ACCEPTED, $debt2->getState());
         $this->assertEquals(Transaction::STATE_ACCEPTED, $debt2->getState());
     }

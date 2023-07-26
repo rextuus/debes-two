@@ -23,22 +23,28 @@ App\Entity\User:
     lastName: '<lastName()>'
     email: '<email()>'
     password: '<password()>'
+  event3_participant1:
+    username: 'event3_participant1'
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+    email: '<email()>'
+    password: '<password()>'
 
 App\Entity\GroupEventUserCollection:
   event2_all:
     name: 'all'
     initial: true
-    allOthers: false
+    allOther: false
     users: ['@event1_creator', '@event1_participant1', '@event1_participant2', '@event1_participant3']
   event2_all_others:
     name: 'all others'
     initial: false
-    allOthers: true
+    allOther: true
     users: ['@event1_participant1', '@event1_participant2', '@event1_participant3']
   event2_only_participant_2:
     name: 'participant 2'
     initial: false
-    allOthers: true
+    allOther: true
     users: [ '@event1_participant2' ]
 
 App\Entity\GroupEventPayment:
@@ -72,11 +78,11 @@ App\Entity\GroupEventPayment:
 
 App\Entity\GroupEvent:
   event2:
-    decscription: 'Hurricane 2023'
+    description: 'Hurricane 2023'
     created: '<dateTimeBetween("-200 days", "now")>'
     creator: '@event1_creator'
-    participantGroups: ['@event2_all', '@event2_all_others', '@event2_only_participant_2']
-    payments: ['@event2_payment_creator_to_all', '@event2_payment_creator_to_all_other', '@event2_payment_participant3_to_all', '@event2_payment_participant2_to_participant2']
+#    participantGroups: ['@event2_all', '@event2_all_others', '@event2_only_participant_2']
+    groupEventPayments: ['@event2_payment_creator_to_all', '@event2_payment_creator_to_all_other', '@event2_payment_participant3_to_all', '@event2_payment_participant2_to_participant2']
     open: true
 
 

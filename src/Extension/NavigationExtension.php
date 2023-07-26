@@ -9,10 +9,7 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class NavigationExtension extends AbstractExtension
 {
     public function __construct(private Environment $environment, private Security $security)

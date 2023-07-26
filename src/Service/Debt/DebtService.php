@@ -7,15 +7,15 @@ use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
 use App\Entity\User;
 use App\Repository\DebtRepository;
-use App\Service\Transaction\TransactionPartDataInterface;
+use App\Service\Debt\Form\DebtCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionPartDataInterface;
 
 class DebtService
 {
     public function __construct(
-        private DebtFactory    $debtFactory,
+        private DebtFactory $debtFactory,
         private DebtRepository $debtRepository
-    )
-    {
+    ) {
     }
 
     public function storeDebt(DebtCreateData $debtData): Debt

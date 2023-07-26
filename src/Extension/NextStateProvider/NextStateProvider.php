@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace App\Extension\NextStateProvider;
 
-use App\Service\Transaction\TransactionDtos\TransactionDto;
+use App\Service\Transaction\Dto\TransactionDto;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class NextStateProvider
 {
     private $handlers;

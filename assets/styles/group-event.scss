@@ -93,7 +93,7 @@
 
 //header
 .event-header-container {
-    background-color: #331c1c;
+    background-color: #a2a1a1;
     border: 1px solid #ccc;
     margin-bottom: 10px;
     overflow: hidden;
@@ -102,7 +102,11 @@
     border-radius: 4px;
     //max-height: 0;
     //max-height: 1000px; /* Set the desired max-height for the expanded list */
+}
 
+.event-page-header{
+    font-weight: bold;
+    font-size: 1.8em;
 }
 
 .event-header-user-list{
@@ -305,8 +309,100 @@
     border-color: #353b2e !important;
 }
 .event-group-color-3{
-    background-color: rgba(253, 0, 0, 0.3);
+    background-color: #FD00004C;
+    border-color: #4D00004C !important;
+
 }
 .event-group-color-4{
     background-color: #591d7c;
+    border-color: #30004b !important;
 }
+
+.result-user{
+    background-color: #80596f;
+}
+
+.ge-result-user-container{
+    margin-bottom: 25px;
+    background-color: #696969;
+    padding: 5px;
+}
+.ge-result-pair-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+
+    .ge-result-transaction-pair {
+        display: flex;
+        justify-content: space-between;
+
+        &.hidden{
+            display: none;
+        }
+    }
+
+    .ge-result-row-placeholder{
+        margin-bottom: 10px;
+    }
+
+    .ge-result-tile {
+        width: 100px; // Adjust the width as needed
+        height: 40px; // Adjust the height as needed
+        border: 1px solid #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+
+        &.ge-result-tile-invisible {
+            visibility: hidden;
+        }
+
+        &.reverse {
+            height: 25px; // Adjust the height as needed
+
+        }
+    }
+}
+
+
+
+
+
+
+
+
+//.parent-container2 {
+//    display: flex;
+//    flex-wrap: wrap;
+//    width: 100%;
+//}
+//
+//
+//.column {
+//    display: flex;
+//    flex-direction: column; /* Each column will have a vertical layout */
+//    align-items: center; /* Center the tiles horizontally in each column */
+//    justify-content: center; /* Center the tiles vertically in each column */
+//}
+//
+//.user-tile {
+//    padding: 10px;
+//    border: 1px solid #ccc;
+//    margin: 5px;
+//    z-index: +1;
+//    background-color: #80596f;
+//}
+//
+//.free-space {
+//    height: 20px; /* Set the height of the free space column */
+//    min-width: 20px; /* Take the full width of the parent container */
+//    //width: 100%; /* Take the full width of the parent container */
+//}
+//
+//.h-space{
+//    height: 50px; /* Set the height of the free space column */
+//}
+

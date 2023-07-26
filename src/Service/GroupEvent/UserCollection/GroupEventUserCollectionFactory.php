@@ -4,38 +4,29 @@ declare(strict_types=1);
 
 namespace App\Service\GroupEvent\UserCollection;
 
-use App\Entity\GroupEvent;
-use App\Entity\GroupEventPayment;
 use App\Entity\GroupEventUserCollection;
-use App\Service\GroupEvent\GroupEventData;
-use App\Service\GroupEvent\GroupEventInitData;
-use App\Service\GroupEvent\Payment\GroupEventPaymentData;
-use DateTime;
+use App\Service\GroupEvent\UserCollection\Form\UserCollectionData;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
 class GroupEventUserCollectionFactory
 {
-    public function createByData(GroupEventUserCollectionData $groupEventUserCollectionData): GroupEventUserCollection
+    public function createByData(UserCollectionData $data): GroupEventUserCollection
     {
-        $groupEventUserCollection = $this->createNewGroupEventUserCollectionInstance();
-        $this->mapData($groupEventUserCollection, $groupEventUserCollectionData);
+        $userCollection = $this->createNewGroupEventUserCollectionInstance();
+        $this->mapData($userCollection, $data);
 
-        return $groupEventUserCollection;
+        return $userCollection;
     }
 
-    public function mapData(GroupEventUserCollection $groupEventUserCollection, GroupEventUserCollectionData $groupEventUserCollectionData): void
+    public function mapData(GroupEventUserCollection $userCollection, UserCollectionData $data): void
     {
-        foreach ($groupEventUserCollectionData->getUsers() as $user){
-            $groupEventUserCollection->addUser($user);
+        foreach ($data->getUsers() as $user){
+            $userCollection->addUser($user);
         }
-        $groupEventUserCollection->setInitial($groupEventUserCollectionData->isInitial());
-        $groupEventUserCollection->setAllOthers($groupEventUserCollectionData->isAllOthers());
-        $groupEventUserCollection->setName($groupEventUserCollectionData->getName());
-        $groupEventUserCollection->addGroupEvent($groupEventUserCollectionData->getGroupEvent());
-        $groupEventUserCollectionData->getGroupEvent()->getParticipantGroups()->add($groupEventUserCollection);
+        $userCollection->setInitial($data->isInitial());
+        $userCollection->setAllOther($data->isAllOthers());
+        $userCollection->setName($data->getName());
+        $userCollection->setEvent($data->getGroupEvent());
+        $userCollection->getEvent()->getUserGroups()->add($userCollection);
     }
 
     private function createNewGroupEventUserCollectionInstance(): GroupEventUserCollection

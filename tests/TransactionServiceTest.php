@@ -2,12 +2,14 @@
 
 namespace App\Tests;
 
+use App\Entity\Transaction;
 use App\Entity\User;
 use App\Repository\DebtRepository;
 use App\Repository\LoanRepository;
 use App\Repository\TransactionRepository;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
-use App\Service\Transaction\TransactionCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionCreateData;
+use App\Service\Transaction\TransactionProcessor;
 use App\Service\Transaction\TransactionService;
 
 /**
@@ -18,11 +20,8 @@ use App\Service\Transaction\TransactionService;
  */
 class TransactionServiceTest extends FixtureTestCase
 {
-
-    /**
-     * @var TransactionService
-     */
-    private $transactionService;
+    private TransactionService $transactionService;
+    private TransactionProcessor $transactionProcessor;
 
     protected function setUp(): void
     {
@@ -35,6 +34,7 @@ class TransactionServiceTest extends FixtureTestCase
             ]
         );
         $this->transactionService = $this->getService(TransactionService::class);
+        $this->transactionProcessor = $this->getService(TransactionProcessor::class);
     }
 
     protected function tearDown(): void
@@ -87,4 +87,31 @@ class TransactionServiceTest extends FixtureTestCase
         $this->assertEquals($debtsBefore+1, $debtsAfter);
         $this->assertEquals($loansBefore+1, $loansAfter);
     }
+
+    public function testAcceptTransaction(): void
+    {
+        /** @var User $debtor */
+        $debtor = $this->getFixtureEntityByIdent('user1');
+
+        /** @var Transaction $transaction */
+        $transaction = $this->getFixtureEntityByIdent('transactionStateReady');
+
+        $this->assertEquals(Transaction::STATE_READY, $transaction->getState());
+        $this->transactionProcessor->accept($transaction->getDebts()[0]);
+        $this->assertEquals(Transaction::STATE_ACCEPTED, $transaction->getState());
+    }
+
+    public function testProcessTransaction(): void
+    {
+        /** @var User $debtor */
+        $debtor = $this->getFixtureEntityByIdent('user1');
+
+        /** @var Transaction $transaction */
+        $transaction = $this->getFixtureEntityByIdent('transactionStateReady');
+
+        $this->assertEquals(Transaction::STATE_READY, $transaction->getState());
+        $this->transactionProcessor->process($transaction->getDebts()[0]);
+        $this->assertEquals(Transaction::STATE_CLEARED, $transaction->getState());
+    }
+
 }

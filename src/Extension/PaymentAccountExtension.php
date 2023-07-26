@@ -5,16 +5,12 @@ namespace App\Extension;
 
 use App\Entity\BankAccount;
 use App\Entity\PaypalAccount;
-use App\Service\PaymentOption\PaymentOptionDTO;
 use App\Service\Util\TimeConverter;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class PaymentAccountExtension extends AbstractExtension
 {
     public function __construct(private Environment $environment, private TimeConverter $timeConverter)

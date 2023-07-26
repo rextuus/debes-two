@@ -4,7 +4,7 @@ namespace App\Service\Transfer;
 
 use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
-use App\Service\Transaction\TransactionPartDataInterface;
+use App\Service\Transaction\Transaction\Form\TransactionPartDataInterface;
 use App\Service\Transaction\TransactionUpdateData;
 
 class TransactionUpdateDataCollection

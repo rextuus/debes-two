@@ -2,7 +2,6 @@
 
 namespace App\Service\GroupEvent\UserCollection;
 
-use App\Entity\GroupEvent;
 use App\Entity\GroupEventUserCollection;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -93,8 +92,6 @@ class GroupEventUserCollectionRepository extends ServiceEntityRepository
         ;
 
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
-dump($userIds);
-dump($result);
         return $result;
     }
 }

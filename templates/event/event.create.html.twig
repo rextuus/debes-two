@@ -20,7 +20,7 @@
             </div>
 
             <div class="form-input-field">
-                <label class="hidden" for="paypal_account_update_description"></label>
+                <label class="hidden" for="init_group_event_description"></label>
                 <div class="image-form-row">
                     <div class="image-form-row-image">
                         <img src="{{ asset('assets/img/description.svg') }}" alt="Tile image">
@@ -28,15 +28,21 @@
                     {{ form_widget(form.description, {'attr': {'class': 'form-style', 'placeholder': 'Beschreibung', 'id': 'description'}}) }}
                 </div>
             </div>
-{#            <div class="form-input-field">#}
-{#                <label class="hidden" for="paypal_account_update_description"></label>#}
-{#                <div class="image-form-row">#}
-{#                    <div class="image-form-row-image">#}
-{#                        <img src="{{ asset('assets/img/description.svg') }}" alt="Tile image">#}
-{#                    </div>#}
-{#                    {{ form_widget(form.users, {'attr': {'class': 'form-style', 'placeholder': 'Beschreibung', 'id': 'description'}}) }}#}
-{#                </div>#}
-{#            </div>#}
+
+            <div class="form-input-field">
+                <label class="hidden" for="init_group_event_open"></label>
+                <div class="image-form-row">
+                    <div class="image-form-row-image">
+                        <img src="{{ asset('assets/img/icons/transfer/activated.svg') }}" alt="Tile image">
+                    </div>
+                    <div class="toggle-switch-container">
+                        <label class="switch">
+                            {{ form_widget(form.open, {'attr': {'class': 'toggle-box', 'placeholder': 'Offen', 'id': 'open'}}) }}
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
 
             <div class="user-selection">
                 <div class="options-panel">

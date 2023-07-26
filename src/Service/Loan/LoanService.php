@@ -8,11 +8,8 @@ use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
 use App\Entity\User;
 use App\Repository\LoanRepository;
-use App\Service\Transaction\TransactionPartDataInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use App\Service\Loan\Form\LoanCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionPartDataInterface;
 
 class LoanService
 {

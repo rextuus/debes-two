@@ -13,7 +13,14 @@
     </div>
 
     <div class="content-body">
-
+        <div class="event-page-header">
+            {{ event.description }}
+            {% if event.open %}
+                (offen)
+            {% else %}
+                (geschlossen)
+            {% endif %}
+        </div>
 
         <div class="next-state-button payment-button-container has-mb-m">
             <a href="{{ path('event_payment_add', {'groupEvent' : event.id}) }}" class="accept-link payment-button">
@@ -21,6 +28,20 @@
                 <div class="next-state-button-text">Zahlung adden</div>
             </a>
         </div>
+
+        <div class="next-state-button payment-button-container has-mb-m">
+
+
+        {% if event.open %}
+            <a href="{{ path('event_calculate', {'groupEvent' : event.id}) }}" class="accept-link payment-button">
+                <img src="{{ asset('assets/img/icons/event/add.svg') }}" alt="Button Image">
+                <div class="next-state-button-text">Finale Abbrechnung</div>
+            </a>
+        {% else %}
+            (geschlossen)
+        {% endif %}
+        </div>
+
 
         {{ render_participant_list(event) | raw }}
 

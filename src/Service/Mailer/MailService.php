@@ -49,6 +49,7 @@ class MailService
 
         $template = $this->mailTemplateProvider->getTemplateByIdent($mailVariant);
         $template->setTransaction($transaction);
+
         $receiver = $template->getReceiver();
         $sender = $template->getSender();
 

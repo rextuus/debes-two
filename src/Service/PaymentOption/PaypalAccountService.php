@@ -5,6 +5,8 @@ namespace App\Service\PaymentOption;
 use App\Entity\PaypalAccount;
 use App\Entity\User;
 use App\Repository\PaypalAccountRepository;
+use App\Service\PaymentOption\Form\PaypalAccountData;
+use App\Service\PaymentOption\Form\PaypalAccountUpdateData;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;

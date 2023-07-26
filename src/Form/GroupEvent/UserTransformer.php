@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace App\Form\GroupEvent;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\GroupEvent\GroupEventInitData;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class UserTransformer implements DataTransformerInterface
 {
     private $userRepository;

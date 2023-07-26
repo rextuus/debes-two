@@ -13,7 +13,7 @@
     </div>
 
     <div class="content-body">
-        <h3>Event: {{ event.decscription }}</h3>
+        <h3>Event: {{ event.description }}</h3>
         <div class="form-area has-mb-m">
             {{ form_start(form, {'method': 'POST'}) }}
             <div class="my-custom-class-for-errors">
@@ -40,21 +40,9 @@
                 </div>
             </div>
 
-            <div class="event-payment-form has-mt-m">
-                <div class="event-payment-form-pool">
-                    {% for group in groups %}
-                        <div class="event-payment-form-tile event-group-color-{{ loop.index }}" groupId="{{ group.id }}" members="{{ user_names(group.users) }}">{{ group.name }}</div>
-                    {% endfor %}
-                </div>
+            {{ render_group_fields(event) | raw }}
 
-                <h3>Zielgruppe:</h3>
-                <div class="event-payment-form-selection">
 
-                    <div class="event-payment-form-tile event-payment-form-empty-tile non-choosen"></div>
-                </div>
-                <p>Gruppenmitglieder</p>
-                <div class="event-payment-form-group-members"></div>
-            </div>
 
 
             {{ form_row(form.debtors, {'attr': {'class': 'hidden'}}) }}
@@ -65,24 +53,10 @@
                 {{ form_widget(form.submit, {'attr': {'class': 'btn'}}) }}
             </div>
 
-            <a href="{{ path('payment_overview') }}" class="form-submit-field decline btn plain-link">
+            <a href="{{ path('event_show', {groupEvent: event.id}) }}" class="form-submit-field decline btn plain-link">
                 <div class="next-state-button-text">Abbrechen</div>
             </a>
-
-
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     </div>

@@ -2,7 +2,7 @@
 
 namespace App\Extension\NextStateProvider;
 
-use App\Service\Transaction\TransactionDtos\TransactionDto;
+use App\Service\Transaction\Dto\TransactionDto;
 
 interface NextStateInterface
 {

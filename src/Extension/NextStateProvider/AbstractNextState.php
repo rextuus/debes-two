@@ -5,10 +5,7 @@ namespace App\Extension\NextStateProvider;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class AbstractNextState
 {
     public const DEBT_POSTFIX = '_debt';

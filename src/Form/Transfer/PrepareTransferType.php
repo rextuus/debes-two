@@ -3,7 +3,6 @@
 namespace App\Form\Transfer;
 
 use App\Entity\BankAccount;
-use App\Entity\Debt;
 use App\Entity\PaymentOption;
 use App\Service\Transfer\PrepareTransferData;
 use Symfony\Component\Form\AbstractType;

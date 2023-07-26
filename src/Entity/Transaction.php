@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'transactions')]
@@ -65,7 +66,7 @@ class Transaction
     #[ORM\OneToMany(targetEntity: TransactionStateChangeEvent::class, mappedBy: 'transaction', cascade: ['persist'])]
     private $transactionStateChangeEvents;
 
-    #[ORM\OneToMany(targetEntity: PaymentAction::class, mappedBy: 'transaction')]
+    #[ORM\OneToMany(targetEntity: PaymentAction::class, mappedBy: 'transaction', cascade: ['persist'])]
     private $paymentActions;
 
     public function __construct()
@@ -495,6 +496,6 @@ class Transaction
     }
 
     public function formatted(): string{
-        return sprintf('%s => %s: %.2f€', $this->getLoaner()->getId(), $this->getDebtor()->getId(), $this->getAmount());
+        return sprintf('[L] %s => [D] %s: %.2f€', $this->getLoaner()->getId(), $this->getDebtor()->getId(), $this->getAmount());
     }
 }

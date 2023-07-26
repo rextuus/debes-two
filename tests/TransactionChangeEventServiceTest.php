@@ -2,14 +2,8 @@
 
 namespace App\Tests;
 
-use App\Entity\Debt;
 use App\Entity\User;
-use App\Repository\DebtRepository;
-use App\Repository\LoanRepository;
-use App\Repository\TransactionRepository;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
-use App\Service\Transaction\TransactionCreateData;
-use App\Service\Transaction\TransactionService;
 
 /**
  * TransactionServiceTest
@@ -51,6 +45,6 @@ class TransactionChangeEventServiceTest extends FixtureTestCase
         /** @var User $user */
         $user = $this->getFixtureEntityByIdent('exchangeUser1');
         $events = $this->transactionChangeEventService->getAllByUser($user);
-        dump($events);
+        $this->assertCount(2, $events);
     }
 }

@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Service\GroupEvent\Result;
 
 use App\Entity\GroupEventResult;
+use App\Service\GroupEvent\Result\Form\GroupEventResultData;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
 class GroupEventResultFactory
 {
     public function createByData(GroupEventResultData $groupEventResultData): GroupEventResult

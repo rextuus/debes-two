@@ -6,11 +6,8 @@ namespace App\Service\GroupEvent\UserCollection;
 
 use App\Entity\GroupEvent;
 use App\Entity\GroupEventUserCollection;
+use App\Service\GroupEvent\UserCollection\Form\UserCollectionData;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
 class GroupEventUserCollectionService
 {
     public function __construct(
@@ -20,7 +17,7 @@ class GroupEventUserCollectionService
     }
 
     public function storeGroupEventUserCollection(
-        GroupEventUserCollectionData $groupEventUserCollectionData,
+        UserCollectionData $groupEventUserCollectionData,
         bool $persist = true
     ): GroupEventUserCollection {
         $groupEventUserCollection = $this->groupEventUserCollectionFactory->createByData($groupEventUserCollectionData);
@@ -32,7 +29,7 @@ class GroupEventUserCollectionService
         return $groupEventUserCollection;
     }
 
-    public function update(GroupEventUserCollection $groupEventPayment, GroupEventUserCollectionData $data): void
+    public function update(GroupEventUserCollection $groupEventPayment, UserCollectionData $data): void
     {
         $this->groupEventUserCollectionFactory->mapData($groupEventPayment, $data);
 

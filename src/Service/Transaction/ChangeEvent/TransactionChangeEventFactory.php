@@ -5,6 +5,7 @@ namespace App\Service\Transaction\ChangeEvent;
 use App\Entity\Exchange;
 use App\Entity\PaymentAction;
 use App\Entity\TransactionStateChangeEvent;
+use App\Service\Transaction\ChangeEvent\Form\TransactionChangeEventData;
 use DateTime;
 
 class TransactionChangeEventFactory

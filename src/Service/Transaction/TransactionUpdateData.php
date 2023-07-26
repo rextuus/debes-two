@@ -3,6 +3,7 @@
 namespace App\Service\Transaction;
 
 use App\Entity\Transaction;
+use App\Service\Transaction\Transaction\Form\TransactionData;
 use DateTime;
 use DateTimeInterface;
 
@@ -39,9 +40,10 @@ class TransactionUpdateData extends TransactionData
         return $this->state;
     }
 
-    public function setState(?string $state): void
+    public function setState(?string $state): TransactionData
     {
         $this->state = $state;
+        return $this;
     }
 
     public function getChangeType(): ?string
@@ -59,8 +61,8 @@ class TransactionUpdateData extends TransactionData
         $this->setReason($transaction->getReason());
         $this->setState($transaction->getState());
         $this->setAmount($transaction->getAmount());
-        $this->setDebts($transaction->getDebts());
-        $this->setLoans($transaction->getLoans());
+        $this->setDebts($transaction->getDebts()->toArray());
+        $this->setLoans($transaction->getLoans()->toArray());
         $this->setCreated($transaction->getCreated());
         $this->setEdited($transaction->getEdited());
         return $this;

@@ -2,8 +2,11 @@
 
 namespace App\Service\Transaction;
 
-use App\Service\Debt\DebtCreateData;
+use App\Service\Debt\Form\DebtCreateData;
 
+/**
+ * @deprecated Was uses for multi transactions in a strange and bad way!? Delete
+ */
 trait DebtorsTrait
 {
     /**

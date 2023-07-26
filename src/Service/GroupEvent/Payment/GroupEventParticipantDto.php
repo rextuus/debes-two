@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\GroupEvent\Payment;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
 class GroupEventParticipantDto
 {
     private string $name;

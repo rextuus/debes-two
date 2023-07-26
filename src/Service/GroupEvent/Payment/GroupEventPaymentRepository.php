@@ -2,7 +2,6 @@
 
 namespace App\Service\GroupEvent\Payment;
 
-use App\Entity\GroupEvent;
 use App\Entity\GroupEventPayment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\Entity\GroupEvent;
 use App\Entity\User;
 use App\Form\GroupEvent\CreateEventPaymentType;
-use App\Form\GroupEvent\InitGroupEventType;
 use App\Repository\UserRepository;
-use App\Service\GroupEvent\GroupEventInitData;
+use App\Service\GroupEvent\Event\Form\GroupEventInitData;
+use App\Service\GroupEvent\Event\Form\InitGroupEventType;
 use App\Service\GroupEvent\GroupEventManager;
-use App\Service\GroupEvent\Payment\GroupEventPaymentData;
+use App\Service\GroupEvent\Payment\Form\GroupEventPaymentData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,11 +22,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class GroupEventController extends AbstractController
 {
 
-    public function __construct(private GroupEventManager $groupEventManager)
+    public function __construct(private readonly GroupEventManager $groupEventManager)
     {
     }
 
-    #[Route('/create', name: 'event_init')]
+    #[Route(path: '/create', name: 'event_init')]
     public function createEvent(Request $request, UserRepository $repository): Response
     {
         /** @var User $requester */
@@ -37,6 +38,7 @@ class GroupEventController extends AbstractController
         $groupEventInitData->setAllUsers($allUsers);
         $groupEventInitData->setSelectedUsers([]);
         $groupEventInitData->setCreator($requester);
+        $groupEventInitData->setOpen(true);
         $form = $this->createForm(
             InitGroupEventType::class,
             $groupEventInitData,
@@ -61,25 +63,31 @@ class GroupEventController extends AbstractController
         ]);
     }
 
-    #[Route('/{groupEvent}/show', name: 'event_show')]
-    public function showEvent(GroupEvent $groupEvent, Request $request, UserRepository $repository): Response
+    #[Route(path: '/{groupEvent}/show', name: 'event_show')]
+    public function showEvent(GroupEvent $groupEvent, Request $request): Response
     {
-        $groupEvent->getUsers();
+        $forbidden = $this->checkIfUserIsParticipantOfEvent($groupEvent, $request);
+        if (!is_null($forbidden)){
+            return $forbidden;
+        }
 
         return $this->render('event/event.show.html.twig', [
             'event' => $groupEvent,
         ]);
     }
 
-    #[Route('/{groupEvent}/add', name: 'event_payment_add')]
-    public function editEvent(GroupEvent $groupEvent, Request $request, UserRepository $repository): Response
+    #[Route(path: '/{groupEvent}/add', name: 'event_payment_add')]
+    public function editEvent(GroupEvent $groupEvent, Request $request): Response
     {
+        $forbidden = $this->checkIfUserIsParticipantOfEvent($groupEvent, $request);
+        if (!is_null($forbidden)){
+            return $forbidden;
+        }
+
         /** @var User $requester */
         $requester = $this->getUser();
 
-        // TODO need method to check if user is participant of the event
-
-        $groups = $groupEvent->getParticipantGroups()->toArray();
+        $groups = $groupEvent->getUserGroups()->toArray();
 
         $paymentData = (new GroupEventPaymentData());
         $paymentData->setGroupEvent($groupEvent);
@@ -101,10 +109,7 @@ class GroupEventController extends AbstractController
 
             $this->groupEventManager->addPaymentToEvent($data);
 
-
-//            $event = $this->groupEventManager->initEvent($data);
-//            $this->groupEventManager->addInitialUserCollectionsToGroupEvent($data, $event);
-
+            $this->addFlash('info', 'Zahlung hinzugefügt');
             return $this->redirect($this->generateUrl('event_show', ['groupEvent' => $groupEvent->getId()]));
         }
 
@@ -113,5 +118,73 @@ class GroupEventController extends AbstractController
             'groups' =>  $groups,
             'event' => $groupEvent
         ]);
+    }
+
+    #[Route(path: '/{groupEvent}/calculate', name: 'event_calculate')]
+    public function calculateEvent(GroupEvent $groupEvent, Request $request): Response
+    {
+        $forbidden = $this->checkIfUserIsParticipantOfEvent($groupEvent, $request);
+        if (!is_null($forbidden)){
+            return $forbidden;
+        }
+
+        /** @var User $requester */
+        $requester = $this->getUser();
+
+        $restricted = false;
+        if ($groupEvent->getCreator() !== $requester){
+            $this->addFlash('warning', 'Nur der Ersteller eines Events darf die Auswertung triggern');
+            $restricted = true;
+        }
+
+        if (!is_null($groupEvent->getEvaluated())){
+            $this->addFlash('warning', 'Das Event ist bereits ausgewertet');
+            $restricted = true;
+        }
+
+
+        if (!$restricted){
+            $this->groupEventManager->calculateGroupEventFinalBill($groupEvent);
+        }
+
+        return $this->redirect(
+            $this->generateUrl('event_show', [
+                'groupEvent' => $groupEvent->getId(),
+            ])
+        );
+    }
+
+    #[Route(path: '/{groupEvent}/calculation', name: 'event_show_calculation')]
+    public function showCalculation(GroupEvent $groupEvent, Request $request): Response
+    {
+        $forbidden = $this->checkIfUserIsParticipantOfEvent($groupEvent, $request);
+        if (!is_null($forbidden)){
+            return $forbidden;
+        }
+
+        $results = $this->groupEventManager->getResultsForEvent($groupEvent);
+
+        foreach ($results as $result){
+
+        }
+
+
+        return $this->render('event/event.calculation.show.html.twig', [
+            'event' => $groupEvent
+        ]);
+    }
+
+    private function checkIfUserIsParticipantOfEvent(GroupEvent $event, Request $request): ?RedirectResponse
+    {
+        if (!in_array($this->getUser(), $event->getUsers())) {
+            $referer = $request->headers->get('referer');
+            $this->addFlash('warning', 'Du bist kein Teilnehmer dieses Events');
+            if (is_null($referer)){
+                return $this->redirect($this->generateUrl('app_home', []));
+            }
+            return new RedirectResponse($referer);
+        }
+
+        return null;
     }
 }

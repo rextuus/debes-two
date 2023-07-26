@@ -63,6 +63,8 @@ class TransferServiceTest extends FixtureTestCase
         /** @var BankAccount $receiver */
         $receiver = $this->getFixtureEntityByIdent('bank_account_user_2');
 
+        $amountBefore = $transaction->getAmount();
+
         // check payment actions before
         $paymentActionsBefore = $this->paymentActionService->getPaymentActionsByProvider($provider->getOwner());
         $this->assertCount(0, $paymentActionsBefore);
@@ -87,6 +89,12 @@ class TransferServiceTest extends FixtureTestCase
         $this->assertEquals(PaymentAction::VARIANT_BANK, $paymentActionsAfter[0]->getVariant());
         $this->assertEquals(Transaction::STATE_CLEARED, $transaction->getDebts()[0]->getState());
         $this->assertEquals(Transaction::STATE_CLEARED, $transaction->getState());
+
+        // check if transaction is cleared
+        $this->assertEquals(Transaction::STATE_CLEARED, $transaction->getState());
+        $this->assertEquals(Transaction::STATE_CLEARED, $debt->getState());
+        $this->assertEquals($amountBefore, $transaction->getAmount());
+        $this->assertEquals($amountBefore, $debt->getAmount());
     }
 
     public function testCreatePaymentActionByPaypalAccount(): void

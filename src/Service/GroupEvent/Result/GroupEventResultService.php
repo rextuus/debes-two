@@ -7,11 +7,8 @@ namespace App\Service\GroupEvent\Result;
 use App\Entity\GroupEvent;
 use App\Entity\GroupEventResult;
 use App\Entity\User;
+use App\Service\GroupEvent\Result\Form\GroupEventResultData;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
 class GroupEventResultService
 {
     public function __construct(
@@ -41,7 +38,6 @@ class GroupEventResultService
     }
 
     /**
-     * @param GroupEvent $event
      * @return GroupEventResult[]
      */
     public function findAllForEvent(GroupEvent $event): array

@@ -5,21 +5,9 @@ namespace App\Service\Debt;
 use App\Entity\Debt;
 use App\Service\Transaction\LoanAndDebtDto;
 
-/**
- * DebtDto
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
- */
 class DebtDto extends LoanAndDebtDto
 {
-    /**
-     * create
-     *
-     * @param Debt $debt
-     *
-     * @return DebtDto
-     */
+
     public static function create(Debt $debt): DebtDto
     {
         $dto = new self();

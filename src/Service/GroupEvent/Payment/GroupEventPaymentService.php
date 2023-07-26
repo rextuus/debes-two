@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\GroupEvent\Payment;
 
-use App\Entity\GroupEvent;
 use App\Entity\GroupEventPayment;
+use App\Service\GroupEvent\Payment\Form\GroupEventPaymentData;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
 class GroupEventPaymentService
 {
     public function __construct(

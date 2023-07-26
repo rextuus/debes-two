@@ -7,10 +7,7 @@ use App\Entity\TransactionPartInterface;
 use DateTimeInterface;
 
 /**
- * LoanAndDebtDto
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
+ * @deprecated Was uses for multi transactions in a strange and bad way!? Delete
  */
 abstract class LoanAndDebtDto
 {

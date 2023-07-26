@@ -10,10 +10,7 @@ use App\Service\Mailer\MailService;
 use App\Service\Mailer\MailTemplateInterface;
 use App\Service\Transaction\TransactionService;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class DebtCreatedReminderTemplate extends AbstractMailTemplate implements MailTemplateInterface
 {
 

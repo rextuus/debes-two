@@ -5,6 +5,8 @@ namespace App\Service\PaymentOption;
 use App\Entity\BankAccount;
 use App\Entity\User;
 use App\Repository\BankAccountRepository;
+use App\Service\PaymentOption\Form\BankAccountData;
+use App\Service\PaymentOption\Form\BankAccountUpdateData;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;

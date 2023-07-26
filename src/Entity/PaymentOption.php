@@ -79,4 +79,9 @@ abstract class PaymentOption
 
         return $this;
     }
+
+    public function isIsPrioritised(): ?bool
+    {
+        return $this->isPrioritised;
+    }
 }

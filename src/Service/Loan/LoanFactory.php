@@ -5,7 +5,9 @@ namespace App\Service\Loan;
 use App\Entity\Loan;
 use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
-use App\Service\Transaction\TransactionPartDataInterface;
+use App\Service\Loan\Form\ImportLoanCreateData;
+use App\Service\Loan\Form\LoanCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionPartDataInterface;
 use DateTime;
 use Exception;
 

@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
-use App\Service\Debt\DebtCreateData;
+use App\Service\Debt\Form\DebtCreateData;
 use App\Service\User\UserService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

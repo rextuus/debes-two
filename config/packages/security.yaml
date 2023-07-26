@@ -28,7 +28,7 @@ security:
                 # "app_login" is the name of the route created previously
                 login_path: app_login
                 check_path: app_login
-                success_handler: App\Service\System\CustomAuthenticationSuccessHandler
+                success_handler: App\Service\System\Authentication\CustomAuthenticationSuccessHandler
 
             logout:
                 path: app_logout

@@ -5,6 +5,9 @@ namespace App\Service\PaymentOption;
 use App\Entity\BankAccount;
 use App\Entity\PaymentOption;
 use App\Entity\PaypalAccount;
+use App\Service\PaymentOption\Form\BankAccountData;
+use App\Service\PaymentOption\Form\PaymentOptionData;
+use App\Service\PaymentOption\Form\PaypalAccountData;
 use Exception;
 
 class PaymentOptionFactory

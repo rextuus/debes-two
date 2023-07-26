@@ -5,11 +5,10 @@ namespace App\Service\Exchange;
 use App\Entity\Exchange;
 use App\Entity\Transaction;
 use App\Entity\TransactionPartInterface;
-use App\EntityListener\Event\TransactionExchangeEvent;
 use App\Repository\ExchangeRepository;
+use App\Service\Exchange\Form\ExchangeCreateData;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * ExchangeService

@@ -3,6 +3,8 @@
 namespace App\Service\Exchange;
 
 use App\Entity\Exchange;
+use App\Service\Exchange\Form\ExchangeCreateData;
+use App\Service\Exchange\Form\ExchangeData;
 use DateTime;
 
 /**

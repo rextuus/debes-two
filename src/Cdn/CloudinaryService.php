@@ -13,10 +13,7 @@ use Cloudinary\Transformation\Effect;
 use Cloudinary\Transformation\Resize;
 use Cloudinary\Transformation\RoundCorners;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class CloudinaryService
 {
 

@@ -3,20 +3,13 @@
 namespace App\Command;
 
 use App\Cdn\CloudinaryService;
-use App\Entity\Transaction;
 use App\Entity\User;
-use App\Service\Legacy\LegacyImportService;
 use App\Service\Mailer\MailService;
-use App\Service\Transaction\TransactionCreateData;
 use App\Service\Transaction\TransactionService;
-use App\Service\User\UserData;
-use App\Service\User\UserService;
-use GuzzleHttp\Client;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'debes:simon:dillan')]
 class SimonDillanCommand extends Command

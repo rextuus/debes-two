@@ -11,7 +11,7 @@ use DateTimeInterface;
  * TransactionDto
  *
  * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
+ * @deprecated Use new TransactionDto variant. Can be deleted propably already
  */
 class TransactionDto
 {

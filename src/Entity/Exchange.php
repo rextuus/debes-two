@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ExchangeRepository;
 use App\Service\Transaction\TransactionStateChangeTargetInterface;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExchangeRepository::class)]

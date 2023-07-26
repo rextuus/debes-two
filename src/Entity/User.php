@@ -51,24 +51,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: PaymentOption::class, cascade: ['persist'])]
     private Collection $paymentOptions;
 
-    #[ORM\ManyToMany(targetEntity: GroupEventUserCollection::class, mappedBy: 'users')]
-    private Collection $groupEventUserCollections;
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: GroupEvent::class)]
+    private Collection $groupEvents;
 
     #[ORM\OneToMany(mappedBy: 'loaner', targetEntity: GroupEventPayment::class)]
     private Collection $groupEventPayments;
 
-    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: GroupEvent::class)]
-    private Collection $groupEvents;
+    #[ORM\ManyToMany(targetEntity: GroupEventUserCollection::class, mappedBy: 'users')]
+    private Collection $groupEventUserCollections;
 
-    #[ORM\OneToMany(mappedBy: 'loaner', targetEntity: GroupEventResult::class)]
+    #[ORM\OneToMany(mappedBy: 'debtor', targetEntity: GroupEventResult::class)]
     private Collection $groupEventResults;
 
     public function __construct()
     {
         $this->paymentOptions = new ArrayCollection();
-        $this->groupEventUserCollections = new ArrayCollection();
         $this->groupEventPayments = new ArrayCollection();
         $this->groupEvents = new ArrayCollection();
+        $this->PaymentOptions = new ArrayCollection();
+        $this->debts = new ArrayCollection();
+        $this->loans = new ArrayCollection();
+        $this->groupEventUserCollections = new ArrayCollection();
         $this->groupEventResults = new ArrayCollection();
     }
 

@@ -10,17 +10,20 @@ use App\Entity\User;
 use App\Exception\TransactionPartIsNotInCorrectStateException;
 use App\Exception\UserNotCorrectParticipantOfTransaction;
 use App\Repository\TransactionRepository;
-use App\Service\Debt\DebtCreateData;
 use App\Service\Debt\DebtService;
-use App\Service\Debt\DebtUpdateData;
-use App\Service\Debt\ImportDebtCreateData;
-use App\Service\Loan\ImportLoanCreateData;
-use App\Service\Loan\LoanCreateData;
+use App\Service\Debt\Form\DebtCreateData;
+use App\Service\Debt\Form\DebtUpdateData;
+use App\Service\Debt\Form\ImportDebtCreateData;
+use App\Service\Loan\Form\ImportLoanCreateData;
+use App\Service\Loan\Form\LoanCreateData;
+use App\Service\Loan\Form\LoanUpdateData;
 use App\Service\Loan\LoanDto;
 use App\Service\Loan\LoanService;
-use App\Service\Loan\LoanUpdateData;
-use App\Service\Transaction\ChangeEvent\TransactionChangeEventData;
+use App\Service\Transaction\ChangeEvent\Form\TransactionChangeEventData;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
+use App\Service\Transaction\Transaction\Form\TransactionCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionCreateLegacyImportData;
+use App\Service\Transaction\Transaction\Form\TransactionData;
 use DateTime;
 use Doctrine\DBAL\Exception;
 
@@ -154,7 +157,7 @@ class TransactionService
     }
 
     /**
-     * @return TransactionDtos\TransactionDto[]
+     * @return Dto\TransactionDto[]
      */
     public function getAllTransactionBelongingUser(User $owner): array
     {
@@ -195,7 +198,7 @@ class TransactionService
     }
 
     /**
-     * @return TransactionDtos\TransactionDto[]
+     * @return Dto\TransactionDto[]
      */
     public function getAllDebtTransactionsForUserAndState(User $owner, string $state): array
     {
@@ -215,7 +218,7 @@ class TransactionService
     public function createDtoFromTransaction(
         Transaction $transaction,
         bool        $isDebtVariant
-    ): TransactionDtos\TransactionDto
+    ): Dto\TransactionDto
     {
         return $this->dtoProvider->createTransactionDto($transaction, $isDebtVariant);
     }
@@ -242,7 +245,7 @@ class TransactionService
     }
 
     /**
-     * @return TransactionDtos\TransactionDto[]
+     * @return Dto\TransactionDto[]
      */
     public function getAllLoanTransactionsForUserAndState2(User $owner, string $state): array
     {

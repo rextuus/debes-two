@@ -25,7 +25,7 @@ class PaymentAction implements TransactionStateChangeTargetInterface
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Transaction::class, inversedBy: 'paymentActions')]
+    #[ORM\ManyToOne(targetEntity: Transaction::class, inversedBy: 'paymentActions', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private $transaction;
 

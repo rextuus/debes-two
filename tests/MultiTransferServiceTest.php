@@ -2,7 +2,6 @@
 
 namespace App\Tests;
 
-use App\Entity\BankAccount;
 use App\Entity\Debt;
 use App\Entity\Loan;
 use App\Entity\PaymentAction;

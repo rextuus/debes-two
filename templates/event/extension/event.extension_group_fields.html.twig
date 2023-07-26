@@ -1,0 +1,15 @@
+<div class="event-payment-form has-mt-m">
+    <div class="event-payment-form-pool">
+        {% for group in dtos %}
+            <div class="event-payment-form-tile {{ group.colorClass }}" groupId="{{ group.id }}" members="{{group.members }}">{{ group.name }}</div>
+        {% endfor %}
+    </div>
+
+    <h3>Zielgruppe:</h3>
+    <div class="event-payment-form-selection">
+
+        <div class="event-payment-form-tile event-payment-form-empty-tile non-choosen"></div>
+    </div>
+    <p>Gruppenmitglieder</p>
+    <div class="event-payment-form-group-members"></div>
+</div>

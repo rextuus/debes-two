@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Extension;
 
 use App\Entity\Transaction;
-use App\Service\Transaction\TransactionDtos\TransactionDto;
+use App\Service\Transaction\Dto\TransactionDto;
 use App\Service\Transaction\TransactionService;
 use App\Service\Transfer\TransferService;
 use App\Service\Util\TimeConverter;
@@ -14,10 +14,7 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class TransferExtension extends AbstractExtension
 {
     public function __construct(

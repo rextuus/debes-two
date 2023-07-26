@@ -6,26 +6,21 @@ namespace App\Service\GroupEvent\Calculation;
 
 use App\Entity\GroupEvent;
 use App\Entity\Transaction;
-use App\Service\GroupEvent\Result\GroupEventResultData;
+use App\Service\GroupEvent\Result\Form\GroupEventResultData;
 use App\Service\GroupEvent\Result\GroupEventResultService;
-use App\Service\Transaction\TransactionCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionCreateData;
 use App\Service\Transaction\TransactionProcessor;
 use App\Service\Transaction\TransactionService;
 use App\Service\Transfer\ExchangeProcessor;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
 class GroupEventCalculator
 {
     public function __construct(
-        private GroupEventResultService $groupEventResultService,
-        private TransactionService $transactionService,
-        private TransactionProcessor $transactionProcessor,
-        private ExchangeProcessor $exchangeProcessor
-    )
-    {
+        private readonly GroupEventResultService $groupEventResultService,
+        private readonly TransactionService $transactionService,
+        private readonly TransactionProcessor $transactionProcessor,
+        private readonly ExchangeProcessor $exchangeProcessor,
+    ) {
     }
 
     public function calculateGroupEventFinalBill(GroupEvent $event): void
@@ -42,7 +37,7 @@ class GroupEventCalculator
             $cashBoxes[$user->getId()] = $cashBox;
         }
 
-        foreach ($event->getPayments() as $payment) {
+        foreach ($event->getGroupEventPayments() as $payment) {
             $loaner = $payment->getLoaner();
             foreach ($payment->getDebtors()->getUsers() as $debtor) {
                 $paymentAction = new Payment();
@@ -74,25 +69,24 @@ class GroupEventCalculator
 
                 $result = $this->groupEventResultService->findByEventDebtorLoanerCombination(
                     $event,
-                    $user,
-                    $cashBox->getOwner()
+                    $cashBox->getOwner(),
+                    $user
                 );
 
                 if ($totalAmount > 0.0) {
                     if ($result) {
-                        dump('already');
                         $resultData = (new GroupEventResultData())->initFrom($result);
-                        $resultData->setReason($reason);
+                        $resultData->setReason(implode(',', $reason));
                         $resultData->setAmount($totalAmount);
 
                         $this->groupEventResultService->update($result, $resultData);
                     } else {
                         $resultData = new GroupEventResultData();
                         $resultData->setEvent($event);
-                        $resultData->setReason($reason);
+                        $resultData->setReason(implode(',', $reason));
                         $resultData->setAmount($totalAmount);
-                        $resultData->setDebtor($user);
-                        $resultData->setLoaner($cashBox->getOwner());
+                        $resultData->setDebtor($cashBox->getOwner());
+                        $resultData->setLoaner($user);
 
                         $this->groupEventResultService->storeGroupEventResult($resultData);
                     }
@@ -101,11 +95,12 @@ class GroupEventCalculator
         }
     }
 
-    public function triggerTransactionCreation(GroupEvent $groupEvent): void
+    public function triggerTransactionCreation(GroupEvent $groupEvent, bool $createExchanges = true): void
     {
         $results = $this->groupEventResultService->findAllForEvent($groupEvent);
         $exchangeMap = [];
         foreach ($results as $result) {
+//            dump($result->getDebtor()->getId().'-'.$result->getLoaner()->getId().': '.$result->getAmount());
             $transactionData = new TransactionCreateData();
             $transactionData->setOwner($result->getDebtor());
             $transactionData->setAmount($result->getAmount());
@@ -124,14 +119,19 @@ class GroupEventCalculator
         }
 
         // exchange automatically
-        foreach ($exchangeMap as $combination){
-            if (count($combination) > 1){
-                // lets instantly exchange the created
-                /** @var Transaction[] $combination */
-                $this->transactionProcessor->accept($combination[0]->getDebts()->get(0));
-                $this->transactionProcessor->accept($combination[1]->getDebts()->get(0));
+        if ($createExchanges) {
+            foreach ($exchangeMap as $combination) {
+                if (count($combination) > 1) {
+                    // lets instantly exchange the created
+                    /** @var Transaction[] $combination */
+                    $this->transactionProcessor->accept($combination[0]->getDebts()->get(0));
+                    $this->transactionProcessor->accept($combination[1]->getDebts()->get(0));
 
-                $this->exchangeProcessor->exchangeTransactionParts($combination[0]->getDebts()->get(0), $combination[1]->getLoans()->get(0));
+                    $this->exchangeProcessor->exchangeTransactionParts(
+                        $combination[0]->getDebts()->get(0),
+                        $combination[1]->getLoans()->get(0)
+                    );
+                }
             }
         }
     }

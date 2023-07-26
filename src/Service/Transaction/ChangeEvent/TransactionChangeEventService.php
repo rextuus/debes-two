@@ -6,6 +6,7 @@ use App\Entity\Transaction;
 use App\Entity\TransactionStateChangeEvent;
 use App\Entity\User;
 use App\Repository\TransactionStateChangeEventRepository;
+use App\Service\Transaction\ChangeEvent\Form\TransactionChangeEventData;
 
 class TransactionChangeEventService
 {

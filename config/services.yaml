@@ -27,6 +27,8 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/**/Entity/*'
+            - '../src/**/*Dto.php'
             - '../src/Kernel.php'
             - '../src/EntityListener/Event/'
 
@@ -34,6 +36,7 @@ services:
         tags:
             - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\Transaction' }
             - { name: 'doctrine.orm.entity_listener', event: 'preUpdate', entity: 'App\Entity\Transaction' }
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

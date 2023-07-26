@@ -2,16 +2,12 @@
 
 namespace App\Tests;
 
-use App\Entity\BankAccount;
 use App\Entity\Debt;
 use App\Entity\Loan;
-use App\Entity\PaymentAction;
-use App\Entity\PaypalAccount;
 use App\Entity\Transaction;
 use App\Service\PaymentAction\PaymentActionService;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;
 use App\Service\Transaction\TransactionProcessor;
-use App\Service\Transfer\TransferService;
 
 class TransactionProcessorTest extends FixtureTestCase
 {

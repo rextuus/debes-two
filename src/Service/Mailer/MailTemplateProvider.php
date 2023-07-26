@@ -7,10 +7,7 @@ namespace App\Service\Mailer;
 use Exception;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class MailTemplateProvider
 {
     private $templates;

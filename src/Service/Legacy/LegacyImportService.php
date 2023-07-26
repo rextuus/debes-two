@@ -4,31 +4,20 @@ namespace App\Service\Legacy;
 
 use App\Entity\Transaction;
 use App\Entity\User;
-use App\Service\Debt\DebtCreateData;
-use App\Service\Loan\LoanCreateData;
-use App\Service\PaymentOption\BankAccountData;
+use App\Service\Debt\Form\DebtCreateData;
+use App\Service\Loan\Form\LoanCreateData;
 use App\Service\PaymentOption\BankAccountService;
-use App\Service\Transaction\TransactionCreateData;
+use App\Service\PaymentOption\Form\BankAccountData;
+use App\Service\Transaction\Transaction\Form\TransactionCreateData;
 use App\Service\Transaction\TransactionCreateMultipleData;
 use App\Service\Transaction\TransactionService;
 use App\Service\Transaction\TransactionUpdateData;
 use App\Service\User\UserData;
 use App\Service\User\UserService;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Exception;
 
-/**
- * LegacyImportService
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- *
- */
 class LegacyImportService
 {
-    /**
-     * LoadFixtureFilesToDatabase constructor.
-     */
+
     public function __construct(
         private UserService        $userService,
         private BankAccountService $bankAccountService,

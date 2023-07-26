@@ -8,10 +8,7 @@ use App\Entity\Transaction;
 use App\Service\Transaction\TransactionService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class AbstractMailTemplate
 {
 //    protected const BASE_URL = 'https://debes.wh-company.de';

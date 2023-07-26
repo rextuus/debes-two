@@ -2,7 +2,7 @@
 
 namespace App\Form\PaypalAccount;
 
-use App\Service\PaymentOption\PaypalAccountCreateData;
+use App\Service\PaymentOption\Form\PaypalAccountCreateData;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

@@ -2,6 +2,8 @@
 
 namespace App\Service\Exchange;
 
+use App\Service\Exchange\Form\ExchangeData;
+
 /**
  * ExchangeUpdateData
  *

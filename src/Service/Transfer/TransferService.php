@@ -10,12 +10,11 @@ use App\Entity\PaypalAccount;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Service\Mailer\MailService;
-use App\Service\PaymentAction\PaymentActionData;
+use App\Service\PaymentAction\Form\PaymentActionData;
 use App\Service\PaymentAction\PaymentActionService;
 use App\Service\PaymentOption\PaymentOptionService;
 use App\Service\Transaction\TransactionProcessor;
 use App\Service\Transaction\TransactionService;
-use Exception;
 
 /**
  * TransferService

@@ -3,6 +3,9 @@
 namespace App\Service\Transaction;
 
 use App\Entity\Transaction;
+use App\Service\Transaction\Transaction\Form\TransactionCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionCreateLegacyImportData;
+use App\Service\Transaction\Transaction\Form\TransactionData;
 use DateTime;
 
 class TransactionFactory

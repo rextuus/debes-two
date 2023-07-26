@@ -6,10 +6,7 @@ namespace App\Service\Transfer;
 use App\Entity\BankAccount;
 use App\Entity\PaypalAccount;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class PaymentOptionSummaryContainer
 {
     /**

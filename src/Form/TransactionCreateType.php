@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Service\Transaction\TransactionCreateData;
+use App\Service\Transaction\Transaction\Form\TransactionCreateData;
 use App\Service\User\UserService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

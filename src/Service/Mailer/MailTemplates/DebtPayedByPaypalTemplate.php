@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Mailer\MailTemplates;
 
-use App\Entity\Exchange;
 use App\Entity\PaymentAction;
 use App\Entity\User;
-use App\Service\Exchange\ExchangeService;
 use App\Service\Mailer\AbstractMailTemplate;
 use App\Service\Mailer\MailService;
 use App\Service\Mailer\MailTemplateInterface;
-use App\Service\PaymentAction\PaymentActionService;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class DebtPayedByPaypalTemplate extends AbstractMailTemplate implements MailTemplateInterface
 {
     public function getName(): string

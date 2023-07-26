@@ -9,10 +9,7 @@ use App\Service\Mailer\AbstractMailTemplate;
 use App\Service\Mailer\MailService;
 use App\Service\Mailer\MailTemplateInterface;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class DebtDeclinedTemplate extends AbstractMailTemplate implements MailTemplateInterface
 {
 

@@ -9,6 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @deprecated Was uses for multi transactions in a strange and bad way!? Delete
+ */
 class TransactionCreateDebtorType extends AbstractType
 {
 

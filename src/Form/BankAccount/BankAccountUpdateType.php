@@ -2,7 +2,7 @@
 
 namespace App\Form\BankAccount;
 
-use App\Service\PaymentOption\BankAccountUpdateData;
+use App\Service\PaymentOption\Form\BankAccountUpdateData;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

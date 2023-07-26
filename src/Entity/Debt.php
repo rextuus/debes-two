@@ -6,6 +6,7 @@ use App\Repository\DebtRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DebtRepository::class)]
@@ -207,5 +208,10 @@ class Debt implements TransactionPartInterface
         $this->initialAmount = $initialAmount;
 
         return $this;
+    }
+
+    public function isPaid(): ?bool
+    {
+        return $this->paid;
     }
 }

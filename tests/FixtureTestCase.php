@@ -5,6 +5,7 @@ namespace App\Tests;
 
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Nelmio\Alice\Loader\NativeLoader;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -26,7 +27,7 @@ class FixtureTestCase extends WebTestCase
 
         // prepare db
         $doctrineUpdateCommand = sprintf(
-            'php bin/console doctrine:schema:update --force'
+            'php bin/console doctrine:schema:update --force > /dev/null'
         );
         exec($doctrineUpdateCommand);
     }
@@ -46,15 +47,15 @@ class FixtureTestCase extends WebTestCase
         $manager = $repo->getManager();
         foreach ($objects as $entity) {
             $manager->persist($entity);
-            $manager->flush();
         }
+        $manager->flush();
     }
 
     protected function tearDown(): void
     {
         // clear complete db
         $doctrineDropCommand = sprintf(
-            'php bin/console doctrine:schema:drop --full-database --force'
+            'php bin/console doctrine:database:drop --force --env=test > /dev/null'
         );
         exec($doctrineDropCommand);
 
@@ -89,5 +90,24 @@ class FixtureTestCase extends WebTestCase
 //        $repo = $container->get('doctrine');
 //        $manager = $repo->getManager();
 //        return $manager->getRepository($class)->find($fixture->getId());
+    }
+
+    public function refreshLoadedEntity(&$entity, bool $refreshIfNotContained = false): void
+    {
+        /** @var EntityManager $entityManager */
+        $container = self::$kernel->getContainer();
+        /** @var Registry $repo */
+        $repo = $container->get('doctrine');
+        $entityManager = $repo->getManager();
+
+        if (!$entityManager->contains($entity)) {
+            $entity = $entityManager->merge($entity);
+
+            if ($refreshIfNotContained) {
+                $entityManager->refresh($entity);
+            }
+        } else {
+            $entityManager->refresh($entity);
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Service\PaymentAction;
 
 use App\Entity\PaymentAction;
+use App\Service\PaymentAction\Form\PaymentActionData;
 
 /**
  * PaymentActionFactory
@@ -36,6 +37,7 @@ class PaymentActionFactory
         $paymentAction->setPaypalAccountSender($data->getPaypalAccountSender());
         $paymentAction->setBankAccountReceiver($data->getBankAccountReceiver());
         $paymentAction->setPaypalAccountReceiver($data->getPaypalAccountReceiver());
+        $data->getTransaction()->addPaymentAction($paymentAction);
     }
 
     /**

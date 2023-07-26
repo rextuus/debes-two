@@ -2,14 +2,11 @@
 
 namespace App\Service\Transaction;
 
-use App\Service\Debt\DebtCreateData;
-use App\Service\Loan\LoanCreateData;
+use App\Service\Debt\Form\DebtCreateData;
+use App\Service\Loan\Form\LoanCreateData;
 
 /**
- * TransactionCreateMultipleData
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
+ * @deprecated guess its beeter to build new if needed
  */
 class TransactionCreateMultipleData
 {

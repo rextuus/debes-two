@@ -6,12 +6,9 @@ namespace App\Extension\NextStateProvider\Ready;
 use App\Entity\Transaction;
 use App\Extension\NextStateProvider\AbstractNextState;
 use App\Extension\NextStateProvider\NextStateInterface;
-use App\Service\Transaction\TransactionDtos\TransactionDto;
+use App\Service\Transaction\Dto\TransactionDto;
 
-/**
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * @license 2023 DocCheck Community GmbH
- */
+
 class NextStateDebtReady extends AbstractNextState implements NextStateInterface
 {
     public const NEXT_STATE_SHORTCUT = Transaction::STATE_READY . AbstractNextState::DEBT_POSTFIX;
