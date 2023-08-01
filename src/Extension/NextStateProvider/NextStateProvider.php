@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Extension\NextStateProvider;
@@ -21,11 +22,11 @@ class NextStateProvider
     public function getHandlerForState(TransactionDto $part): ?NextStateInterface
     {
         $postfix = AbstractNextState::LOAN_POSTFIX;
-        if ($part->isDebtVariant()){
+        if ($part->isDebtVariant()) {
             $postfix = AbstractNextState::DEBT_POSTFIX;
         }
         foreach ($this->handlers as $handler) {
-            if ($handler->getName() === $part->getStateTransactionVariant().$postfix){
+            if ($handler->getName() === $part->getStateTransactionVariant() . $postfix) {
                 return $handler;
             }
         }

@@ -171,7 +171,7 @@ class TransactionService
             ]
         );
         foreach ($debtTransactions as $transaction) {
-            $dtos[] = $this->dtoProvider->createTransactionDto($transaction, true);
+            $dtos[] = $this->dtoProvider->createTransactionDto($transaction, TransactionVariant::DEBT);
         }
         $loanTransactions = $this->loanService->getAllLoanTransactionsForUser(
             $owner,
@@ -182,7 +182,7 @@ class TransactionService
             ]
         );
         foreach ($loanTransactions as $transaction) {
-            $dtos[] = $this->dtoProvider->createTransactionDto($transaction, false);
+            $dtos[] = $this->dtoProvider->createTransactionDto($transaction, TransactionVariant::LOAN);
         }
         return $dtos;
     }
@@ -205,7 +205,7 @@ class TransactionService
         $dtos = [];
         $debts = $this->debtService->getAllDebtTransactionsForUserAndState($owner, $state);
         foreach ($debts as $debt) {
-            $dtos[] = $this->dtoProvider->createTransactionDto($debt->getTransaction(), true);
+            $dtos[] = $this->dtoProvider->createTransactionDto($debt->getTransaction(), TransactionVariant::DEBT);
         }
         return $dtos;
     }
@@ -217,10 +217,10 @@ class TransactionService
 
     public function createDtoFromTransaction(
         Transaction $transaction,
-        bool        $isDebtVariant
+        TransactionVariant $variant
     ): Dto\TransactionDto
     {
-        return $this->dtoProvider->createTransactionDto($transaction, $isDebtVariant);
+        return $this->dtoProvider->createTransactionDto($transaction, $variant);
     }
 
     /**
@@ -252,7 +252,7 @@ class TransactionService
         $dtos = [];
         $loans = $this->loanService->getAllLoanTransactionsForUserAndSate($owner, $state, 0.0);
         foreach ($loans as $loan) {
-            $dtos[] = $this->dtoProvider->createTransactionDto($loan->getTransaction(), false);
+            $dtos[] = $this->dtoProvider->createTransactionDto($loan->getTransaction(), TransactionVariant::LOAN);
         }
         return $dtos;
     }
@@ -286,7 +286,7 @@ class TransactionService
         Transaction $transaction,
         string      $variant,
         string      $state
-    ): bool
+    ): TransactionVariant
     {
         if ($variant === self::DEBTOR_VIEW) {
             $debt = $this->getDebtPartOfUserForTransaction($transaction, $requester);
@@ -296,7 +296,7 @@ class TransactionService
             if ($debt->getState() !== $state) {
                 throw new TransactionPartIsNotInCorrectStateException(self::ERROR_MESSAGE_NOT_CORRECT_STATE);
             }
-            return true;
+            return TransactionVariant::DEBT;
         } elseif ($variant === self::LOANER_VIEW) {
             $loan = $this->getLoanPartOfUserForTransaction($transaction, $requester);
             if (is_null($loan)) {
@@ -305,12 +305,15 @@ class TransactionService
             if ($loan->getState() !== $state) {
                 throw new TransactionPartIsNotInCorrectStateException(self::ERROR_MESSAGE_NOT_CORRECT_STATE);
             }
-            return true;
+            return TransactionVariant::LOAN;
         } else {
             throw new UserNotCorrectParticipantOfTransaction('User is not involved in this transaction');
         }
     }
 
+    /**
+     * @throws UserNotCorrectParticipantOfTransaction
+     */
     public function checkRequesterIsParticipant(User $requester, Transaction $transaction): void
     {
         $debt = $this->getDebtPartOfUserForTransaction($transaction, $requester);
@@ -319,6 +322,20 @@ class TransactionService
         if (is_null($debt) && is_null($loan)) {
             throw new UserNotCorrectParticipantOfTransaction(self::ERROR_MESSAGE_NO_DEBTOR);
         }
+    }
+
+    /**
+     * @throws UserNotCorrectParticipantOfTransaction
+     */
+    public function checkRequesterRole(User $requester, Transaction $transaction): TransactionVariant
+    {
+        $this->checkRequesterIsParticipant($requester, $transaction);
+
+        $debt = $this->getDebtPartOfUserForTransaction($transaction, $requester);
+        if (!is_null($debt)){
+            return TransactionVariant::DEBT;
+        }
+        return TransactionVariant::LOAN;
     }
 
     public function getTransactionBySlug(string $slug): ?Transaction

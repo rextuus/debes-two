@@ -5,6 +5,7 @@ namespace App\Service\Transaction\Dto;
 use App\Entity\Transaction;
 use App\Entity\TransactionStateChangeEvent;
 use App\Service\Exchange\ExchangeDto;
+use App\Service\Transaction\TransactionVariant;
 use DateTimeInterface;
 
 /**
@@ -42,7 +43,7 @@ class TransactionDto
 
     private string $transactionPartner;
 
-    private bool $isDebtVariant;
+    private TransactionVariant $variant;
 
     /**
      * @var ExchangeDto[]
@@ -175,7 +176,7 @@ class TransactionDto
     public function getTransactionPartner(): string
     {
         // debt variant
-        if ($this->isDebtVariant) {
+        if ($this->isDebtVariant()) {
             // multi
             if ($this->hasMultipleDebtors) {
                 $transactionPartnerNames = array_map(
@@ -240,12 +241,7 @@ class TransactionDto
 
     public function isDebtVariant(): bool
     {
-        return $this->isDebtVariant;
-    }
-
-    public function setIsDebtVariant(bool $isDebtVariant): void
-    {
-        $this->isDebtVariant = $isDebtVariant;
+        return $this->variant->isDebtVariant();
     }
 
     /**
@@ -285,7 +281,18 @@ class TransactionDto
         return $this;
     }
 
-    public static function createFromTransaction(Transaction $transaction, bool $isDebtVariant): TransactionDto
+    public function getVariant(): TransactionVariant
+    {
+        return $this->variant;
+    }
+
+    public function setVariant(TransactionVariant $variant): TransactionDto
+    {
+        $this->variant = $variant;
+        return $this;
+    }
+
+    public static function createFromTransaction(Transaction $transaction, TransactionVariant $variant): TransactionDto
     {
         $dto = new self();
 
@@ -313,7 +320,7 @@ class TransactionDto
         $dto->setTotalAmount($transaction->getAmount());
         $dto->setTransactionId($transaction->getId());
         $dto->setTransactionSlug($transaction->getSlug());
-        $dto->setIsDebtVariant($isDebtVariant);
+        $dto->setVariant($variant);
         $dto->setExchangeDtos([]);
         $dto->setInitialAmount($transaction->getInitialAmount());
 

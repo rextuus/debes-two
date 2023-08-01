@@ -19,6 +19,7 @@ use App\Service\Transaction\Transaction\Form\TransactionData;
 use App\Service\Transaction\TransactionCreateMultipleData;
 use App\Service\Transaction\TransactionProcessor;
 use App\Service\Transaction\TransactionService;
+use App\Service\Transaction\TransactionVariant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -98,14 +99,14 @@ class TransactionController extends AbstractController
 
         if ($isDebtor) {
             $debt = $this->transactionService->getDebtPartOfUserForTransaction($transaction, $requester);
-            $dto = DebtDto::create($debt);
             $labels = ['label' => ['submit' => 'akzeptieren', 'decline' => 'ablehnen']];
+            $variant = TransactionVariant::DEBT;
         } else {
             $loan = $this->transactionService->getLoanPartOfUserForTransaction($transaction, $requester);
-            $dto = LoanDto::create($loan);
             $labels = ['label' => ['submit' => 'Zurückziehen', 'decline' => 'Zurückziehen']];
+            $variant = TransactionVariant::LOAN;
         }
-        $dto = $this->transactionService->createDtoFromTransaction($transaction, $isDebtor);
+        $dto = $this->transactionService->createDtoFromTransaction($transaction, $variant);
 
         $form = $this->createForm(ChoiceType::class, null, $labels);
         $form->handleRequest($request);
@@ -208,10 +209,12 @@ class TransactionController extends AbstractController
 
         if ($isDebtor) {
             $labels = ['label' => ['submit' => 'Bestätigen', 'decline' => 'Bestätigen']];
+            $variant = TransactionVariant::DEBT;
         } else {
             $labels = ['label' => ['submit' => 'Bestätigen', 'decline' => 'd']];
+            $variant = TransactionVariant::LOAN;
         }
-        $dto = $this->transactionService->createDtoFromTransaction($transaction, $isDebtor);
+        $dto = $this->transactionService->createDtoFromTransaction($transaction, $variant);
 
 
         $form = $this->createForm(SingleChoiceType::class, null, $labels);
@@ -378,9 +381,9 @@ class TransactionController extends AbstractController
     {
         $requester = $this->getUser();
 
-        $this->transactionService->checkRequesterIsParticipant($requester, $transaction);
+        $variant = $this->transactionService->checkRequesterRole($requester, $transaction);
 
-        $dto = $dtoProvider->createTransactionDto($transaction, true);
+        $dto = $dtoProvider->createTransactionDto($transaction, $variant);
         return $this->render(
             'transaction/transaction.show.detail.html.twig',
             [

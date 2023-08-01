@@ -192,7 +192,6 @@ document.addEventListener("DOMContentLoaded", function () {
 // });
 
 
-
 // const tiles = document.querySelectorAll('.user-tile');
 //
 // // Create an empty object to store the tile IDs as keys and 0 as values
@@ -246,41 +245,72 @@ document.addEventListener("DOMContentLoaded", function () {
 //     tileValues[element2.id] = tileValues[element2.id]+1;
 // }
 
-let pairs = document.querySelectorAll('.ge-result-pair-container');
-pairs.forEach(pair => {
-    let rows = pair.querySelectorAll('.ge-result-transaction-pair')
+let users = document.querySelectorAll('.ge-result-user-container');
+users.forEach(user => {
+    let userName = user.querySelector('.corner')
 
-    let tiles = pair.querySelectorAll('.ge-result-tile')
+    let transactions = user.querySelectorAll('.ge-result-pair-container');
+    transactions.forEach((transaction, index) => {
+        let rows = transaction.querySelectorAll('.ge-result-transaction-pair');
+        let tiles = transaction.querySelectorAll('.ge-result-tile');
 
-    drawLine(tiles[0], tiles[1], 'right', 'left', 'straight');
-    drawLine(tiles[1], tiles[2],'right', 'left', 'straight');
+        if (index > 0) {
 
-    console.log(rows);
-    console.log(pair.classList.contains('ge-result-tile-invisible'));
-    if (pair.classList.contains('ge-result-tile-invisible')){
-        rows[1].classList.toggle("hidden");
-        rows[1].height = 0;
-        tiles[3].height = 0;
-        tiles[4].height = 0;
-        tiles[5].height = 0;
-    }else{
-        drawLine(tiles[2], tiles[4],'bottom', 'right', 'straight');
-        drawLine(tiles[4], tiles[0],'left', 'bottom', 'straight');
-    }
+            if (rows[0].classList.contains('ge-result-tile-invisible')){
+                // => row
+                console.log(tiles[4].innerHTML);
+                tiles[1].innerHTML = tiles[4].innerHTML;
+                tiles[1].classList.toggle('reverse');
+                rows[1].classList.toggle('hidden');
+
+                // <=
+                drawLine(tiles[2], tiles[1], 'left', 'right', 'magnet', '#8bb976', 'behind');
+                drawBackLine(tiles[1], userName, 'left', 'bottom', 'magnet', 20);
+            }else{
+                // =>
+                drawLine(userName, tiles[1], 'bottom', 'left', 'magnet', '#a86464', 'behind');
+                drawLine(tiles[1], tiles[2], 'right', 'left', 'straight', '#a86464');
+            }
+
+            if (rows[1].classList.contains('ge-result-tile-invisible')){
+                rows[1].classList.toggle('hidden');
+            }else{
+                // <=
+                if (!rows[0].classList.contains('ge-result-tile-invisible')) {
+                    drawLine(tiles[2], tiles[4], 'bottom', 'right', 'arc', '#8bb976', 'behind');
+                    drawBackLine(tiles[4], userName, 'left', 'bottom', 'magnet', 20);
+                }
+            }
+        }
+    });
 });
 
-
-
-function drawLine(element1, element2, startPoint, endPoint, style) {
+function drawLine(element1, element2, startPoint, endPoint, style, color, end) {
     let line = new LeaderLine(
         element1,
         element2,
-        // {endLabel: LeaderLine.pathLabel('23€'),}
+        {dash: {animation: true}}
     );
 
     line.setOptions({startSocket: startPoint, endSocket: endPoint});
     line.path = style;
-    line.color = '#000000';
+    line.color = color;
+    line.endPlug = end;
+}
+
+function drawBackLine(element1, element2, startPoint, endPoint, style, xTarget) {
+    let line = new LeaderLine(
+        element1,
+        LeaderLine.pointAnchor(element2, {
+            x: xTarget,
+            y: 45
+        }),
+        {dash: {animation: true}}
+    );
+
+    line.setOptions({startSocket: startPoint, endSocket: endPoint});
+    line.path = style;
+    line.color = '#8bb976';
 }
 
 function getRandomColor() {
@@ -294,6 +324,76 @@ function getRandomColor() {
 
 
 
+let scrollContainer = document.querySelector('.scroll-container');
+if (scrollContainer){
+    document.addEventListener('DOMContentLoaded', function () {
+        adjustArrowLength();
+    });
+
+    function adjustArrowLength() {
+        const slideArrows = document.querySelectorAll('.slide-arrow');
+        slideArrows.forEach(slideArrow => {
+            const arrowContainer = slideArrow.querySelector('.arrow-container');
+            const slideName = slideArrow.querySelector('.slide-name');
+
+            const textWidth = slideName.offsetWidth + 8;
+            arrowContainer.style.width = `${textWidth}px`;
+        });
+    }
+
+
+    const dataMaxValue = scrollContainer.dataset.max;
+
+    // Add swipe event listener to the body or a specific container
+    document.body.addEventListener('touchstart', handleTouchStart, false);
+    document.body.addEventListener('touchmove', handleTouchMove, false);
+
+    let xStart = null;
+    const sensitivity = 50; // Minimum distance (in pixels) to detect a swipe
+
+    function handleTouchStart(event) {
+        xStart = event.touches[0].clientX;
+    }
+
+    function handleTouchMove(event) {
+        if (!xStart) return;
+
+        const xEnd = event.touches[0].clientX;
+        const xDiff = xStart - xEnd;
+
+        if (Math.abs(xDiff) > sensitivity) {
+            // Swipe detected, handle swipe direction
+            if (xDiff > 0) {
+                // Swipe left, navigate to the next slide
+                navigateToSlide('next');
+            } else {
+                // Swipe right, navigate to the previous slide
+                navigateToSlide('previous');
+            }
+
+            xStart = null;
+        }
+    }
+
+    function navigateToSlide(direction) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentSlide = parseInt(urlParams.get('slide')); // Get the current slide value from the URL
+
+        let newSlide;
+        if (direction === 'next') {
+            newSlide = currentSlide + 1;
+        } else {
+            newSlide = currentSlide - 1;
+        }
+
+        // Handle slide boundaries (e.g., prevent negative slides)
+        if (newSlide >= 0 && newSlide <= dataMaxValue) {
+            urlParams.set('slide', newSlide); // Update the slide parameter with the new value
+            const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+            window.location.href = newUrl;
+        }
+    }
+}
 
 
 

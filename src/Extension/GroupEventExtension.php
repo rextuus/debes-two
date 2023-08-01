@@ -28,6 +28,7 @@ class GroupEventExtension extends AbstractExtension
             new TwigFunction('render_payment_entry', [$this, 'renderPaymentEntry']),
             new TwigFunction('render_participant_list', [$this, 'renderParticipantList']),
             new TwigFunction('render_group_fields', [$this, 'renderGroupFields']),
+            new TwigFunction('render_calculation_user_entry', [$this, 'renderCalculationUserEntry']),
         ];
     }
 
@@ -169,5 +170,17 @@ class GroupEventExtension extends AbstractExtension
             return $user->getId();
         }, $array);
         return implode(',', $array);
+    }
+
+    public function renderCalculationUserEntry(UserCollectionDto $dto): string
+    {
+        $userDataDto = new UserCollectionDto();
+
+        return $this->environment->render(
+            'event/extension/event.extension_calculation_entry.html.twig',
+            [
+                'user' => $userDataDto,
+            ]
+        );
     }
 }

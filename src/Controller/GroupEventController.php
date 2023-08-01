@@ -162,15 +162,28 @@ class GroupEventController extends AbstractController
             return $forbidden;
         }
 
-        $results = $this->groupEventManager->getResultsForEvent($groupEvent);
+        $slide = $request->query->getInt('slide', 1);
 
-        foreach ($results as $result){
+        $results = $this->groupEventManager->getResultsDtosForEvent($groupEvent);
+        if ($slide > count($results) || !$request->query->has('slide')){
+            return $this->redirect($this->generateUrl('event_show_calculation', ['groupEvent' => $groupEvent->getId(), 'slide' => 0]));
+        }
 
+        $left = '';
+        $right = '';
+        if ($slide > 0) {
+            $left = $results[$slide-1]->getLoaner()->getFirstName();
+        }
+        if ($slide < count($results)-1){
+            $right = $results[$slide+1]->getLoaner()->getFirstName();
         }
 
 
         return $this->render('event/event.calculation.show.html.twig', [
-            'event' => $groupEvent
+            'event' => $groupEvent,
+            'user' => $results[$slide],
+            'last' => $left,
+            'next' => $right
         ]);
     }
 

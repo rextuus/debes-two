@@ -12,7 +12,7 @@ class GroupEventData
     private string $description;
 
     private bool $open;
-    private DateTimeInterface|null $evaluated;
+    private DateTimeInterface|null $evaluated = null;
 
     public function getDescription(): string
     {

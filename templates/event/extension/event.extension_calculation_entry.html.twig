@@ -1,0 +1,17 @@
+<div class="ge-result-user-container">
+    {% for transaction in user.transactions %}
+    <div class="ge-result-pair-container {{ transaction.hiddenClassFrom }}">
+        <div class="ge-result-transaction-pair">
+            <div class="ge-result-tile corner">{{ user.loaner.firstName }}</div>
+            <div class="ge-result-tile amount">{{ transaction.amount }}€</div>
+            <div class="ge-result-tile">{{ transaction.debtor.firstName }}</div>
+        </div>
+        <div class="ge-result-row-placeholder"></div>
+        <div class="ge-result-transaction-pair {{ transaction.hiddenClassTo }}">
+            <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div>
+            <div class="ge-result-tile amount reverse">{{ transaction.amount }}</div>
+            <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -8,6 +8,8 @@ use App\Entity\GroupEvent;
 use App\Entity\GroupEventResult;
 use App\Entity\GroupEventUserCollection;
 use App\Entity\User;
+use App\Service\GroupEvent\Calculation\CalculationTransactionDto;
+use App\Service\GroupEvent\Calculation\CalculationUserDto;
 use App\Service\GroupEvent\Calculation\GroupEventCalculator;
 use App\Service\GroupEvent\Event\Form\GroupEventData;
 use App\Service\GroupEvent\Event\Form\GroupEventInitData;
@@ -17,6 +19,7 @@ use App\Service\GroupEvent\Payment\GroupEventPaymentService;
 use App\Service\GroupEvent\Result\GroupEventResultService;
 use App\Service\GroupEvent\UserCollection\Form\UserCollectionData;
 use App\Service\GroupEvent\UserCollection\GroupEventUserCollectionService;
+use App\Service\GroupEvent\UserCollection\UserCollectionDto;
 
 class GroupEventManager
 {
@@ -42,7 +45,7 @@ class GroupEventManager
         $this->addGroupByUsers($groupEventData->getSelectedUsers(), $event);
 
         // we will create at least one userGroup for each participant, so that he can use predefined "All others" May a bit to much but we have the money bitch
-        $groupsToCreate = $this->calculateUserGroupMatrix($groupEventData->getSelectedUsers());
+        $groupsToCreate = $this->calculateUserGroups($groupEventData->getSelectedUsers());
 
         foreach ($groupsToCreate as $group){
             $this->addGroupByUsers($group, $event, false);
@@ -131,7 +134,7 @@ class GroupEventManager
     /**
      * @return User[][]
      */
-    private function calculateUserGroupMatrix(array $users): array
+    private function calculateUserGroups(array $users): array
     {
         $groups = [];
         foreach ($users as $userToCheck) {
@@ -148,12 +151,62 @@ class GroupEventManager
         return $groups;
     }
 
+    /**
+     * @param User[] $users
+     * @return User[]
+     */
+    private function calculateUserCombinations(array $users): array
+    {
+        $pairs = [];
+        foreach ($users as $userNr => $userToCheck) {
+//            if ($userNr === count($users) - 1) {
+//                break;
+//            }
+//            $pairs[$userToCheck->getId()] = [];
+//            for ($userNr2 = $userNr + 1; $userNr2 < count($users); $userNr2++) {
+//                $pairs[$userToCheck->getId()][] = $users[$userNr2];
+//            }
+            $pairs[$userToCheck->getId()] = [];
+            foreach ($users as $userToCheck2){
+                if ($userToCheck !== $userToCheck2){
+                    $pairs[$userToCheck->getId()][] = $userToCheck2;
+                }
+            }
+        }
+        return $pairs;
+    }
 
     /**
-     * @return GroupEventResult[]
+     * @return UserCollectionDto[]
      */
-    public function getResultsForEvent(GroupEvent $event): array
+    public function getResultsDtosForEvent(GroupEvent $event): array
     {
-        return $this->resultService->findAllForEvent($event);
+        $users = $event->getUsers();
+        $userCombinations = $this->calculateUserCombinations($users);
+
+        $dtos = [];
+        $index = 0;
+        foreach ($userCombinations as $userId => $otherUsers){
+            $user = $users[$index];
+            $index++;
+            $userDto = new CalculationUserDto();
+            $userDto->setLoaner($user);
+
+            $transactions = [];
+            foreach ($otherUsers as $partner) {
+                $to = $this->resultService->findByEventDebtorLoanerCombination($event, $user, $partner);
+                $from = $this->resultService->findByEventDebtorLoanerCombination($event, $partner, $user);
+                $transactionDto = new CalculationTransactionDto();
+                $transactionDto->setAmount(!is_null($to) ? $to->getAmount() : 0.0);
+                $transactionDto->setAmountReturn(!is_null($from) ? $from->getAmount() : 0.0);
+                $transactionDto->setHiddenClassTo(!is_null($to) ? '' : 'ge-result-tile-invisible');
+                $transactionDto->setHiddenClassFrom(!is_null($from) ? '' : 'ge-result-tile-invisible');
+                $transactionDto->setDebtor($partner);
+                $transactions[] = $transactionDto;
+            }
+            $userDto->setTransactions($transactions);
+            $dtos[] = $userDto;
+        }
+        return $dtos;
     }
 }

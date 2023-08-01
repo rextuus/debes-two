@@ -324,15 +324,16 @@
 
 .ge-result-user-container{
     margin-bottom: 25px;
-    background-color: #696969;
-    padding: 5px;
+    background-color: #4b4b4b;
+    padding: 20px;
+    border: 4px solid #0a0800;
 }
 .ge-result-pair-container {
     display: flex;
     flex-direction: column;
     margin-top: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid black;
+    //border-bottom: 1px solid black;
 
     .ge-result-transaction-pair {
         display: flex;
@@ -348,13 +349,24 @@
     }
 
     .ge-result-tile {
-        width: 100px; // Adjust the width as needed
-        height: 40px; // Adjust the height as needed
+        min-width: 80px; // Adjust the width as needed
+        height: 25px; // Adjust the height as needed
         border: 1px solid #000;
         display: flex;
         justify-content: center;
         align-items: center;
         font-size: 16px;
+
+        &.target{
+            max-height: 1px;
+        }
+
+        &.corner {
+            min-width: 150px; // Adjust the width as needed
+            background-color: #691818; // Adjust the width as needed
+            border: 4px solid #0a0800;
+            height: 40px; // Adjust the height as needed
+        }
 
         &.ge-result-tile-invisible {
             visibility: hidden;
@@ -362,7 +374,77 @@
 
         &.reverse {
             height: 25px; // Adjust the height as needed
+        }
 
+        &.amount {
+            border-color: $color-navi-tab-button-negative;
+            background-color: $color-navi-tab-button-negative;
+            width: 50px;
+            color: black;
+        }
+
+        &.reverse.amount{
+            border-color: $color-navi-tab-button-positive;
+            background-color: $color-navi-tab-button-positive;
+        }
+
+
+    }
+}
+
+
+
+
+.calculation-navbar{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 30px;
+    padding-left: 30px;
+    .slide-arrow {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        color: $color-navi-tab-button-active;
+        margin-bottom: 5px;
+        display: inline-block;
+
+        .slide-name {
+            //margin-bottom: 8px;
+            display: inline-block;
+            padding-left: 5px;
+        }
+
+        .arrow-container {
+            position: relative;
+            display: inline-block;
+            width: fit-content;
+
+            .arrow-line {
+                width: 100%;
+                height: 4px;
+                border-bottom: 5px solid $color-navi-tab-button-active;
+                background-color: $color-navi-tab-button-active;
+            }
+
+            .arrow-tip.right {
+                position: absolute;
+                top: 3px;
+                right: -20px;
+                width: 0px;
+                height: 0px;
+                border: 20px solid;
+                border-color: transparent transparent $color-navi-tab-button-active transparent;
+                border-width: 0 20px 20px 0;
+            }
+            .arrow-tip.left{
+                position: absolute;
+                top: 3px;
+                left: -20px;
+                width: 0px;
+                height: 0px;
+                border: 20px solid;
+                border-color: transparent $color-navi-tab-button-active transparent transparent;
+                border-width: 20px 20px 0px 0px;
+            }
         }
     }
 }
@@ -372,37 +454,4 @@
 
 
 
-
-
-//.parent-container2 {
-//    display: flex;
-//    flex-wrap: wrap;
-//    width: 100%;
-//}
-//
-//
-//.column {
-//    display: flex;
-//    flex-direction: column; /* Each column will have a vertical layout */
-//    align-items: center; /* Center the tiles horizontally in each column */
-//    justify-content: center; /* Center the tiles vertically in each column */
-//}
-//
-//.user-tile {
-//    padding: 10px;
-//    border: 1px solid #ccc;
-//    margin: 5px;
-//    z-index: +1;
-//    background-color: #80596f;
-//}
-//
-//.free-space {
-//    height: 20px; /* Set the height of the free space column */
-//    min-width: 20px; /* Take the full width of the parent container */
-//    //width: 100%; /* Take the full width of the parent container */
-//}
-//
-//.h-space{
-//    height: 50px; /* Set the height of the free space column */
-//}
 

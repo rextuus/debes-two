@@ -3,6 +3,15 @@
 {% block title %}Event Details{% endblock %}
 
 {% block body %}
+    {#    <div class="tab-nav "> #}
+    {#        <button class="tab-button active  " data-tab="tab-1" data-name="Neu" data-image="{{ asset('assets/img/create.svg') }}"> #}
+    {#        </button> #}
+    {#        <button class="tab-button " data-tab="tab-2" data-name="Akzeptiert" data-image="{{ asset('assets/img/icons/transaction/accept.svg') }}"> #}
+    {#        </button> #}
+    {#        <button class="tab-button " data-tab="tab-3" data-name="Bezahlt" data-image="{{ asset('assets/img/paid.svg') }}"></button> #}
+    {#        <button class="tab-button " data-tab="tab-4" data-name="Erledigt" data-image="{{ asset('assets/img/party.svg') }}"></button> #}
+    {#    </div> #}
+
     <div class="page-header">
         <div class="page-header-text">
             Event Details
@@ -17,69 +26,188 @@
             Auswertung: {{ event.description }}
         </div>
 
-        <div class="ge-result-list-container">
-            <div class="ge-result-user-container">
-                <div class="ge-result-pair-container">
-                    <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile">Peter</div>
-                        <div class="ge-result-tile">33€</div>
-                        <div class="ge-result-tile">Hanne</div>
-                    </div>
-                    <div class="ge-result-row-placeholder"></div>
-                    <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div>
-                        <div class="ge-result-tile reverse">7€</div>
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div>
-                    </div>
+        <div class="calculation-navbar">
+            <div class="slide-arrow">
+                <div class="arrow-container">
+                    <div class="slide-name">{{ last }}</div>
+                    <div class="arrow-tip left"></div>
+                    <div class="arrow-line"></div>
                 </div>
-
-                <div class="ge-result-pair-container ge-result-tile-invisible">
-                    <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile">Peter</div>
-                        <div class="ge-result-tile">33€</div>
-                        <div class="ge-result-tile">Hanne</div>
-                    </div>
-                    <div class="ge-result-row-placeholder"></div>
-                    <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div>
-                        <div class="ge-result-tile ge-result-tile-invisible">7€</div>
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div>
-                    </div>
+            </div>
+            <div class="slide-arrow">
+                <div class="arrow-container">
+                    <div class="slide-name">{{ next }}</div>
+                    <div class="arrow-line"></div>
+                    <div class="arrow-tip right"></div>
                 </div>
             </div>
         </div>
 
-        <div class="ge-result-list-container">
+
+        <div class="scroll-container" data-max="3">
             <div class="ge-result-user-container">
-                <div class="ge-result-pair-container">
-                    <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile">Peter</div>
-                        <div class="ge-result-tile">33€</div>
-                        <div class="ge-result-tile">Hanne</div>
-                    </div>
-                    <div class="ge-result-row-placeholder"></div>
-                    <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div>
-                        <div class="ge-result-tile">7€</div>
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div>
-                    </div>
+                <div class="calculation-navbar">
+                    <div class="calculation-navbar-item calculation-navbar-left">Jens</div>
+                    <div class="calculation-navbar-item hidden">Middle</div>
+                    <div class="calculation-navbar-item calculation-navbar-right">Holger</div>
                 </div>
 
-                <div class="ge-result-pair-container ge-result-tile-invisible">
+                <div class="ge-result-pair-container">
                     <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile">Peter</div>
-                        <div class="ge-result-tile">33€</div>
-                        <div class="ge-result-tile">Hanne</div>
+                        <div class="ge-result-tile corner">{{ user.loaner.firstName }}</div>
+                        <div class="ge-result-tile ge-result-tile-invisible amount">33€</div>
+                        <div class="ge-result-tile ge-result-tile-invisible">Hanne</div>
                     </div>
                     <div class="ge-result-row-placeholder"></div>
-                    <div class="ge-result-transaction-pair">
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div>
-                        <div class="ge-result-tile ge-result-tile-invisible">7€</div>
-                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div>
-                    </div>
                 </div>
+
+                {% for transaction in user.transactions %}
+                    <div class="ge-result-pair-container ">
+                        <div class="ge-result-transaction-pair {{ transaction.hiddenClassTo }}">
+                            <div class="ge-result-tile ge-result-tile-invisible">{{ user.loaner.firstName }}</div>
+                            <div class="ge-result-tile amount">{{ transaction.amount |round(2, 'floor') }}€
+                            </div>
+                            <div class="ge-result-tile">{{ transaction.debtor.firstName }}</div>
+                        </div>
+                        <div class="ge-result-row-placeholder"></div>
+                        <div class="ge-result-transaction-pair {{ transaction.hiddenClassFrom }}">
+                            <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div>
+                            <div class="ge-result-tile amount reverse">{{ transaction.amountReturn |round(2, 'floor') }}€</div>
+                            <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
+
+
+        {#        {% for user in results %} #}
+        {#            <div class="ge-result-user-container"> #}
+        {#                <div class="ge-result-pair-container"> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile corner">{{ user.loaner.firstName }}</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible amount">33€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Hanne</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                </div> #}
+
+        {#                {% for transaction in user.transactions %} #}
+        {#                    <div class="ge-result-pair-container "> #}
+        {#                        <div class="ge-result-transaction-pair {{ transaction.hiddenClassTo }}"> #}
+        {#                            <div class="ge-result-tile ge-result-tile-invisible">{{ user.loaner.firstName }}</div> #}
+        {#                            <div class="ge-result-tile amount">{{ transaction.amount |round(2, 'floor') }}€ #}
+        {#                            </div> #}
+        {#                            <div class="ge-result-tile">{{ transaction.debtor.firstName }}</div> #}
+        {#                        </div> #}
+        {#                        <div class="ge-result-row-placeholder"></div> #}
+        {#                        <div class="ge-result-transaction-pair {{ transaction.hiddenClassFrom }}"> #}
+        {#                            <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div> #}
+        {#                            <div class="ge-result-tile amount reverse">{{ transaction.amountReturn |round(2, 'floor') }}</div> #}
+        {#                            <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div> #}
+        {#                        </div> #}
+        {#                    </div> #}
+        {#                {% endfor %} #}
+        {#            </div> #}
+        {#        {% endfor %} #}
+
+
+        {#            <div class="ge-result-user-container"> #}
+        {#                <div class="ge-result-pair-container"> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile corner">Peter</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible amount">33€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Hanne</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                </div> #}
+
+
+        {#                <div class="ge-result-pair-container"> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Peter</div> #}
+        {#                        <div class="ge-result-tile amount">33€</div> #}
+        {#                        <div class="ge-result-tile">Hanne</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div> #}
+        {#                        <div class="ge-result-tile amount reverse">7€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div> #}
+        {#                    </div> #}
+        {#                </div> #}
+
+        {#                <div class="ge-result-pair-container"> #}
+        {#                    <div class="ge-result-transaction-pair ge-result-tile-invisible"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Peter</div> #}
+        {#                        <div class="ge-result-tile amount">33€</div> #}
+        {#                        <div class="ge-result-tile">Wolfgang</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div> #}
+        {#                        <div class="ge-result-tile amount reverse">7€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div> #}
+        {#                    </div> #}
+        {#                </div> #}
+
+        {#                <div class="ge-result-pair-container ge-result-tile-invisible"> #}
+        {#                    <div class="ge-result-transaction-pair "> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Peter</div> #}
+        {#                        <div class="ge-result-tile amount">33€</div> #}
+        {#                        <div class="ge-result-tile">Magarethe A</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div> #}
+        {#                        <div class="ge-result-tile amount reverse">7€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div> #}
+        {#                    </div> #}
+        {#                </div> #}
+
+        {#                <div class="ge-result-pair-container"> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Peter</div> #}
+        {#                        <div class="ge-result-tile amount">33€</div> #}
+        {#                        <div class="ge-result-tile">Eberharft</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                    <div class="ge-result-transaction-pair ge-result-tile-invisible"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div> #}
+        {#                        <div class="ge-result-tile amount reverse">7€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div> #}
+        {#                    </div> #}
+        {#                </div> #}
+
+        {#                <div class="ge-result-pair-container"> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Peter</div> #}
+        {#                        <div class="ge-result-tile amount">33€</div> #}
+        {#                        <div class="ge-result-tile">Hanne</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div> #}
+        {#                        <div class="ge-result-tile amount reverse">7€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div> #}
+        {#                    </div> #}
+        {#                </div> #}
+
+        {#                <div class="ge-result-pair-container"> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Peter</div> #}
+        {#                        <div class="ge-result-tile amount">33€</div> #}
+        {#                        <div class="ge-result-tile">Hanne</div> #}
+        {#                    </div> #}
+        {#                    <div class="ge-result-row-placeholder"></div> #}
+        {#                    <div class="ge-result-transaction-pair"> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 4</div> #}
+        {#                        <div class="ge-result-tile amount reverse">7€</div> #}
+        {#                        <div class="ge-result-tile ge-result-tile-invisible">Tile 6</div> #}
+        {#                    </div> #}
+        {#                </div> #}
+
+        {#            </div> #}
 
 
     </div>

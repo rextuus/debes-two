@@ -38,11 +38,11 @@ class DtoProvider
         return $loanDto;
     }
 
-    public function createTransactionDto(Transaction $transaction, bool $isDebtVariant): Dto\TransactionDto
+    public function createTransactionDto(Transaction $transaction, TransactionVariant $variant): Dto\TransactionDto
     {
         $transactionDto = \App\Service\Transaction\Dto\TransactionDto::createFromTransaction(
             $transaction,
-            $isDebtVariant
+            $variant
         );
 
 

@@ -21,6 +21,7 @@ use App\Service\PaymentOption\BankAccountService;
 use App\Service\PaymentOption\PaypalAccountService;
 use App\Service\Transaction\DtoProvider;
 use App\Service\Transaction\TransactionService;
+use App\Service\Transaction\TransactionVariant;
 use App\Service\Transfer\ExchangeProcessor;
 use App\Service\Transfer\PrepareExchangeTransferData;
 use App\Service\Transfer\PrepareTransferData;
@@ -59,7 +60,7 @@ class TransferController extends AbstractController
         /** @var User $requester */
         $requester = $this->getUser();
 
-        $isDebtor = $this->transactionService->checkRequestForVariant(
+        $variant = $this->transactionService->checkRequestForVariant(
             $requester,
             $transaction,
             TransactionService::DEBTOR_VIEW,
@@ -102,12 +103,12 @@ class TransferController extends AbstractController
             }
         }
 
-        $dto = $this->transactionService->createDtoFromTransaction($transaction, $isDebtor);
+        $dto = $this->transactionService->createDtoFromTransaction($transaction, $variant);
 
         return $this->render('transfer/prepare.html.twig', [
             'form' => $form->createView(),
             'dto' => $dto,
-            'debtVariant' => $isDebtor,
+            'debtVariant' => $variant,
         ]);
     }
 
@@ -288,7 +289,7 @@ class TransferController extends AbstractController
             return $this->redirectToRoute('account_debts', []);
         }
 
-        $dto = $dtoProvider->createTransactionDto($transaction, true);
+        $dto = $dtoProvider->createTransactionDto($transaction, TransactionVariant::DEBT);
         return $this->render('transfer/prepare.exchange.html.twig', [
             'dto' => $dto,
             'form' => $form->createView(),
@@ -401,7 +402,7 @@ class TransferController extends AbstractController
         );
 
         // prepare dto and
-        $dto = $dtoProvider->createTransactionDto($transaction, true);
+        $dto = $dtoProvider->createTransactionDto($transaction, TransactionVariant::DEBT);
 
         // handle the submission of the forms
         if ($request->isMethod('POST')) {
