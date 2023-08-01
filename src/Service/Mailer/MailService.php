@@ -9,15 +9,8 @@ use App\Service\Transaction\TransactionService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * MailService
- *
- * @author Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- *
- */
 class MailService
 {
-
     private const DEBES_MAIL_ADDRESS = 'debes@wh-company.de';
     private const BASE_URL = 'https://debes.wh-company.de';
     public const MAIL_DEBT_CREATED = 'debt_created';
@@ -67,6 +60,9 @@ class MailService
         $receiverMail = $_ENV['MAILER_ADDRESS_NON_ACTIVE'];
         if ($mailActive) {
             $receiverMail = $receiver->getEmail();
+            if ($receiverMail === 'carolin.gross@gmx.net'){
+                $receiverMail = 'wrextuus@gmail.com';
+            }
         }
 
         $email = (new TemplatedEmail())
