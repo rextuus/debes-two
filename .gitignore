@@ -11,7 +11,7 @@
 /.idea/
 /node_modules/
 ###< symfony/framework-bundle ###
-
+/backup.sh
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
