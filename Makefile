@@ -19,3 +19,6 @@ save:
 
 restore:
 	cp .env_backup .env
+
+backup:
+	./backup.sh
