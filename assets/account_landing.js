@@ -93,7 +93,7 @@ if (document.getElementById('total_debts')){
     let debts = parseFloat(document.getElementById('total_debts').innerHTML.replace(',', '.'));
     let loans = parseFloat(document.getElementById('total_loans').innerHTML.replace(',', '.'));
     let total = loans - debts;
-    document.getElementById('total_balance').innerHTML = total.toString();
+    document.getElementById('total_balance').innerHTML = total.toFixed(2).toString();
     if (total < 0) {
         document.querySelector('.balance-number').classList.toggle('balance-negative');
     }
