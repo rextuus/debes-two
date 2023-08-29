@@ -1,0 +1,25 @@
+#sudo nano /etc/systemd/system/debes-messenger-consumer.service
+[Unit]
+Description=Consumes the messages debes application creates
+After=network.target
+
+[Service]
+Type=simple
+User=master
+WorkingDirectory=/var/www/debes/
+ExecStart=/usr/bin/php /var/www/debes/bin/console messenger:consume async -vv
+RuntimeMaxSec=86400s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+#sudo systemctl daemon-reload
+#sudo systemctl start debes-messenger-consumer
+#sudo systemctl enable debes-messenger-consumer
+
+##
+alias debes-messenger-start="sudo systemctl start debes-messenger-consumer.service"
+alias debes-messenger-restart="sudo systemctl restart debes-messenger-consumer.service"
+alias debes-messenger-stop="sudo systemctl stop debes-messenger-consumer.service"
+alias debes-messenger-logs="sudo journalctl -u debes-messenger-consumer.service"

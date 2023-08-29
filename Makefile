@@ -1,4 +1,4 @@
-deploy: pull install database build
+deploy: stop_consumer pull install database build start_consumer
 stash:
 	git stash
 
@@ -22,3 +22,9 @@ restore:
 
 backup:
 	./backup.sh
+
+stop_consumer:
+	sudo systemctl stop debes-messenger-consumer.service
+
+start_consumer:
+	sudo systemctl start debes-messenger-consumer.service
