@@ -50,6 +50,7 @@ class TransactionCreateSimpleType extends AbstractType
                     return $currency . ' €';
                 },
                 function ($stringCurrency): float {
+                    $stringCurrency = str_replace(',', '.', $stringCurrency);
                     return (float) str_replace(' €', '', $stringCurrency);
                 }
             ))
@@ -76,7 +77,8 @@ class TransactionCreateSimpleType extends AbstractType
         $candidates = $this->userService->findAllOther($requester);
         $choices = array();
         foreach ($candidates as $candidate) {
-            $choices[$candidate->getUsername()] = $candidate;
+            /** @var User $candidate */
+            $choices[$candidate->getFullName()] = $candidate;
         }
         return $choices;
     }

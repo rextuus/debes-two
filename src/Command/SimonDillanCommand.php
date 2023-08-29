@@ -43,6 +43,7 @@ class SimonDillanCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        dd((float) "33.44 €");
         $user = new User();
         $user->setFirstName("Pitter");
 
