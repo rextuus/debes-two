@@ -127,7 +127,8 @@ class GroupEventManager
         $this->calculator->calculateGroupEventFinalBill($event);
     }
 
-    public function triggerTransactionCreation(GroupEvent $event, bool $createExchanges = true):void{
+    public function triggerTransactionCreation(GroupEvent $event, bool $createExchanges = true): void
+    {
         $this->calculator->triggerTransactionCreation($event, $createExchanges);
     }
 

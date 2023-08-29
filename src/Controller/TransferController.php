@@ -16,6 +16,7 @@ use App\Form\Transfer\PreparePaypalType;
 use App\Form\Transfer\PrepareTransferType;
 use App\Service\Debt\DebtService;
 use App\Service\Loan\LoanService;
+use App\Service\Mailer\Handler\SendEmailMessage;
 use App\Service\Mailer\MailService;
 use App\Service\PaymentOption\BankAccountService;
 use App\Service\PaymentOption\PaypalAccountService;
@@ -31,6 +32,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -45,7 +47,8 @@ class TransferController extends AbstractController
         private TransactionService   $transactionService,
         private MailService          $mailService,
         private TransferService      $transferService,
-        private BankAccountService   $bankAccountService
+        private BankAccountService   $bankAccountService,
+        private MessageBusInterface $messageBus,
     )
     {
     }
@@ -326,7 +329,8 @@ class TransferController extends AbstractController
 
             if ($isAccepted) {
                 $exchangeService->exchangeTransactionParts($debt, $loan);
-                $this->mailService->sendNotificationMail($loan->getTransaction(), MailService::MAIL_DEBT_EXCHANGED);
+                $message = new SendEmailMessage(MailService::MAIL_DEBT_EXCHANGED, $loan->getTransaction());
+                $this->messageBus->dispatch($message);
                 if ($debt->getTransaction()->getAmount() === 0){
                     return $this->redirectToRoute('account_debts', []);
                 }

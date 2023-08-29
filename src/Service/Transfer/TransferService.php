@@ -9,12 +9,14 @@ use App\Entity\PaymentOption;
 use App\Entity\PaypalAccount;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Service\Mailer\Handler\SendEmailMessage;
 use App\Service\Mailer\MailService;
 use App\Service\PaymentAction\Form\PaymentActionData;
 use App\Service\PaymentAction\PaymentActionService;
 use App\Service\PaymentOption\PaymentOptionService;
 use App\Service\Transaction\TransactionProcessor;
 use App\Service\Transaction\TransactionService;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * TransferService
@@ -34,6 +36,7 @@ class TransferService
         private PaymentActionService $paymentActionService,
         private TransactionProcessor $transactionProcessor,
         private MailService          $mailService,
+        private MessageBusInterface $messageBus,
     )
     {
     }
@@ -92,10 +95,9 @@ class TransferService
         if ($paymentAction->getVariant() === PaymentAction::VARIANT_PAYPAL){
             $mailVariant = MailService::MAIL_DEBT_PAYED_PAYPAL;
         }
-        $this->mailService->sendNotificationMail(
-            $transaction,
-            $mailVariant,
-            $paymentAction
-        );
+
+        $message = new SendEmailMessage($mailVariant, $transaction);
+        $message->setPaymentAction($paymentAction);
+        $this->messageBus->dispatch($message);
     }
 }

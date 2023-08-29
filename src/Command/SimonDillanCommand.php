@@ -4,12 +4,14 @@ namespace App\Command;
 
 use App\Cdn\CloudinaryService;
 use App\Entity\User;
+use App\Service\Mailer\Handler\SendEmailMessage;
 use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommand(name: 'debes:simon:dillan')]
 class SimonDillanCommand extends Command
@@ -22,6 +24,7 @@ class SimonDillanCommand extends Command
         private CloudinaryService $cloudinaryService,
         private MailService $mailService,
         private TransactionService $transactionService,
+        private MessageBusInterface $messageBus,
     )
     {
         parent::__construct();
@@ -45,7 +48,9 @@ class SimonDillanCommand extends Command
 
         $transaction = $this->transactionService->getTransactionById(8);
 
-        $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_REMINDER);
+        $message = new SendEmailMessage(MailService::MAIL_DEBT_REMINDER, $transaction);
+        $this->messageBus->dispatch($message);
+//        $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_REMINDER);
 
 //        $imagePath = 'public/assets/img/home/borrow.png';
 //        $cdnPath = 'debes/app/borrow.png';

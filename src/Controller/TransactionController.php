@@ -12,6 +12,7 @@ use App\Form\TransactionCreateSimpleType;
 use App\Service\Debt\DebtDto;
 use App\Service\Debt\Form\DebtCreateData;
 use App\Service\Loan\LoanDto;
+use App\Service\Mailer\Handler\SendEmailMessage;
 use App\Service\Mailer\MailService;
 use App\Service\Transaction\DtoProvider;
 use App\Service\Transaction\Transaction\Form\TransactionCreateData;
@@ -23,6 +24,7 @@ use App\Service\Transaction\TransactionVariant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -34,10 +36,11 @@ class TransactionController extends AbstractController
     public const REQUESTER_VARIANT_DEBTOR = 'debtor';
 
     public function __construct(
-        private TransactionService   $transactionService,
-        private MailService          $mailService,
-        private TransactionProcessor $transactionProcessor)
-    {
+        private TransactionService $transactionService,
+        private MailService $mailService,
+        private TransactionProcessor $transactionProcessor,
+        private MessageBusInterface $messageBus,
+    ) {
     }
 
     #[Route('/create/simple', name: 'transaction_create_simple')]
@@ -57,7 +60,8 @@ class TransactionController extends AbstractController
 
             $transaction = $this->transactionService->storeSingleTransaction($data, $requester);
 
-            $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_CREATED);
+            $message = new SendEmailMessage(MailService::MAIL_DEBT_CREATED, $transaction);
+            $this->messageBus->dispatch($message);
 
             return $this->redirect($this->generateUrl('account_loans', ['variant' => 'new']));
         }
@@ -117,15 +121,19 @@ class TransactionController extends AbstractController
             if ($isDebtor) {
                 if ($isAccepted) {
                     $this->transactionProcessor->accept($debt);
-                    $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_ACCEPTED);
+                    $message = new SendEmailMessage(MailService::MAIL_DEBT_ACCEPTED, $transaction);
+                    $this->messageBus->dispatch($message);
+
                 } else {
                     $this->transactionService->declineDebt($debt);
-                    $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_DECLINED);
+                    $message = new SendEmailMessage(MailService::MAIL_DEBT_DECLINED, $transaction);
+                    $this->messageBus->dispatch($message);
                 }
                 return $this->redirectToRoute('account_debts', []);
             } else {
                 if ($isAccepted) {
-                    $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_CANCELED);
+                    $message = new SendEmailMessage(MailService::MAIL_DEBT_CANCELED, $transaction);
+                    $this->messageBus->dispatch($message);
                 }
                 return $this->redirectToRoute('account_loans', []);
             }
@@ -232,7 +240,8 @@ class TransactionController extends AbstractController
             } else {
                 if ($isAccepted) {
                     $this->transactionService->confirmTransaction($transaction);
-                    $this->mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_CONFIRMED, null);
+                    $message = new SendEmailMessage(MailService::MAIL_DEBT_CONFIRMED, $transaction);
+                    $this->messageBus->dispatch($message);
                 }
                 return $this->redirectToRoute('account_loans', []);
             }
@@ -257,8 +266,7 @@ class TransactionController extends AbstractController
     #[Route('/create', name: 'transaction_create')]
     public function createTransaction(
         Request $request
-    ): Response
-    {
+    ): Response {
         /** @var User $requester */
         $requester = $this->getUser();
 
@@ -287,11 +295,10 @@ class TransactionController extends AbstractController
 
     #[Route('/notify/{slug}', name: 'transaction_notify')]
     public function createTransactionNotification(
-        Request     $request,
+        Request $request,
         Transaction $transaction,
         MailService $mailService
-    ): Response
-    {
+    ): Response {
         /** @var User $requester */
         $requester = $this->getUser();
 
@@ -341,7 +348,8 @@ class TransactionController extends AbstractController
                         $returnTab = 2;
                     }
 
-                    $mailService->sendNotificationMail($transaction, MailService::MAIL_DEBT_REMINDER);
+                    $message = new SendEmailMessage(MailService::MAIL_DEBT_REMINDER, $transaction);
+                    $this->messageBus->dispatch($message);
                     $messageReceiver = $transaction->getLoaner()->getFullName();
 
                     $this->addFlash(
@@ -374,11 +382,10 @@ class TransactionController extends AbstractController
 
     #[Route('/show/{slug}', name: 'transaction_detail')]
     public function showTransaction(
-        Request     $request,
+        Request $request,
         Transaction $transaction,
         DtoProvider $dtoProvider
-    ): Response
-    {
+    ): Response {
         $requester = $this->getUser();
 
         $variant = $this->transactionService->checkRequesterRole($requester, $transaction);

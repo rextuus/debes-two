@@ -397,6 +397,60 @@ if (scrollContainer){
 
 
 
+/*
+        <div id="camera-container">
+            <button id="activate-camera-btn">Activate Camera</button>
+            <video id="camera-stream" autoplay></video>
+            <button id="capture-btn" disabled>Take Picture</button>
+        </div>
+
+         #camera-container {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+         }
+        #camera-stream {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+        }
+
+        // Variables to store references to DOM elements
+const activateCameraBtn = document.getElementById('activate-camera-btn');
+const captureBtn = document.getElementById('capture-btn');
+const cameraStream = document.getElementById('camera-stream');
+let stream;
+
+// Function to start the camera stream
+async function activateCamera() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        cameraStream.srcObject = stream;
+        activateCameraBtn.disabled = true;
+        captureBtn.disabled = false;
+    } catch (error) {
+        console.error('Error accessing the camera:', error);
+    }
+}
+
+// Function to take a picture
+function takePicture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = cameraStream.videoWidth;
+    canvas.height = cameraStream.videoHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
+    const image = canvas.toDataURL('image/jpeg'); // You can change the image type here (e.g., 'image/jpeg')
+    console.log(image);
+    // You can now do something with the image, like displaying it on the page or sending it to a server.
+}
+
+// Event listeners
+activateCameraBtn.addEventListener('click', activateCamera);
+captureBtn.addEventListener('click', takePicture);
+
+ */
+
 
 
 
