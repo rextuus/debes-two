@@ -9,7 +9,7 @@ class SendEmailMessage
 {
      private string $mailVariant;
      private Transaction $transaction;
-     private PaymentAction|null $paymentAction;
+     private PaymentAction|null $paymentAction = null;
 
     public function __construct(string $mailVariant, Transaction $transaction)
     {
