@@ -100,7 +100,7 @@ class MailService
         $this->mailer->send($email);
     }
 
-    public function sendTestMail(User $receiver)
+    public function sendTestMail()
     {
         $email = (new TemplatedEmail())
             ->from(self::DEBES_MAIL_ADDRESS)
@@ -108,15 +108,17 @@ class MailService
             ->subject('Mail Service Test for debes')
             ->text('Mailing works fine');
 
+        $this->mailer->send($email);
+    }
 
-//
-//        $transport = Transport::fromDsn('smtp://0.0.0.0:1025');
-//        $transport = Transport::fromDsn('smtp://debes@wh-company.de:M6264P687783D78@smtp.strato.de:465/?encryption=ssl$auth_mode=login');
-//        $transport = Transport::fromDsn($mailDsn);
-//        $transport = Transport::fromDsn('smtp://127.0.0.1:1025');
-//        $mailer = new Mailer($transport);
-////        dd($this->mailer);
-///
+    public function sendNotificationTestMail()
+    {
+        $email = (new TemplatedEmail())
+            ->from(self::DEBES_MAIL_ADDRESS)
+            ->to('wrextuus@gmail.com')
+            ->subject('Mail Service Test for debes')
+            ->text('Mailing works fine');
+
         $this->mailer->send($email);
     }
 
