@@ -65,6 +65,10 @@ class MailService
             }
         }
 
+        if ($receiverMail === null){
+            throw new \Exception('No mail address found for receiver with id ' . $receiver->getId());
+        }
+
         $email = (new TemplatedEmail())
             ->from(self::DEBES_MAIL_ADDRESS)
             ->to($receiverMail)
