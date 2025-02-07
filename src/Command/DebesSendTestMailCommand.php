@@ -2,10 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\Debt;
-use App\Entity\Loan;
-use App\Entity\Transaction;
-use App\Entity\User;
 use App\Service\Mailer\MailService;
 use App\Service\Transaction\TransactionService;
 use Symfony\Component\Console\Attribute\AsCommand;

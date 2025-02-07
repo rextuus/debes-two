@@ -6,6 +6,7 @@ use App\Entity\PaymentAction;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Service\Transaction\TransactionService;
+use App\Service\User\UserService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -24,10 +25,11 @@ class MailService
     public const MAIL_DEBT_REMINDER = 'debt_reminder';
 
     public function __construct(
-        private CustomMailer $mailer,
-        private TransactionService $transactionService,
+        private readonly CustomMailer $mailer,
+        private readonly TransactionService $transactionService,
         protected UrlGeneratorInterface $router,
-        private MailTemplateProvider $mailTemplateProvider
+        private readonly MailTemplateProvider $mailTemplateProvider,
+        private readonly UserService $userService
     ) {
     }
 

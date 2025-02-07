@@ -30,7 +30,7 @@ class Debt implements TransactionPartInterface
     #[ORM\JoinColumn(nullable: false)]
     private $transaction;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'debts', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'debts')]
     #[ORM\JoinColumn(nullable: false)]
     private $owner;
 
