@@ -1,15 +1,13 @@
 <?php
 
 
-namespace App\Tests;
+namespace App\Tests\Old;
 
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Nelmio\Alice\Loader\NativeLoader;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FixtureTestCase extends WebTestCase
 {

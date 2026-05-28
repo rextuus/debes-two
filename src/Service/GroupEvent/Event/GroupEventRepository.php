@@ -67,8 +67,8 @@ class GroupEventRepository extends ServiceEntityRepository
 //    }
     public function persist(GroupEvent $groupEvent): void
     {
-        $this->_em->persist($groupEvent);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($groupEvent);
+        $this->getEntityManager()->flush();
     }
 
     public function getTotalSumOfEvent(GroupEvent $groupEvent): float
@@ -76,7 +76,7 @@ class GroupEventRepository extends ServiceEntityRepository
         try {
             return $this->createQueryBuilder('e')
                 ->select('sum(p.amount) as result')
-                ->innerJoin(GroupEventPayment::class, 'p', 'WITH', 'p.groupEvent = e.id')
+                ->innerJoin(GroupEventPayment::class, 'p', 'ON', 'p.groupEvent = e.id')
                 ->where('e = :event')
                 ->setParameter('event', $groupEvent)
                 ->orderBy('e.created', 'ASC')

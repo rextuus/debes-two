@@ -13,11 +13,13 @@ class PaymentAction implements TransactionStateChangeTargetInterface
     const VARIANT_BANK = 'bank';
     const VARIANT_PAYPAL = 'paypal';
     const VARIANT_EXCHANGE = 'exchange';
+    const VARIANT_ADMIN = 'admin';
 
     const ALLOWED_VARIANTS = [
         self::VARIANT_BANK,
         self::VARIANT_PAYPAL,
         self::VARIANT_EXCHANGE,
+        self::VARIANT_ADMIN,
     ];
 
     #[ORM\Id]

@@ -58,7 +58,7 @@ class TransactionService
         return $transaction;
     }
 
-    public function update(Transaction $transaction, TransactionUpdateData $data = null): Transaction
+    public function update(Transaction $transaction, ?TransactionUpdateData $data = null): Transaction
     {
         // TODO Add variant to change event paypal/bankaccount/exchange
         // TODO after transaction is set to cleared it will be set to partial cleared why?

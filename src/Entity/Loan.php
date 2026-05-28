@@ -23,8 +23,8 @@ class Loan implements TransactionPartInterface
     #[ORM\Column(type: 'datetime')]
     private $created;
 
-    #[ORM\Column(type: 'datetime')]
-    private $edited;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?DateTimeInterface $edited;
 
     #[ORM\ManyToOne(targetEntity: Transaction::class, inversedBy: 'loans', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -129,7 +129,7 @@ class Loan implements TransactionPartInterface
      *
      * @return TransactionPartInterface
      */
-    public function setEdited(DateTimeInterface $edited): TransactionPartInterface
+    public function setEdited(?DateTimeInterface $edited): TransactionPartInterface
     {
         $this->edited = $edited;
 

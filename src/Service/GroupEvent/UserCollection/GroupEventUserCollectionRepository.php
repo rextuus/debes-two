@@ -67,8 +67,8 @@ class GroupEventUserCollectionRepository extends ServiceEntityRepository
 
     public function persist(GroupEventUserCollection $groupEventUserCollection): void
     {
-        $this->_em->persist($groupEventUserCollection);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($groupEventUserCollection);
+        $this->getEntityManager()->flush();
     }
 
     public function getGroupByUserList(array $users)

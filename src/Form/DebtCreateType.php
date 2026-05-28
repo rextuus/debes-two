@@ -27,7 +27,7 @@ class DebtCreateType extends AbstractType
         $this->userService = $userService;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $choices = $this->prepareOptions($options['requester']);
         $builder
@@ -46,7 +46,7 @@ class DebtCreateType extends AbstractType
             );
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => DebtCreateData::class,

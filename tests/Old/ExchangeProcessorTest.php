@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Old;
 
 use App\Entity\Debt;
 use App\Entity\Loan;
 use App\Entity\Transaction;
 use App\Repository\ExchangeRepository;
 use App\Service\Transfer\ExchangeProcessor;
-
-use function Clue\StreamFilter\fun;
 
 /**
  * ExchangeProcessorTest

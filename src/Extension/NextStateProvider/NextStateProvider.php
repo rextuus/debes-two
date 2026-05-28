@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace App\Extension\NextStateProvider;
 
 use App\Service\Transaction\Dto\TransactionDto;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 
-class NextStateProvider
+readonly class NextStateProvider
 {
-    private $handlers;
-
+    /**
+     * @param iterable<NextStateInterface> $handlers
+     */
     public function __construct(
-        #[TaggedIterator('next.state')] iterable $handlers
+        #[AutowireIterator('next.state')] private iterable $handlers
     ) {
-        /** @var NextStateInterface[] $this->handlers */
-        $this->handlers = $handlers;
     }
 
     public function getHandlerForState(TransactionDto $part): ?NextStateInterface

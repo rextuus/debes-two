@@ -66,7 +66,7 @@ class GroupEventPaymentRepository extends ServiceEntityRepository
 
     public function persist(GroupEventPayment $groupEventPayment): void
     {
-        $this->_em->persist($groupEventPayment);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($groupEventPayment);
+        $this->getEntityManager()->flush();
     }
 }

@@ -9,13 +9,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PaypalAccountUpdateType extends AbstractPaypalAccountType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
         $builder->add('submit', SubmitType::class, ['label' => 'Änderungen sichern']);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => PaypalAccountUpdateData::class,

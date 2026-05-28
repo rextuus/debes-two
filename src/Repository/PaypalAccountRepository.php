@@ -35,8 +35,8 @@ class PaypalAccountRepository extends ServiceEntityRepository
      */
     public function persist(PaypalAccount $paypalAccount): void
     {
-        $this->_em->persist($paypalAccount);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($paypalAccount);
+        $this->getEntityManager()->flush();
     }
 
     /**

@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 abstract class AbstractBankAccountType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('iban', TextType::class)// TODO IBAN + BIC CHECKER

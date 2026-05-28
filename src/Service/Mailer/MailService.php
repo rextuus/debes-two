@@ -36,7 +36,7 @@ class MailService
     public function sendNotificationMail(
         Transaction $transaction,
         string $mailVariant,
-        PaymentAction $paymentAction = null
+        ?PaymentAction $paymentAction = null
     ): void {
         if ($_ENV['APP_ENV'] === 'dev' || $_ENV['APP_ENV'] === 'test') {
 //            return;

@@ -33,7 +33,7 @@ class SimonDillanCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Import legacy data from sql file');
     }

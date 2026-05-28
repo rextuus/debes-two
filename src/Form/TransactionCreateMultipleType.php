@@ -29,7 +29,7 @@ class TransactionCreateMultipleType extends AbstractType
         $this->userService = $userService;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $numberOfCandidates = count($this->userService->findAllOther($options['requester']));
         $choices = array();
@@ -64,7 +64,7 @@ class TransactionCreateMultipleType extends AbstractType
      * @return void
      *
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => TransactionCreateMultipleData::class,

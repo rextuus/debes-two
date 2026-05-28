@@ -9,21 +9,18 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 
-class UserTransformer implements DataTransformerInterface
+readonly class UserTransformer implements DataTransformerInterface
 {
-    private $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
-    public function transform($value)
+    public function transform($value): mixed
     {
         return implode(',', $value);
     }
 
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         if (!$value) {
             return [];

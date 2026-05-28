@@ -24,7 +24,7 @@ class ExchangeType extends AbstractType
     {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -39,7 +39,7 @@ class ExchangeType extends AbstractType
             ->add('decline', SubmitType::class, ['label' => 'Abbrechen']);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => PrepareExchangeTransferData::class,

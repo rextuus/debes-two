@@ -34,15 +34,15 @@ class ExchangeRepository extends ServiceEntityRepository
      */
     public function persist(Exchange $exchange): void
     {
-        $this->_em->persist($exchange);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($exchange);
+        $this->getEntityManager()->flush();
     }
 
     public function findCorrespondingExchange(Transaction $transaction, Debt $debt, Loan $loan)
     {
         $qb = $this->createQueryBuilder('e')
             ->select('t')
-            ->leftJoin(Transaction::class, 't', 'WITH', 'e.transaction = t.id')
+            ->leftJoin(Transaction::class, 't', 'ON', 'e.transaction = t.id')
             ->where('e.debt = :debt')
             ->andWhere('e.loan = :loan')
             ->andWhere('e.transaction != :transaction')

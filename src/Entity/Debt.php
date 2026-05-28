@@ -37,8 +37,8 @@ class Debt implements TransactionPartInterface
     #[ORM\OneToMany(targetEntity: Exchange::class, mappedBy: 'debt')]
     private $exchanges;
 
-    #[ORM\Column(type: 'datetime')]
-    private $edited;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?DateTimeInterface $edited;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $state;
@@ -121,7 +121,7 @@ class Debt implements TransactionPartInterface
         return $this->edited;
     }
 
-    public function setEdited(DateTimeInterface $edited): TransactionPartInterface
+    public function setEdited(?DateTimeInterface $edited): TransactionPartInterface
     {
         $this->edited = $edited;
         return $this;

@@ -14,33 +14,34 @@ class TransactionStateChangeEvent
     public const TYPE_PAYPAL_ACCOUNT = 'paypal';
     public const TYPE_EXCHANGE_ACCOUNT = 'exchange';
     public const TYPE_BLANK = 'blank';
+    public const TYPE_ADMIN = 'admin';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
-    #[ORM\ManyToOne(targetEntity: Transaction::class, inversedBy: 'transactionStateChangeEvents', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Transaction::class, cascade: ['persist'], inversedBy: 'transactionStateChangeEvents')]
     #[ORM\JoinColumn(nullable: false)]
-    private $transaction;
+    private Transaction $transaction;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $oldState;
+    private string $oldState;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $newState;
+    private string $newState;
 
     #[ORM\Column(type: 'datetime')]
-    private $created;
+    private DateTimeInterface $created;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $type;
+    private ?string $type;
 
     #[ORM\OneToOne(targetEntity: PaymentAction::class, cascade: ['persist', 'remove'])]
-    private $paymentTarget;
+    private PaymentAction $paymentTarget;
 
     #[ORM\OneToOne(targetEntity: Exchange::class, cascade: ['persist', 'remove'])]
-    private $exchangeTarget;
+    private Exchange $exchangeTarget;
 
     public function getId(): ?int
     {

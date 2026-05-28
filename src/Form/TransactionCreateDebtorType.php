@@ -15,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TransactionCreateDebtorType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach (range(1, $options['debtors']) as $debtorNr) {
             $name = sprintf('debtor%d', $debtorNr);
@@ -26,7 +26,7 @@ class TransactionCreateDebtorType extends AbstractType
     }
 
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => TransactionCreateDebtorData::class,

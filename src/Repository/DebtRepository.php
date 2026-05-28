@@ -36,8 +36,8 @@ class DebtRepository extends ServiceEntityRepository
      */
     public function persist(TransactionPartInterface $debt): void
     {
-        $this->_em->persist($debt);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($debt);
+        $this->getEntityManager()->flush();
     }
 
     /**
@@ -51,7 +51,7 @@ class DebtRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('d')
             ->select('t')
-            ->leftJoin(Transaction::class, 't', 'WITH', 'd.transaction = t.id')
+            ->leftJoin(Transaction::class, 't', 'ON', 'd.transaction = t.id')
             ->where('d.owner = :owner')
             ->setParameter('owner', $owner)
             ->orderBy('d.amount', 'ASC');

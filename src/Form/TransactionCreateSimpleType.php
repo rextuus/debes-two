@@ -28,7 +28,7 @@ class TransactionCreateSimpleType extends AbstractType
         $this->userService = $userService;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('amount', TextType::class)
@@ -57,7 +57,7 @@ class TransactionCreateSimpleType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => TransactionData::class,

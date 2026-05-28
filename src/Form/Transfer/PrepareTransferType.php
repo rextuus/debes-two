@@ -27,7 +27,7 @@ class PrepareTransferType extends AbstractType
 
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($options['payment_accounts'][0] instanceof BankAccount){
             $this->name = 'transfer_bank';
@@ -45,7 +45,7 @@ class PrepareTransferType extends AbstractType
             ->add('decline', SubmitType::class, ['label' => 'Abbrechen']);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => PrepareTransferData::class,

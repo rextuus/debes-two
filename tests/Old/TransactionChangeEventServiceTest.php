@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Old;
 
 use App\Entity\User;
 use App\Service\Transaction\ChangeEvent\TransactionChangeEventService;

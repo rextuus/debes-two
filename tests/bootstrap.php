@@ -1,7 +1,13 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
 
-define(
-    'TEST_FILES_PATH',
-    __DIR__ . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR
-);
+use Symfony\Component\Dotenv\Dotenv;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+if (method_exists(Dotenv::class, 'bootEnv')) {
+    (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+}
+
+if ($_SERVER['APP_DEBUG']) {
+    umask(0000);
+}

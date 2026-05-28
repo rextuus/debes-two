@@ -52,8 +52,8 @@ class PaymentActionRepository extends ServiceEntityRepository
     */
     public function persist(PaymentAction $paymentAction): void
     {
-        $this->_em->persist($paymentAction);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($paymentAction);
+        $this->getEntityManager()->flush();
     }
 
     /**
@@ -61,12 +61,12 @@ class PaymentActionRepository extends ServiceEntityRepository
      */
     public function findAllBelongingToProvider(User $user): array
     {
-        //            ->innerJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
+        //            ->innerJoin(Transaction::class, 't', 'ON', 'l.transaction = t.id')
         $qb = $this->createQueryBuilder('p');
-        $qb->leftJoin(BankAccount::class, 'b', 'WITH', 'p.bankAccountSender = b.id')
-            ->leftJoin(PaypalAccount::class, 'pa', 'WITH', 'p.paypalAccountSender = pa.id')
-            ->leftJoin(User::class, 'u', 'WITH', 'b.owner = u.id')
-            ->leftJoin(User::class, 'u2', 'WITH', 'pa.owner = u2.id')
+        $qb->leftJoin(BankAccount::class, 'b', 'ON', 'p.bankAccountSender = b.id')
+            ->leftJoin(PaypalAccount::class, 'pa', 'ON', 'p.paypalAccountSender = pa.id')
+            ->leftJoin(User::class, 'u', 'ON', 'b.owner = u.id')
+            ->leftJoin(User::class, 'u2', 'ON', 'pa.owner = u2.id')
             ->where('u.id = :user')
             ->orWhere('u2.id = :user')
             ->setParameter('user', $user->getId());

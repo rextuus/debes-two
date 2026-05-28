@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Old;
 
 use App\Entity\BankAccount;
 use App\Entity\Debt;

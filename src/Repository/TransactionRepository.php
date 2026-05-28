@@ -34,15 +34,15 @@ class TransactionRepository extends ServiceEntityRepository
      */
     public function persist(Transaction $transaction): void
     {
-        $this->_em->persist($transaction);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($transaction);
+        $this->getEntityManager()->flush();
     }
 
     public function getTransactionCountBetweenUsers(User $debtor, User $loaner) {
         $qb=  $this->createQueryBuilder('t');
         $qb->select('count (t) as count')
-            ->leftJoin(Debt::class, 'd', 'WITH', 'd.transaction = t.id')
-            ->leftJoin(Loan::class, 'l', 'WITH', 'l.transaction = t.id')
+            ->leftJoin(Debt::class, 'd', 'ON', 'd.transaction = t.id')
+            ->leftJoin(Loan::class, 'l', 'ON', 'l.transaction = t.id')
             ->where('d.owner = :debtor')
             ->andWhere('l.owner = :loaner')
             ->setParameter('debtor', $debtor)
@@ -82,8 +82,8 @@ class TransactionRepository extends ServiceEntityRepository
     {
         $qb=  $this->createQueryBuilder('t');
         $qb->select('sum(d.amount) as total')
-            ->leftJoin(Debt::class, 'd', 'WITH', 'd.transaction = t.id')
-            ->leftJoin(Loan::class, 'l', 'WITH', 'l.transaction = t.id')
+            ->leftJoin(Debt::class, 'd', 'ON', 'd.transaction = t.id')
+            ->leftJoin(Loan::class, 'l', 'ON', 'l.transaction = t.id')
             ->where('d.owner = :debtor')
             ->andWhere('l.owner = :loaner')
             ->setParameter('debtor', $debtor)

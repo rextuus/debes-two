@@ -42,10 +42,10 @@ class Transaction
     #[ORM\Column(type: 'float')]
     private $amount;
 
-    #[ORM\OneToMany(targetEntity: Debt::class, mappedBy: 'transaction', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: Debt::class, cascade: ['persist'])]
     private $debts;
 
-    #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'transaction', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: Loan::class, cascade: ['persist'])]
     private $loans;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -60,13 +60,13 @@ class Transaction
     #[ORM\Column(type: 'float')]
     private $initialAmount;
 
-    #[ORM\OneToMany(targetEntity: Exchange::class, mappedBy: 'transaction')]
+    #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: Exchange::class)]
     private $exchanges;
 
-    #[ORM\OneToMany(targetEntity: TransactionStateChangeEvent::class, mappedBy: 'transaction', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: TransactionStateChangeEvent::class, cascade: ['persist'])]
     private $transactionStateChangeEvents;
 
-    #[ORM\OneToMany(targetEntity: PaymentAction::class, mappedBy: 'transaction', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'transaction', targetEntity: PaymentAction::class, cascade: ['persist'])]
     private $paymentActions;
 
     public function __construct()

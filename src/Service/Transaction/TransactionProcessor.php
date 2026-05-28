@@ -11,56 +11,17 @@ use App\Service\Debt\Form\DebtUpdateData;
 use App\Service\Loan\Form\LoanUpdateData;
 use App\Service\Loan\LoanService;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 
-/**
- * TransactionProcessor
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
- */
-class TransactionProcessor
+readonly class TransactionProcessor
 {
-    /**
-     * @var DebtService
-     */
-    private $debtService;
-
-    /**
-     * @var LoanService
-     */
-    private $loanService;
-
-    /**
-     * @var TransactionService
-     */
-    private $transactionService;
-
-    /**
-     * TransactionProcessor constructor.
-     */
     public function __construct(
-        DebtService        $debtService,
-        LoanService        $loanService,
-        TransactionService $transactionService
-    )
-    {
-        $this->debtService = $debtService;
-        $this->loanService = $loanService;
-        $this->transactionService = $transactionService;
+        private DebtService $debtService,
+        private LoanService $loanService,
+        private TransactionService $transactionService
+    ) {
     }
 
-    /**
-     * acceptDebt
-     *
-     * @param Debt $requestDebt
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws Exception
-     */
     public function accept(Debt $requestDebt): void
     {
         $transaction = $requestDebt->getTransaction();
@@ -133,16 +94,6 @@ class TransactionProcessor
         }
     }
 
-    /**
-     * acceptRequestDebt
-     *
-     * @param Debt $debt
-     * @param string $state
-     *
-     * @return DebtData|DebtUpdateData
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     protected function updateDebt(Debt $debt, string $state): void
     {
         $debtData = (new DebtUpdateData())->initFrom($debt);
@@ -150,16 +101,6 @@ class TransactionProcessor
         $this->debtService->update($debt, $debtData);
     }
 
-    /**
-     * updateLoan
-     *
-     * @param        $singleLoan
-     * @param string $state
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     protected function updateLoan($singleLoan, string $state): void
     {
         $loanData = (new LoanUpdateData())->initFrom($singleLoan);
@@ -169,23 +110,13 @@ class TransactionProcessor
 
     protected function updateLoanInState(Loan $singleLoan, string $state, string $mandatoryState): void
     {
-        $loanData = (new LoanUpdateData())->initFrom($singleLoan);
+        $loanData = new LoanUpdateData()->initFrom($singleLoan);
         $loanData->setState($state);
         if ($singleLoan->getState() === $mandatoryState) {
             $this->loanService->update($singleLoan, $loanData);
         }
     }
 
-    /**
-     * acceptTransaction
-     *
-     * @param Transaction $transaction
-     * @param string $state
-     *
-     * @return void
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     protected function updateTransaction(Transaction $transaction, string $state): void
     {
         $transactionData = new TransactionUpdateData();
@@ -194,18 +125,6 @@ class TransactionProcessor
         $this->transactionService->update($transaction, $transactionData);
     }
 
-    // process
-
-    /**
-     * process
-     *
-     * @param Debt $requestDebt
-     *
-     * @return void
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function process(Debt $requestDebt)
     {
         $transaction = $requestDebt->getTransaction();
@@ -225,7 +144,8 @@ class TransactionProcessor
 
 
         // Single Debt / Multiple Loan => |D|L|T| = |Transaction::STATE_CLEARED|Transaction::STATE_CLEARED|Transaction::STATE_CLEARED|
-        if ($transaction->hasMultipleSide() && $transaction->hasMultipleLoaners() && !$transaction->hasMultipleDebtors()) {
+        if ($transaction->hasMultipleSide() && $transaction->hasMultipleLoaners() && !$transaction->hasMultipleDebtors(
+            )) {
             // update  current debt
             $this->updateDebt($requestDebt, Transaction::STATE_CLEARED);
 
@@ -240,7 +160,8 @@ class TransactionProcessor
 
 
         // Multiple Debt / Single Loan => |D|L|T| = |Transaction::STATE_CLEARED|Transaction::STATE_CLEARED?Transaction::STATE_PARTIAL_CLEARED|Transaction::STATE_CLEARED?Transaction::STATE_PARTIAL_CLEARED|
-        if ($transaction->hasMultipleSide() && !$transaction->hasMultipleLoaners() && $transaction->hasMultipleDebtors()) {
+        if ($transaction->hasMultipleSide() && !$transaction->hasMultipleLoaners() && $transaction->hasMultipleDebtors(
+            )) {
             $isLastOne = $transaction->isDebtTheLastNonClearedOne($requestDebt);
 
             // update current debt
@@ -274,7 +195,11 @@ class TransactionProcessor
             } // else set loan partial accepted
             else {
                 foreach ($loans as $loan) {
-                    $this->updateLoanInState($loan, Transaction::STATE_PARTIAL_CLEARED, Transaction::STATE_PARTIAL_ACCEPTED);
+                    $this->updateLoanInState(
+                        $loan,
+                        Transaction::STATE_PARTIAL_CLEARED,
+                        Transaction::STATE_PARTIAL_ACCEPTED
+                    );
                 }
                 // set transaction to partial accepted
                 $this->updateTransaction($transaction, Transaction::STATE_PARTIAL_CLEARED);

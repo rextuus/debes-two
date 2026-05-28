@@ -37,8 +37,8 @@ class LoanRepository extends ServiceEntityRepository
      */
     public function persist(TransactionPartInterface $loan): void
     {
-        $this->_em->persist($loan);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($loan);
+        $this->getEntityManager()->flush();
     }
 
     /**
@@ -51,7 +51,7 @@ class LoanRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('l')
             ->select('t')
-            ->leftJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
+            ->leftJoin(Transaction::class, 't', 'ON', 'l.transaction = t.id')
             ->where('l.owner = :owner')
             ->setParameter('owner', $owner)
             ->orderBy('l.amount', 'ASC');
@@ -103,7 +103,7 @@ class LoanRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('l')
             ->select('l')
-            ->leftJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
+            ->leftJoin(Transaction::class, 't', 'ON', 'l.transaction = t.id')
             ->where('l.owner = :owner')
             ->andWhere('l.state = :state')
             ->andWhere('l.amount >= :amount')
@@ -118,7 +118,7 @@ class LoanRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('l')
             ->select('count(l)')
-            ->leftJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
+            ->leftJoin(Transaction::class, 't', 'ON', 'l.transaction = t.id')
             ->where('l.owner = :owner')
             ->andWhere('l.state = :state')
             ->andWhere('l.amount >= :amount')
@@ -148,9 +148,9 @@ class LoanRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('l')
             ->select('l')
-            ->innerJoin(Transaction::class, 't', 'WITH', 'l.transaction = t.id')
-            ->innerJoin(Debt::class, 'd', 'WITH', 'd.transaction = t.id')
-            ->innerJoin(User::class, 'u', 'WITH', 'd.owner = u.id')
+            ->innerJoin(Transaction::class, 't', 'ON', 'l.transaction = t.id')
+            ->innerJoin(Debt::class, 'd', 'ON', 'd.transaction = t.id')
+            ->innerJoin(User::class, 'u', 'ON', 'd.owner = u.id')
             ->where('l.owner = :debtor')
             ->andWhere('t.state = :state')
             ->andWhere('l.amount >= :amount')

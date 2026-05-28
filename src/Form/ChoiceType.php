@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class ChoiceType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('submit', SubmitType::class, ['label' => $options['label']['submit']])

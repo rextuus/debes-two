@@ -18,7 +18,7 @@ class InitGroupEventType extends AbstractType
 {
     public function __construct(private UserTransformer $transformer) { }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
         $builder->add('description', TextType::class, ['label' => 'Beschreibung']);
@@ -35,7 +35,7 @@ class InitGroupEventType extends AbstractType
         $builder->get('selectedUsers')->addModelTransformer($this->transformer);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => GroupEventInitData::class,

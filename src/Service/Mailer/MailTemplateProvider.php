@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace App\Service\Mailer;
 
 use Exception;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 
-class MailTemplateProvider
+readonly class MailTemplateProvider
 {
-    private $templates;
-
+    /**
+     * @param iterable<MailTemplateInterface> $templates
+     */
     public function __construct(
-        #[TaggedIterator('mail.template')] iterable $templates
+        #[AutowireIterator('mail.template')] private iterable $templates
     ) {
-        /** @var MailTemplateInterface[] $this->templates */
-        $this->templates = $templates;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getTemplateByIdent(string $ident): ?MailTemplateInterface
     {
         foreach ($this->templates as $handler) {

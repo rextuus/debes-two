@@ -23,7 +23,7 @@ class CreateEventPaymentType extends AbstractType
 
     public function __construct(private GroupEventUserCollectionRepository $groupEventUserCollectionRepository) { }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
 //        $builder->add('groupEvent', TextType::class, ['label' => 'Beschreibung']);
@@ -59,7 +59,7 @@ class CreateEventPaymentType extends AbstractType
         );
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => GroupEventPaymentData::class,

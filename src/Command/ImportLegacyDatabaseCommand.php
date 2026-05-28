@@ -18,24 +18,14 @@ use App\Service\Transaction\TransactionService;
 use App\Service\User\UserData;
 use App\Service\User\UserService;
 use DateTime;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * ImportLegacyDatabaseCommand
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- *
- */
+#[AsCommand('debes:legacy:import')]
 class ImportLegacyDatabaseCommand extends Command
 {
-    const NAME = 'debes:legacy:import';
-
-    /**
-     * @var string
-     */
-    protected static $defaultName = self::NAME;
 
     private array $idUserEntityRelations = [];
 
@@ -73,7 +63,7 @@ class ImportLegacyDatabaseCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Import legacy data from sql file');
     }

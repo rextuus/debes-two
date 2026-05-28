@@ -18,7 +18,7 @@ interface TransactionPartInterface
 
     public function getEdited(): ?DateTimeInterface;
 
-    public function setEdited(DateTimeInterface $edited): TransactionPartInterface;
+    public function setEdited(?DateTimeInterface $edited): TransactionPartInterface;
 
     public function getPaid(): ?bool;
 

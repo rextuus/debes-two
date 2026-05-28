@@ -35,8 +35,8 @@ class BankAccountRepository extends ServiceEntityRepository
      */
     public function persist(BankAccount $bankAccount): void
     {
-        $this->_em->persist($bankAccount);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($bankAccount);
+        $this->getEntityManager()->flush();
     }
 
     /**

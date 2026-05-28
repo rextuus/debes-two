@@ -82,6 +82,12 @@ class TransferService
             $paymentActionData->setPaypalAccountReceiver($senderBankAccount);
         }
 
+        // admin variant
+        if ($variant === PaymentAction::VARIANT_ADMIN && $senderBankAccount instanceof BankAccount && $receiverBankAccount instanceof BankAccount) {
+            $paymentActionData->setBankAccountSender($senderBankAccount);
+            $paymentActionData->setBankAccountReceiver($receiverBankAccount);
+        }
+
         $paymentAction = $this->paymentActionService->storePaymentAction($paymentActionData);
 
 //        $transactionUpdateData = (new TransactionUpdateData())->initFrom($transaction);

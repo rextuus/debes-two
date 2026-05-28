@@ -5,24 +5,14 @@ namespace App\Command;
 use App\Entity\Transaction;
 use App\Service\Legacy\LegacyImportService;
 use App\Service\User\UserService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * LoadFixtureFilesToDatabase
- *
- * @author  Wolfgang Hinzmann <wolfgang.hinzmann@doccheck.com>
- * 
- */
+#[AsCommand('debes:test:filldatabase')]
 class LoadFixtureFilesToDatabaseCommand extends Command
 {
-    const NAME = 'debes:test:filldatabase';
-
-    /**
-     * @var string
-     */
-    protected static $defaultName = self::NAME;
 
     /**
      * @var LegacyImportService
@@ -51,7 +41,7 @@ class LoadFixtureFilesToDatabaseCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Fill Database With Data');
     }

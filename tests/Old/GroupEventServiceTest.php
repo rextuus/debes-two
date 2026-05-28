@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\GroupEvent;
+namespace App\Tests\Old;
 
 use App\Entity\Exchange;
 use App\Entity\GroupEvent;
@@ -13,9 +13,7 @@ use App\Service\GroupEvent\Event\Form\GroupEventInitData;
 use App\Service\GroupEvent\Event\GroupEventRepository;
 use App\Service\GroupEvent\GroupEventManager;
 use App\Service\GroupEvent\Payment\Form\GroupEventPaymentData;
-use App\Service\GroupEvent\UserCollection\DisplayName\DisplayNameRepository;
 use App\Service\GroupEvent\UserCollection\GroupEventUserCollectionRepository;
-use App\Tests\FixtureTestCase;
 
 /**
  * ExchangeProcessorTest
@@ -36,7 +34,7 @@ class GroupEventServiceTest extends FixtureTestCase
         parent::setUp();
         $this->loadFixtureFiles(
             [
-                __DIR__ . '/../group_events.yml',
+                __DIR__ . '/group_events.yml',
             ]
         );
         $this->groupEventManager = $this->getService(GroupEventManager::class);

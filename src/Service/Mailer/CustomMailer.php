@@ -12,7 +12,7 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\RawMessage;
 use Twig\Environment;
 
-class CustomMailer implements MailerInterface
+readonly class CustomMailer implements MailerInterface
 {
     private Mailer $mailer;
 
@@ -23,7 +23,7 @@ class CustomMailer implements MailerInterface
         $this->mailer = new Mailer($transport);
     }
 
-    public function send(RawMessage $message, Envelope $envelope = null): void
+    public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         // cause this shit needs to be build by ourself TempleatedEmails are not rendered correctly
         // Its dirty but works. We render the mail body to ensure there is a text. Otherwise mail sent leads to exception

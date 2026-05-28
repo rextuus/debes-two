@@ -15,10 +15,10 @@ class ErrorController extends AbstractController
 {
     public function show(Request $request): Response
     {
-        $exception = $request->get('exception');
+        $exception = $request->request->get('exception');
 
-        if ($_ENV['APP_ENV'] === 'dev'){
-            dd($exception);
+        if ($_ENV['APP_ENV'] === 'dev' && $exception instanceof \Throwable){
+            dd($request->request);
         }
 
         $requestUri = $request->getRequestUri();

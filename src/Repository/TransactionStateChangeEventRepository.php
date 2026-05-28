@@ -25,19 +25,19 @@ class TransactionStateChangeEventRepository extends ServiceEntityRepository
 
     public function persist(TransactionStateChangeEvent $transactionStateChangeEvent): void
     {
-        $this->_em->persist($transactionStateChangeEvent);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($transactionStateChangeEvent);
+        $this->getEntityManager()->flush();
     }
 
     public function findAllEventsForUser(User $user)
     {
         $qb = $this->createQueryBuilder('tce');
 //        $qb->select('u1.id as debtor')->addSelect('u2.id as loaner');
-        $qb->leftJoin(Transaction::class, 't', 'WITH', 'tce.transaction = t.id')
-            ->leftJoin(Debt::class, 'd', 'WITH', 'd.transaction = t.id')
-            ->leftJoin(Loan::class, 'l', 'WITH', 'l.transaction = t.id')
-            ->leftJoin(User::class, 'u1', 'WITH', 'd.owner = u1.id')
-            ->leftJoin(User::class, 'u2', 'WITH', 'l.owner = u2.id')
+        $qb->leftJoin(Transaction::class, 't', 'ON', 'tce.transaction = t.id')
+            ->leftJoin(Debt::class, 'd', 'ON', 'd.transaction = t.id')
+            ->leftJoin(Loan::class, 'l', 'ON', 'l.transaction = t.id')
+            ->leftJoin(User::class, 'u1', 'ON', 'd.owner = u1.id')
+            ->leftJoin(User::class, 'u2', 'ON', 'l.owner = u2.id')
             ->where('u1.id = :user')
             ->orWhere('u2.id = :user')
             ->setParameter('user', $user->getId())
